@@ -82,16 +82,18 @@ public class SesameRepositoryImpl implements SesameRepository, InitializingBean 
 	public Query prepareQuery(String sparqlQuery) {
 		try {
 			return conn.prepareQuery(QueryLanguage.SPARQL, sparqlQuery);
-		} catch (RepositoryException | MalformedQueryException e) {
+			// } catch (RepositoryException | MalformedQueryException e) {
+		} catch (RuntimeException e) {
 			e.printStackTrace();
 			throw new SparqlTutorialException(e);
 		}
 	}
-	
+
 	@PostConstruct
 	public void init() throws Exception {
 
-		boolean nativeConfig = (System.getProperty("repository.type") != null) && (System.getProperty("repository.type").equals("native"));
+		boolean nativeConfig = (System.getProperty("repository.type") != null)
+				&& (System.getProperty("repository.type").equals("native"));
 		if (nativeConfig) {
 			logger.info("Found repository type native property!");
 		}
@@ -120,12 +122,14 @@ public class SesameRepositoryImpl implements SesameRepository, InitializingBean 
 			rep.initialize();
 			logger.info("No previous sesame repository found in " + sesameDataValueFile);
 			logger.info("Loading turtle files from " + ttlFile);
-			logger.info("Depending on the number of triplets, this may take some time to load the first time, please be patient ....");
+			logger.info(
+					"Depending on the number of triplets, this may take some time to load the first time, please be patient ....");
 			addTTLFiles(ttlFile, rep.getConnection());
 		} else {
 			rep.initialize();
 			logger.info("Sesame repository already found in " + sesameDataValueFile);
-			logger.info("Skipping to load turtle files. Remove " + sesameDataFolder + " folder if you want to reload turtle files");
+			logger.info("Skipping to load turtle files. Remove " + sesameDataFolder
+					+ " folder if you want to reload turtle files");
 		}
 
 		// logger.info("Counting number of triplets...");
@@ -136,7 +140,8 @@ public class SesameRepositoryImpl implements SesameRepository, InitializingBean 
 
 	}
 
-	private static void addTTLFiles(final File folder, RepositoryConnection conn) throws RDFParseException, RepositoryException, IOException {
+	private static void addTTLFiles(final File folder, RepositoryConnection conn)
+			throws RDFParseException, RepositoryException, IOException {
 		long start = System.currentTimeMillis();
 		for (final File fileEntry : folder.listFiles()) {
 			if (!fileEntry.isDirectory()) {
