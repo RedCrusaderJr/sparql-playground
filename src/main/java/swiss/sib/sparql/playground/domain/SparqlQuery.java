@@ -3,8 +3,8 @@ package swiss.sib.sparql.playground.domain;
 import java.util.Set;
 
 /**
- * A sparql query used for the examples 
- * 
+ * A sparql query used for the examples
+ *
  * @author Daniel Teixeira http://github.com/ddtxra
  *
  */
@@ -18,7 +18,7 @@ public class SparqlQuery {
 	private String owner;
 	private String img;
 	private String backgroundColor;
-	
+
 	public String getBackgroundColor() {
 		return backgroundColor;
 	}

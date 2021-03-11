@@ -17,6 +17,7 @@ import swiss.sib.sparql.playground.exception.SparqlTutorialException;
 
 /**
  * IO utitly class
+ *
  * @author Daniel Teixeira http://github.com/ddtxra
  *
  */
@@ -27,9 +28,9 @@ public class IOUtils {
 			byte[] encoded = Files.readAllBytes(Paths.get(path));
 			return new String(encoded, Charset.forName("UTF-8"));
 		} catch (IOException e) {
-			if(orValue != null){
+			if (orValue != null) {
 				return orValue;
-			}else {
+			} else {
 				e.printStackTrace();
 				throw new SparqlTutorialException(e);
 			}
@@ -37,9 +38,7 @@ public class IOUtils {
 	}
 
 	public static byte[] readImage(String extension, File f) {
-
 		try {
-
 			// Retrieve image from the classpath.
 			InputStream is = new FileInputStream(f);
 
@@ -53,33 +52,30 @@ public class IOUtils {
 			ImageIO.write(img, extension, bao);
 
 			return bao.toByteArray();
+
 		} catch (IOException e) {
 			throw new SparqlTutorialException(e);
 		}
 	}
-	
 
 	public static void streamFile(File file, OutputStream outStream) {
-
 		try {
-
 			FileInputStream inputStream = new FileInputStream(file);
 
-	        byte[] buffer = new byte[4096];
-	        int bytesRead = -1;
-	 
-	        // write bytes read from the input stream into the output stream
-	        while ((bytesRead = inputStream.read(buffer)) != -1) {
-	            outStream.write(buffer, 0, bytesRead);
-	        }
-	 
-	        inputStream.close();
-	        outStream.close();
+			byte[] buffer = new byte[4096];
+			int bytesRead = -1;
+
+			// write bytes read from the input stream into the output stream
+			while ((bytesRead = inputStream.read(buffer)) != -1) {
+				outStream.write(buffer, 0, bytesRead);
+			}
+
+			inputStream.close();
+			outStream.close();
+
 		} catch (IOException e) {
 			throw new SparqlTutorialException(e);
 		}
 	}
-	
-	
 
 }

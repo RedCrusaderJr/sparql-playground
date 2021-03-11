@@ -6,12 +6,11 @@ import org.springframework.context.annotation.Profile;
 
 /**
  * Cache is enabled with the profile cache
+ * 
  * @author Daniel Teixeira http://github.com/ddtxra
  */
 @Configuration
 @EnableCaching
 @Profile("!nocache")
 public class CacheConfiguration {
-
-
 }

@@ -15,16 +15,16 @@ import swiss.sib.sparql.playground.utils.IOUtils;
 
 /**
  * The page service
- * 
+ *
  * @author Daniel Teixeira http://github.com/ddtxra
  *
  */
 @Service
 public class PageService {
-	
+
 	private static final String ABOUT_PAGE = "99_About";
 
-    @Cacheable("page-tree")
+	@Cacheable("page-tree")
 	public Map<String, Object> getPagesTree() throws IOException {
 
 		Map<String, Object> tree = new HashMap<String, Object>();
@@ -35,7 +35,7 @@ public class PageService {
 				pages.add(buildPage(fileEntry, fileEntry.getName()));
 			}
 		}
-		
+
 		pages.add(buildPage(new File("README.md"), ABOUT_PAGE + ".md"));
 		return tree;
 	}
@@ -48,25 +48,27 @@ public class PageService {
 		return m;
 	}
 
-    @Cacheable("page")
+	@Cacheable("page")
 	public String getPage(String page) {
-    	if(page.equals(ABOUT_PAGE)){
+		if (page.equals(ABOUT_PAGE)) {
 			return IOUtils.readFile("README.md", null);
-		}else {
+
+		} else {
 			return IOUtils.readFile(Application.FOLDER + "/pages/" + page + ".md", null);
 		}
 	}
 
-    @Cacheable("asset")
+	@Cacheable("asset")
 	public byte[] getFileOrTry(String assetOk, String assetIfFailure, String extension) {
 
 		File f = null;
 		f = new File(assetOk);
-		if(!f.exists()){
-			if(assetIfFailure != null){
+		if (!f.exists()) {
+			if (assetIfFailure != null) {
 				f = new File(assetIfFailure);
 			}
 		}
+
 		return IOUtils.readImage(extension, f);
 	}
 

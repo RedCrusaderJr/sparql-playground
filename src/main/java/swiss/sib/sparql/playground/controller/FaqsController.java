@@ -12,8 +12,8 @@ import swiss.sib.sparql.playground.domain.SparqlQuery;
 import swiss.sib.sparql.playground.repository.QueryDictionary;
 
 /**
- * Controller used to server the FAQ queries 
- * 
+ * Controller used to server the FAQ queries
+ *
  * @author Daniel Teixeira http://github.com/ddtxra
  *
  */
@@ -27,6 +27,4 @@ public class FaqsController {
 	public List<SparqlQuery> queries() throws IOException {
 		return queryDictionary.getFaqs();
 	}
-	
-
 }

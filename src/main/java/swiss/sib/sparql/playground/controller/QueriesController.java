@@ -17,8 +17,8 @@ import swiss.sib.sparql.playground.service.PageService;
 import swiss.sib.sparql.playground.utils.IOUtils;
 
 /**
- * Controller used to server the SPARQL queries 
- * 
+ * Controller used to server the SPARQL queries
+ *
  * @author Daniel Teixeira http://github.com/ddtxra
  *
  */
@@ -34,9 +34,10 @@ public class QueriesController {
 	public List<SparqlQuery> queries() throws IOException {
 		return queryDictionary.getQueries(Application.FOLDER + "/queries");
 	}
-	
+
 	@RequestMapping(value = "/queries/{queryId}.{extension}")
-	public @ResponseBody byte[] queryImage(@PathVariable("queryId") String queryId, @PathVariable("extension") String extension) throws IOException {
+	public @ResponseBody byte[] queryImage(@PathVariable("queryId") String queryId,
+			@PathVariable("extension") String extension) throws IOException {
 		return pageService.getFileOrTry(Application.FOLDER + "/queries/" + queryId + "." + extension, null, extension);
 	}
 
@@ -44,5 +45,4 @@ public class QueriesController {
 	public String rdfhelp() throws IOException {
 		return IOUtils.readFile(Application.FOLDER + "/rdfhelp.json", "");
 	}
-
 }

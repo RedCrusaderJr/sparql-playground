@@ -24,7 +24,7 @@ import swiss.sib.sparql.playground.utils.IOUtils;
 
 /**
  * Dictionary for the queries
- * 
+ *
  * @author Daniel Teixeira http://github.com/ddtxra
  *
  */
@@ -34,24 +34,28 @@ public class QueryDictionary {
 	private Map<String, String> resourcesMap = null;
 
 	protected Map<String, String> getResourcesMap(String folder) {
-		loadResources(folder);// In case of changes, reload them (should be removed in a production environment)
+		// In case of changes, reload them (should be removed in a
+		// production environment)
+		loadResources(folder);
 		return resourcesMap;
 	}
 
 	protected String getResource(String resource) {
 		if (resourcesMap.containsKey(resource)) {
 			return resourcesMap.get(resource);
+
 		} else {
-			throw new SparqlTutorialException("Resource " + resource + " not found on a total of " + resourcesMap.size() + " resources");
+			throw new SparqlTutorialException(
+					"Resource " + resource + " not found on a total of " + resourcesMap.size() + " resources");
 		}
 	}
 
 	protected void loadResources(String folder) {
-
 		resourcesMap = new TreeMap<String, String>();
 		for (final File fileEntry : new File(folder).listFiles()) {
 			if (!fileEntry.isDirectory() && fileEntry.getName().endsWith(".rq")) {
-				resourcesMap.put(fileEntry.getName().replace(".rq", ""), IOUtils.readFile(fileEntry.getAbsolutePath(), null));
+				resourcesMap.put(fileEntry.getName().replace(".rq", ""),
+						IOUtils.readFile(fileEntry.getAbsolutePath(), null));
 			}
 		}
 	}
@@ -70,16 +74,15 @@ public class QueryDictionary {
 		for (String queryId : queries) {
 			queriesList.add(buildSparqlQueryFromRawContent(queryId, map.get(queryId)));
 		}
-		
-		//Sort by query id
-		Collections.sort(queriesList, new Comparator<SparqlQuery>(){
-		    public int compare(SparqlQuery q1, SparqlQuery q2) {
-		       return Long.valueOf(q1.getUserQueryId()).compareTo(Long.valueOf(q2.getUserQueryId()));    
-		    }
+
+		// Sort by query id
+		Collections.sort(queriesList, new Comparator<SparqlQuery>() {
+			public int compare(SparqlQuery q1, SparqlQuery q2) {
+				return Long.valueOf(q1.getUserQueryId()).compareTo(Long.valueOf(q2.getUserQueryId()));
+			}
 		});
 
-
-		return queriesList; 
+		return queriesList;
 	}
 
 	private SparqlQuery buildSparqlQueryFromRawContent(String queryId, String rawContent) {
@@ -96,16 +99,17 @@ public class QueryDictionary {
 		try {
 
 			String id = null;
-			if(rawProps.get("id") != null){
+			if (rawProps.get("id") != null) {
 				id = rawProps.get("id");
-			}else {
+
+			} else {
 				id = queryId;
 			}
-			
+
 			dsq.setPublicId(id);
-			//removes all non numeric character
+			// removes all non numeric character
 			dsq.setUserQueryId(Long.valueOf(id.replaceAll("[^0-9]", "")));
-	
+
 		} catch (Exception e) {
 			dsq.setUserQueryId(0);
 		}
@@ -113,32 +117,35 @@ public class QueryDictionary {
 		if (rawProps.get("tags") != null) {
 			Set<String> tags = new HashSet<String>(Arrays.asList(rawProps.get("tags").split(",")));
 			dsq.setTags(tags);
-		} else
+
+		} else {
 			dsq.setTags(new HashSet<String>());
+		}
 
 		// dsq.set(rawProps.get("count"));
 		// dsq.setAcs(rawProps.get("acs"));
 
 		return dsq;
-
 	}
 
 	private String parseAndGlupRawQuery(String rawData, String q, String label, Map<String, String> meta) {
-
 		String p = "[# ]?" + label + ":([^\\n]*)";
 		Matcher m = Pattern.compile(p, Pattern.DOTALL | Pattern.MULTILINE).matcher(rawData);
 		boolean found = false;
-		while (m.find()) { //
+
+		while (m.find()) {
 			found = true;
+
 			if (!meta.containsKey(label)) {
 				meta.put(label, m.group(1));
+
 			} else {
 				meta.put(label, meta.get(label) + "\n" + m.group(1));
 			}
-
 		}
-		if (found)
+		if (found) {
 			return q.replaceAll(p, "");
+		}
 
 		return q;
 	}
