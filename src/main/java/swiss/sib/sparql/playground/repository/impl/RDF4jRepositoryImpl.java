@@ -124,7 +124,8 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 		logger.info("Initializing MarkLogic repository");
 
 		SecurityContext securityContext = new DatabaseClientFactory.DigestAuthContext("admin", "admin");
-		repository = new MarkLogicRepository("localhost", 8111, securityContext);
+		repository = new MarkLogicRepository(Application.MARKLOGIC_ADDRESS, Application.MARKLOGIC_PORT,
+				securityContext);
 		repository.init();
 
 		long tripletCounter = countTriplets();

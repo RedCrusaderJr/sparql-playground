@@ -4,12 +4,8 @@ import swiss.sib.sparql.playground.service.SparqlService;
 
 import org.eclipse.rdf4j.query.QueryEvaluationException;
 import org.eclipse.rdf4j.query.TupleQueryResult;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.Ignore;
+import org.junit.*;
 import org.junit.runner.RunWith;
-//import org.openrdf.query.QueryEvaluationException;
-//import org.openrdf.query.TupleQueryResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -24,7 +20,7 @@ public class SparqlServiceIntegrationTest {
 	private SparqlService sparqlService;
 
 	@Test
-	@Ignore
+	// @Ignore
 	public void testAskQuery() throws Exception {
 		String query = "ASK {FILTER(2>1)} ";
 		Boolean result = (Boolean) sparqlService.evaluateQuery(query);
@@ -32,7 +28,7 @@ public class SparqlServiceIntegrationTest {
 	}
 
 	@Test
-	@Ignore
+	// @Ignore
 	public void testQueryWithURI() throws Exception {
 		String query = "select ?x where { ?x rdf:type <http://example.org/tuto/ontology#Cat> . }";
 		TupleQueryResult result = (TupleQueryResult) sparqlService.evaluateQuery(query);
@@ -41,7 +37,7 @@ public class SparqlServiceIntegrationTest {
 	}
 
 	@Test
-	@Ignore
+	// @Ignore
 	public void testQueryWithNamespaces() throws Exception {
 		String query = sparqlService.getPrefixesString();
 		query += " select ?x where { ?x rdf:type tto:Cat . }";
@@ -67,7 +63,7 @@ public class SparqlServiceIntegrationTest {
 	}
 
 	@Test
-	@Ignore
+	// @Ignore
 	public void testFederatedQueryWithDBPedia() throws Exception {
 
 		String federatedQuery = "PREFIX dbp:<http://dbpedia.org/property/>\n"
@@ -92,7 +88,7 @@ public class SparqlServiceIntegrationTest {
 	}
 
 	@Test
-	@Ignore
+	// @Ignore
 	public void testCountNumberOfTriples() throws Exception {
 		Long n = sparqlService.countNumberOfTriples();
 		System.out.println(n + " triples");

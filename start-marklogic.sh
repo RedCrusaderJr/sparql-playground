@@ -1,1 +1,1 @@
-java -Dserver.port=8887 -Drepository.type=marklogic -jar sparql-playground.war
+java -Dserver.port=8887 -Drepository.type=marklogic -jar sparql-playground.war default localhost 8111

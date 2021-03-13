@@ -22,30 +22,64 @@ public class Application {
 	private static final Log logger = LogFactory.getLog(Application.class);
 
 	public static String FOLDER = "default"; // e.g. nextprot or uniprot
+	public static String MARKLOGIC_ADDRESS = "localhost";
+	public static int MARKLOGIC_PORT = 8111;
 
 	public static void main(String[] args) {
 		logger.info("SPARQL Playground\n");
 
-		setFolder(args);
+		try {
+			setFolder(args);
+			setMarkLogicSettings(args);
 
-		SpringApplication.run(Application.class, args);
+			SpringApplication.run(Application.class, args);
 
-		logHostingAddress();
+			logHostingAddress();
+
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
 	}
 
 	private static void setFolder(String[] args) {
-		if (args.length > 0) {
-			String folderAux = args[0];
-
-			if (new File(folderAux).exists()) {
-				FOLDER = folderAux;
-
-			} else {
-				logger.info(folderAux + " folder not found");
-			}
+		if (args.length == 0) {
+			return;
 		}
 
-		logger.info("Reading from " + FOLDER);
+		String folderAux = args[0];
+
+		if (new File(folderAux).exists()) {
+			FOLDER = folderAux;
+
+		} else {
+			logger.debug(folderAux + " folder not found");
+		}
+
+		logger.debug("FOLDER set to: " + FOLDER);
+	}
+
+	private static void setMarkLogicSettings(String[] args) {
+		if (args.length < 3) {
+			return;
+		}
+
+		if (args[1] != "") {
+			MARKLOGIC_ADDRESS = args[1];
+			logger.debug("MARKLOGIC_ADDRESS set to: " + MARKLOGIC_ADDRESS);
+		}
+
+		if (args[2] != "") {
+			String portString = args[2];
+
+			try {
+				MARKLOGIC_PORT = Integer.parseInt(portString);
+				logger.debug("MARKLOGIC_PORT set to: " + MARKLOGIC_PORT);
+
+			} catch (NumberFormatException e) {
+				logger.error(e.getMessage());
+				logger.debug("MARKLOGIC_PORT has default value of:" + MARKLOGIC_PORT);
+			}
+		}
 	}
 
 	private static void logHostingAddress() {
