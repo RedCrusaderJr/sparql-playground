@@ -6,10 +6,10 @@ public enum RepositoryType {
 
 	public static RepositoryType getRepositoryType(String repositoryType) {
 
-		if (repositoryType == "native") {
+		if (repositoryType.equals("native")) {
 			return RepositoryType.NATIVE;
 
-		} else if (repositoryType == "marklogic") {
+		} else if (repositoryType.equals("marklogic")) {
 			return RepositoryType.MARK_LOGIC;
 
 		} else {

@@ -1,35 +1,24 @@
 package swiss.sib.sparql.playground.repository.impl;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import com.marklogic.client.DatabaseClientFactory;
+import com.marklogic.client.DatabaseClientFactory.SecurityContext;
+import com.marklogic.semantics.rdf4j.MarkLogicRepository;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import org.eclipse.rdf4j.common.iteration.Iterations;
-import org.eclipse.rdf4j.model.Model;
-import org.eclipse.rdf4j.model.Resource;
-import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
-import org.eclipse.rdf4j.query.Query;
-import org.eclipse.rdf4j.query.QueryEvaluationException;
-import org.eclipse.rdf4j.query.QueryLanguage;
-import org.eclipse.rdf4j.query.TupleQuery;
-import org.eclipse.rdf4j.query.TupleQueryResult;
-import org.eclipse.rdf4j.repository.Repository;
-import org.eclipse.rdf4j.repository.RepositoryConnection;
-import org.eclipse.rdf4j.repository.RepositoryException;
-import org.eclipse.rdf4j.repository.RepositoryResult;
+import org.eclipse.rdf4j.query.*;
+import org.eclipse.rdf4j.repository.*;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
-import org.eclipse.rdf4j.rio.RDFFormat;
-import org.eclipse.rdf4j.rio.RDFHandlerException;
-import org.eclipse.rdf4j.rio.RDFParseException;
-import org.eclipse.rdf4j.rio.Rio;
+import org.eclipse.rdf4j.rio.*;
 import org.eclipse.rdf4j.sail.memory.MemoryStore;
 import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
 import org.springframework.beans.factory.InitializingBean;
@@ -71,18 +60,22 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 
 		File ttlFile = new File(Application.FOLDER + "/ttl-data");
 
-		if (repositoryType == RepositoryType.DEFAULT) {
-			initializeDefaultRepository(ttlFile);
+		try {
+			if (repositoryType == RepositoryType.DEFAULT) {
+				initializeDefaultRepository(ttlFile);
 
-		} else if (repositoryType == RepositoryType.NATIVE) {
-			initializeNativeRepository(ttlFile);
+			} else if (repositoryType == RepositoryType.NATIVE) {
+				initializeNativeRepository(ttlFile);
 
-		} else if (repositoryType == RepositoryType.MARK_LOGIC) {
-			initializeMarklogicRepository();
+			} else if (repositoryType == RepositoryType.MARK_LOGIC) {
+				initializeMarklogicRepository(ttlFile);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		}
 
-		// logger.info("Counting number of triplets...");
-		// logger.info("Repository contains " + countTriplets() + " triplets");
+		logger.info("Counting number of triplets...");
+		logger.info("Repository contains " + countTriplets() + " triplets");
 
 		testRepository = new SailRepository(new MemoryStore());
 		testRepository.init();
@@ -92,8 +85,8 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 	private void initializeDefaultRepository(File ttlFile) throws RDFParseException, RepositoryException, IOException {
 		logger.info("Initializing in memory repository");
 		repository = new SailRepository(new MemoryStore());
-
 		repository.init();
+
 		logger.info("Loading turtle files from " + ttlFile);
 		addTTLFiles(ttlFile, repository.getConnection());
 	}
@@ -126,17 +119,33 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 	}
 
 	// ml connection
-	private void initializeMarklogicRepository() {
+	private void initializeMarklogicRepository(File ttlFile)
+			throws RDFParseException, RepositoryException, IOException {
+		logger.info("Initializing MarkLogic repository");
+
+		SecurityContext securityContext = new DatabaseClientFactory.DigestAuthContext("admin", "admin");
+		repository = new MarkLogicRepository("localhost", 8111, securityContext);
+		repository.init();
+
+		long tripletCounter = countTriplets();
+		if (tripletCounter > 0) {
+			logger.info("Data already present in MarkLogic DB. Number of triples: " + tripletCounter);
+			return;
+		}
+
+		logger.info("Loading turtle files from " + ttlFile);
+		addTTLFiles(ttlFile, repository.getConnection());
 	}
 
-	private void addTTLFiles(final File folder, RepositoryConnection conn)
+	private void addTTLFiles(final File folder, RepositoryConnection connection)
 			throws RDFParseException, RepositoryException, IOException {
 		long start = System.currentTimeMillis();
 
 		for (final File fileEntry : folder.listFiles()) {
 			if (!fileEntry.isDirectory()) {
 				logger.debug("Loading " + fileEntry);
-				conn.add(fileEntry, "", RDFFormat.TURTLE, new Resource[] {});
+
+				connection.add(fileEntry, null, RDFFormat.TURTLE, (Resource) null);
 			}
 		}
 
@@ -247,6 +256,10 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 	@Override
 	public Query prepareQuery(String sparqlQuery) {
 		try {
+			if (connection == null) {
+				connection = repository.getConnection();
+			}
+
 			return connection.prepareQuery(QueryLanguage.SPARQL, sparqlQuery);
 
 		} catch (RuntimeException e) {

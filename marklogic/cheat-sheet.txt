@@ -1,0 +1,27 @@
+//db status
+curl -X GET http://localhost:8002/manage/v2/databases/sparql-playground?view=status --anyauth --user admin:admin 
+
+//create db
+curl -X POST http://localhost:8002/v1/rest-apis --anyauth --user admin:admin -d@"E:\FAX\MasterTeza\modifikacija-sparql-playground\sparql-playground\marklogic\sparql-playground-config.json" -i -H "Content-type: application/json"
+
+//load triples into db
+curl -X POST http://localhost:8111/v1/graphs?graph=/sparql-playground/ontology --anyauth --user admin:admin -d@"E:\FAX\MasterTeza\modifikacija-sparql-playground\sparql-playground\default\ttl-data\ontology.ttl" -i -H "Content-type: text/turtle"
+curl -X PUT http://localhost:8111/v1/graphs?graph=/sparql-playground/ontology --anyauth --user admin:admin --data-binary @"E:\FAX\MasterTeza\modifikacija-sparql-playground\sparql-playground\default\ttl-data\ontology.ttl" -i -H "Content-type: text/turtle"
+
+
+//get graph(s)
+curl -X GET http://localhost:8111/v1/graphs --anyauth --user admin:admin
+curl -X GET http://localhost:8111/v1/graphs?graph=/sparql-playground/ontology --anyauth --user admin:admin
+
+//SELECT * WHERE { ?s ?p ?o. }
+SELECT+%2A+WHERE+%7B+%3Fs+%3Fp+%3Fo.+%7D
+
+curl -X GET http://localhost:8111/v1/graphs/sparql?query="SELECT+%2A+WHERE+%7B+%3Fs+%3Fp+%3Fo.+%7D" --anyauth --user admin:admin -i -H "Accept: application/sparql-results+json"
+    
+
+//SELECT ?s ?p ?o WHERE {?s ?p ?o.}
+SELECT%20%3Fs%20%3Fp%20%3Fo%20WHERE%20%7B%3Fs%20%3Fp%20%3Fo.%7D
+
+curl -X GET http://localhost:8111/v1/graphs/sparql?query="SELECT%20%3Fs%20%3Fp%20%3Fo%20WHERE%20%7B%3Fs%20%3Fp%20%3Fo.%7D" --anyauth --user admin:admin -i -H "Accept: application/sparql-results+json"
+
+curl -X POST http://localhost:8111/v1/graphs/sparql -d "SELECT * WHERE { ?s ?p ?o }" --anyauth --user admin:admin -i -H "Content-type:application/sparql-query" -H "Accept:application/sparql-results+xml"
