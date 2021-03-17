@@ -1,0 +1,1 @@
+java -Dserver.port=8889 -jar sparql-playground.war geospatial

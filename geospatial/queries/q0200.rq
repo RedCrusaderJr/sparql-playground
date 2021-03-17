@@ -1,0 +1,20 @@
+#title:Example of GeoSparql query - distance
+#comment:Selecting 2 landmarks with coordinates
+#comment:Calculating distance between coodinates
+
+#tags:distance
+#color:ex-blue
+#img:
+    
+SELECT *
+WHERE {
+  ?lmA a ex:Landmark ;
+       geo:hasGeometry [ geo:asWKT ?coord1 ].
+
+  ?lmB a ex:Landmark ;
+       geo:hasGeometry [ geo:asWKT ?coord2 ].
+
+  BIND((geof:distance(?coord1, ?coord2, uom:metre)/1000) as ?dist) .
+  FILTER (str(?lmA) < str(?lmB))
+}
+

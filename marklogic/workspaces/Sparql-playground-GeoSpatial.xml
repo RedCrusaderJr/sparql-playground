@@ -1,0 +1,38 @@
+<export><workspace name="Sparql-playground-GeoSpatial"><query name="Distance" focus="true" listorder="1" taborder="1" active="true" database="8967445921499680360" server="17378417203308661926" database-name="sparql-playground" server-name="8111-sparql-playground" mode="javascript">'use strict';
+
+//landmarks
+let lmTriples = Array.from(cts.triples([], 
+                                     sem.iri("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
+                                     sem.iri("http://example.org/Landmark")));
+let landmark1 = sem.tripleSubject(lmTriples[0]);
+let landmark2 = sem.tripleSubject(lmTriples[1]);
+
+//geometry
+let geomTriple1 = cts.triples(landmark1, 
+                                     sem.iri("http://www.opengis.net/ont/geosparql#hasGeometry"),
+                                     []);
+let geometry1 = sem.tripleObject(geomTriple1);
+  
+
+let geomTriple2 = cts.triples(landmark2, 
+                                     sem.iri("http://www.opengis.net/ont/geosparql#hasGeometry"),
+                                     []);
+let geometry2 = sem.tripleObject(geomTriple2);
+
+
+//points
+let pointTriple1 = cts.triples(geometry1, 
+                                     sem.iri("http://www.opengis.net/ont/geosparql#asWKT"),
+                                     []);
+let point1 = sem.tripleObject(pointTriple1);
+  
+
+let pointTriple2 = cts.triples(geometry2, 
+                                     sem.iri("http://www.opengis.net/ont/geosparql#asWKT"),
+                                     []);
+let point2 = sem.tripleObject(pointTriple2);
+
+//distance
+let distance = geo.distance(point1, point2, "units=meters")/1000;
+
+distance</query></workspace></export>

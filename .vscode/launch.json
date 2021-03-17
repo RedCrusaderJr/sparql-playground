@@ -15,7 +15,8 @@
             "name": "Launch Application",
             "request": "launch",
             "mainClass": "swiss.sib.sparql.playground.Application",
-            "projectName": "sparql-playground"
+            "projectName": "sparql-playground",
+            "args": "default localhost 8111"
         }
     ]
 }
