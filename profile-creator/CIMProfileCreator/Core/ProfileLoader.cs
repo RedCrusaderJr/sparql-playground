@@ -99,15 +99,20 @@ namespace FTN.ESI.SIMES.CIM.Core
 				#region Manage dataType classes
 				PredefinedClasses pf = new PredefinedClasses();
 
-				if (profile.FindProfileElementByUri("#Package_Core") == null && createCore)
+				//if (profile.FindProfileElementByUri("#Package_Core") == null && createCore)
+				if (profile.FindProfileElementByName(StringManipulationManager.ExtractAllAfterSeparator("#Package_Core", StringManipulationManager.SeparatorSharp)) == null && createCore)
 				{
 					pf.CreatePackage(profile, "Package_Core");
 				}
-				if (profile.FindProfileElementByUri("#UnitSymbol") == null)
+
+				//if (profile.FindProfileElementByUri("#UnitSymbol") == null)
+				if (profile.FindProfileElementByName(StringManipulationManager.ExtractAllAfterSeparator("#UnitSymbol", StringManipulationManager.SeparatorSharp)) == null)
 				{
 					pf.CreateEnumeration(profile, "UnitSymbol");
 				}
-				if (profile.FindProfileElementByUri("#UnitMultiplier") == null)
+
+				//if (profile.FindProfileElementByUri("#UnitMultiplier") == null)
+				if (profile.FindProfileElementByName(StringManipulationManager.ExtractAllAfterSeparator("#UnitMultiplier", StringManipulationManager.SeparatorSharp)) == null)
 				{
 					pf.CreateEnumeration(profile, "UnitMultiplier");
 				}
@@ -236,7 +241,8 @@ namespace FTN.ESI.SIMES.CIM.Core
 		{
 			if ((cimPredefined != null) && (profile != null) && (profile.ClassCount > 0))
 			{
-				ClassCategory packageCorePE = profile.FindProfileElementByUri("#Package_Core") as ClassCategory;
+				ClassCategory packageCorePE = profile.FindProfileElementByName(StringManipulationManager.ExtractAllAfterSeparator("#Package_Core", StringManipulationManager.SeparatorSharp)) as ClassCategory;
+				//ClassCategory packageCorePE = profile.FindProfileElementByUri("#Package_Core") as ClassCategory;
 				if (packageCorePE != null)
 				{
 					foreach (string dataTypeName in cimPredefined.PedifinedClassesList)
@@ -252,10 +258,13 @@ namespace FTN.ESI.SIMES.CIM.Core
 					}
 
 					//// remove enums UnitSymbol and UnitMultiplier if not used in classes
-					ProfileElement unitSymbolPE = profile.FindProfileElementByUri("#UnitSymbol");
-					ProfileElement unitMultiplierlPE = profile.FindProfileElementByUri("#UnitMultiplier");
-					bool removeUnitSymbol = !profile.GetAllProfileElementsOfType(ProfileElementTypes.Property).Cast<Property>().Any(p => string.Equals(p.Range, "#UnitSymbol"));
-					bool removeUnitMultiplier = !profile.GetAllProfileElementsOfType(ProfileElementTypes.Property).Cast<Property>().Any(p => string.Equals(p.Range, "#UnitMultiplier"));
+					//ProfileElement unitSymbolPE = profile.FindProfileElementByUri("#UnitSymbol");
+					//ProfileElement unitMultiplierlPE = profile.FindProfileElementByUri("#UnitMultiplier");
+					ProfileElement unitSymbolPE = profile.FindProfileElementByName(StringManipulationManager.ExtractAllAfterSeparator("#UnitSymbol", StringManipulationManager.SeparatorSharp));
+					ProfileElement unitMultiplierlPE = profile.FindProfileElementByName(StringManipulationManager.ExtractAllAfterSeparator("#UnitMultiplier", StringManipulationManager.SeparatorSharp));
+					bool removeUnitSymbol = !profile.GetAllProfileElementsOfType(ProfileElementTypes.Property).Cast<Property>().Any(p => p.Range != null && p.Range.Contains("#UnitSymbol"));
+					bool removeUnitMultiplier = !profile.GetAllProfileElementsOfType(ProfileElementTypes.Property).Cast<Property>().Any(p => p.Range != null && p.Range.Contains("#UnitMultiplier"));
+					
 					if (removeUnitSymbol)
 					{
 						//// remove from package Core
@@ -264,6 +273,7 @@ namespace FTN.ESI.SIMES.CIM.Core
 						profile.ProfileMap[ProfileElementTypes.Class].Remove(unitSymbolPE);
 						unitSymbolPE = null;
 					}
+
 					if (removeUnitMultiplier)
 					{
 						//// remove from package Core
@@ -274,7 +284,9 @@ namespace FTN.ESI.SIMES.CIM.Core
 					}
 
 					//// remove Domain package or just remove all members not used elsewhere
-					ClassCategory packageDomainPE = profile.FindProfileElementByUri("#Package_Domain") as ClassCategory;
+					//ClassCategory packageDomainPE = profile.FindProfileElementByUri("#Package_Domain") as ClassCategory;
+					ClassCategory packageDomainPE = profile.FindProfileElementByName(StringManipulationManager.ExtractAllAfterSeparator("#Package_Domain", StringManipulationManager.SeparatorSharp)) as ClassCategory;
+					
 					if (packageDomainPE != null)
 					{	
 						if (packageDomainPE.CountMembersOfClassCategory > 0)

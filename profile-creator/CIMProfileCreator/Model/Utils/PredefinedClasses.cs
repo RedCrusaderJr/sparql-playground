@@ -327,15 +327,18 @@ namespace FTN.ESI.SIMES.CIM.Model.Utils
 					if (prop.type.Equals("#UnitSymbol"))
 					{
 						property.Range = "#UnitSymbol";
-						property.RangeAsObject = profile.FindProfileElementByUri("#UnitSymbol");
-					}
+						//property.RangeAsObject = profile.FindProfileElementByUri("#UnitSymbol");
+                        property.RangeAsObject = profile.FindProfileElementByName(StringManipulationManager.ExtractAllAfterSeparator("#UnitSymbol", StringManipulationManager.SeparatorSharp));
+
+                    }
 					if (prop.type.Equals("#UnitMultiplier"))
 					{
 						property.Range = "#UnitMultiplier";
-						property.RangeAsObject = profile.FindProfileElementByUri("#UnitMultiplier");
-					}
+						//property.RangeAsObject = profile.FindProfileElementByUri("#UnitMultiplier");
+                        property.RangeAsObject = profile.FindProfileElementByName(StringManipulationManager.ExtractAllAfterSeparator("#UnitMultiplier", StringManipulationManager.SeparatorSharp));
+                    }
 
-					entity.AddToMyProperties(property);
+                    entity.AddToMyProperties(property);
 				}
 			}
         }
