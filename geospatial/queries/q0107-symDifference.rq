@@ -1,0 +1,11 @@
+#title:q-symDifference
+
+#tags:geof:symDifference
+#color:ex-green
+#img:
+
+select distinct (geof:symDifference(?xGeom, ?yGeom) as ?s)
+where {
+	?x geo:asWKT ?xGeom.
+	?y geo:asWKT ?yGeom.
+}

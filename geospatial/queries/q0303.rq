@@ -1,0 +1,17 @@
+#title:Example 2 (Using a predicate)
+#comment:Find all features that are within a transient bounding box geometry, where spatial calculations are based on my:hasPointGeometry.
+#comment:result => my:D
+
+#tags:geo:sfWithin,predicate
+#color:ex-blue
+#img:geosparql-example-objects
+
+SELECT ?f
+WHERE {
+    ?f my:hasPointGeometry ?fGeom .
+        ?fGeom geo:sfWithin '''
+            Polygon ((-83.4 34.0, -83.1 34.0,
+                      -83.1 34.2, -83.4 34.2,
+                      -83.4 34.0))
+        '''^^geo:wktLiteral
+}

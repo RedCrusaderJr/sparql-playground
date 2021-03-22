@@ -1,0 +1,10 @@
+#title:q-srid
+
+#tags:geof:getSRID
+#color:ex-green
+#img:
+
+select (geof:getSRID(?g) as ?s)
+where {
+	[geo:asWKT ?g].
+}

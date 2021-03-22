@@ -1,0 +1,11 @@
+#title:q-intersection
+
+#tags:geof:intersection
+#color:ex-green
+#img:
+
+select distinct (geof:intersection(?xGeom, ?yGeom) as ?s)
+where {
+	?x geo:asWKT ?xGeom.
+	?y geo:asWKT ?yGeom.
+}

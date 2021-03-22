@@ -1,0 +1,15 @@
+#title:Example 1 (Using a predicate)
+#comment:Find all features that feature my:A contains, where spatial calculations are based on my:hasExactGeometry.
+#comment:result => my:B, my:F
+
+#tags:geo:sfContains,predicate
+#color:ex-blue
+#img:geosparql-example-objects
+
+SELECT ?f
+WHERE {
+    my:A my:hasExactGeometry ?aGeom .
+    ?f my:hasExactGeometry ?fGeom .
+    ?aGeom geo:sfContains ?fGeom .
+    FILTER (!sameTerm(?aGeom, ?fGeom))
+}

@@ -1,0 +1,10 @@
+#title:q-envelope
+
+#tags:geof:envelope
+#color:ex-green
+#img:
+
+select distinct (geof:envelope(?xGeom) as ?s)
+where {
+	?x geo:asWKT ?xGeom.
+}
