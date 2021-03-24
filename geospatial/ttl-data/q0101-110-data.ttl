@@ -1,0 +1,15 @@
+@prefix rdfs:	<http://www.w3.org/2000/01/rdf-schema#> .
+@prefix geo:     <http://www.opengis.net/ont/geosparql#> .
+@prefix wkt: <http://www.opengis.net/ont/geosparql#> .
+
+[] 	geo:asWKT "POINT (10.00 1)"^^wkt:wktLiteral;
+	rdfs:label "Point 1".
+	
+[] 	geo:asWKT "POINT (20.00 2)"^^wkt:wktLiteral;
+	rdfs:label "Point 2".
+
+[] 	geo:asWKT "POINT (30.00 3)"^^wkt:wktLiteral;
+	rdfs:label "Point 3".
+
+[] 	geo:asWKT "POINT (40.00 4)"^^wkt:wktLiteral;
+	rdfs:label "Point 4".

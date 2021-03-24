@@ -1,0 +1,22 @@
+#title:q-difference
+
+#tags:geof:difference
+#color:ex-green
+#img:
+
+select distinct ?diff ?union ?xGeom
+where {
+	?x geo:asWKT ?xGeom.
+	?y geo:asWKT ?yGeom.
+  
+  BIND(geof:union(?xGeom, ?yGeom) as ?union)
+  BIND(geof:difference(?union, ?xGeom) as ?diff)
+  
+  FILTER(str(?xGeom) < str(?yGeom))
+}
+
+# select distinct (geof:difference(?xGeom, ?yGeom) as ?s)
+# where {
+# 	?x geo:asWKT ?xGeom.
+# 	?y geo:asWKT ?yGeom.
+# }

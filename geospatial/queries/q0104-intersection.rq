@@ -1,0 +1,21 @@
+#title:q-intersection
+
+#tags:geof:intersection
+#color:ex-green
+#img:
+
+select distinct ?intersect ?xGeom ?yGeom
+where {
+	?x geo:asWKT ?xGeom.
+	?y geo:asWKT ?yGeom.
+  
+  BIND(geof:intersection(?xGeom, ?yGeom) as ?intersect)
+  
+  FILTER(str(?xGeom) = str(?yGeom))
+}
+
+# select distinct (geof:intersection(?xGeom, ?yGeom) as ?s)
+# where {
+# 	?x geo:asWKT ?xGeom.
+# 	?y geo:asWKT ?yGeom.
+# }

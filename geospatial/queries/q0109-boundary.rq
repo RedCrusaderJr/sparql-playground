@@ -1,0 +1,35 @@
+#title:q-boundary
+
+#tags:geof:boundary
+#color:ex-green
+#img:
+
+select distinct ?boundary ?convexHull ?union
+where {
+	?x geo:asWKT ?xGeom.
+	?y geo:asWKT ?yGeom.
+  
+  BIND(geof:union(?xGeom, ?yGeom) as ?union)
+  BIND(geof:convexHull(?union) as ?convexHull)
+  BIND(geof:boundary(?convexHull) as ?boundary)
+  
+  FILTER(str(?xGeom) < str(?yGeom))
+}
+
+# select distinct ?boundary ?envelope ?xGeom ?yGeom
+# where {
+# 	?x geo:asWKT ?xGeom.
+#   	?y geo:asWKT ?yGeom.
+  
+#   BIND(geof:union(?xGeom, ?yGeom) as ?union)
+#   BIND(geof:envelope(?union) as ?envelope)
+#   BIND(geof:boundary(?envelope) as ?boundary)
+  
+#   FILTER(str(?xGeom) < str(?yGeom))
+# }
+
+# select distinct (geof:boundary(geof:union(?xGeom, ?yGeom)) as ?s)
+# where {
+# 	?x geo:asWKT ?xGeom.
+# 	?y geo:asWKT ?yGeom.
+# }
