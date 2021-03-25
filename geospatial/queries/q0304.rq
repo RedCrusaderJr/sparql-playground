@@ -1,0 +1,18 @@
+#title:Example 3 (Using a function)
+#comment:Find all features that touch the union of feature my:A and feature my:D, where computations are based on my:hasExactGeometry.
+#comment:result => my:C
+
+#tags:geof:sfTouches,geof:union,function
+#color:ex-blue
+#img:geosparql-example-objects
+
+SELECT ?f
+WHERE {
+    ?f my:hasExactGeometry ?fGeom .
+    ?fGeom geo:asWKT ?fWKT .
+    my:A my:hasExactGeometry ?aGeom .
+    ?aGeom geo:asWKT ?aWKT .
+    my:D my:hasExactGeometry ?dGeom .
+    ?dGeom geo:asWKT ?dWKT .
+    FILTER (geof:sfTouches(?fWKT, geof:union(?aWKT, ?dWKT)))
+}

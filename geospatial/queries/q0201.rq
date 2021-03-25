@@ -1,17 +1,18 @@
 #title:Landmarks withing the Polygon
 #comment:Landmarks with coordinates withing the Polygon
 
-#tags:geof:sfWithin,polygon
-#color:ex-blue
+#tags:geof:sfWithin,polygon,filter
+#color:ex-yellow
 #img:
   
 SELECT *
 WHERE {
   ?lmA a ex:Landmark ;
-       geo:hasGeometry [ geo:asWKT ?coord1 ].
-  
-  ?coord1 geo:sfWithin '''
-        <http://www.opengis.net/def/crs/OGC/1.3/CRS84>
+       geo:hasGeometry ?Geom.
+
+  ?Geom geo:asWKT ?WKT.
+
+  FILTER(geof:sfWithin(?WKT, '''
             Polygon ((90 90, -90 90, -90 -90, 90 -90, 90 90))
-        '''^^geo:wktLiteral
+        '''^^geo:wktLiteral))
 }

@@ -1,0 +1,21 @@
+#title:q-union
+
+#tags:geof:union
+#color:ex-green
+#img:
+
+select distinct ?union ?xGeom ?yGeom
+where {
+	?x geo:asWKT ?xGeom.
+	?y geo:asWKT ?yGeom.
+  
+  BIND(geof:union(?xGeom, ?yGeom) as ?union)
+  
+  FILTER(str(?xGeom) < str(?yGeom))
+}
+
+# select distinct (geof:union(?xGeom, ?yGeom) as ?s)
+# where {
+# 	?x geo:asWKT ?xGeom.
+# 	?y geo:asWKT ?yGeom.
+# }

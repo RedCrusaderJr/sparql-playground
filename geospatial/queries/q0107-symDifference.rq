@@ -1,0 +1,23 @@
+#title:q-symDifference
+
+#tags:geof:symDifference
+#color:ex-green
+#img:
+
+select distinct ?unionSymDiff ?union ?xGeom ?symDiff ?yGeom  
+where {
+	?x geo:asWKT ?xGeom.
+	?y geo:asWKT ?yGeom.
+  
+  BIND(geof:union(?xGeom, ?yGeom) as ?union)
+  BIND(geof:symDifference(?yGeom, ?xGeom) as ?symDiff)
+  BIND(geof:symDifference(?union, ?xGeom) as ?unionSymDiff)
+  
+  FILTER(str(?xGeom) < str(?yGeom))
+}
+
+# select distinct (geof:symDifference(?xGeom, ?yGeom) as ?s)
+# where {
+# 	?x geo:asWKT ?xGeom.
+# 	?y geo:asWKT ?yGeom.
+# }

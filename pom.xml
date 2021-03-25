@@ -18,7 +18,7 @@
 		    <dependency>
 			    <groupId>org.eclipse.rdf4j</groupId>
 			    <artifactId>rdf4j-bom</artifactId>
-			    <version>3.6.0</version>
+			    <version>3.6.1</version>
 			    <type>pom</type>
 			    <scope>import</scope>
 		    </dependency>
@@ -27,20 +27,31 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>org.eclipse.rdf4j</groupId>
+			<artifactId>rdf4j-storage</artifactId>
+			<type>pom</type>
+			<version>3.6.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.rdf4j</groupId>
+			<artifactId>rdf4j-queryalgebra-geosparql</artifactId>
+			<version>3.6.1</version>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.5.13</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.rdf4j</groupId>
-			<artifactId>rdf4j-storage</artifactId>
-			<type>pom</type>
-			<version>3.6.0</version>
+			<groupId>com.marklogic</groupId>
+			<artifactId>marklogic-rdf4j</artifactId>
+			<version>1.2.2</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.rdf4j</groupId>
-			<artifactId>rdf4j-queryalgebra-geosparql</artifactId>
-		  </dependency>
+			<groupId>com.marklogic</groupId>
+			<artifactId>marklogic-client-api</artifactId>
+			<version>5.4.0</version>
+		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
@@ -81,18 +92,7 @@
 			<artifactId>slf4j-jdk14</artifactId>
 			<version>1.7.13</version>
 		</dependency>
-		<dependency>
-			<groupId>com.marklogic</groupId>
-			<artifactId>marklogic-rdf4j</artifactId>
-			<version>1.2.2</version>
-		</dependency>
-		<dependency>
-			<groupId>com.marklogic</groupId>
-			<artifactId>marklogic-client-api</artifactId>
-			<version>5.4.0</version>
-		</dependency>
 	</dependencies>
-
 	<repositories>
 		<repository>
 			<id>jcenter</id>

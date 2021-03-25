@@ -1,0 +1,19 @@
+#title:Example 3 (Using a predicate)
+#comment:Find all features that touch the union of feature my:A and feature my:D, where computations are based on my:hasExactGeometry.
+#comment:result => my:C
+
+#tags:geo:sfTouches,geof:union,predicate
+#color:ex-blue
+#img:geosparql-example-objects
+
+SELECT ?f
+WHERE {
+    ?f my:hasExactGeometry ?fGeom .
+    ?fGeom geo:asWKT ?fWKT .
+    my:A my:hasExactGeometry ?aGeom .
+    ?aGeom geo:asWKT ?aWKT .
+    my:D my:hasExactGeometry ?dGeom .
+    ?dGeom geo:asWKT ?dWKT .
+    BIND(geof:union(?aWKT, ?dWKT) AS ?union) .
+    ?fGeom geo:sfTouches ?union
+}

@@ -1,6 +1,10 @@
 package swiss.sib.sparql.playground.repository.impl;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -21,6 +25,7 @@ import org.eclipse.rdf4j.repository.sail.SailRepository;
 import org.eclipse.rdf4j.rio.*;
 import org.eclipse.rdf4j.sail.memory.MemoryStore;
 import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
+
 import org.springframework.beans.factory.InitializingBean;
 
 import swiss.sib.sparql.playground.Application;
@@ -58,17 +63,19 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 			logger.info("Found repository type property! Value:" + repositoryType);
 		}
 
-		File ttlFile = new File(Application.FOLDER + "/ttl-data");
+		// File ttlFile = new Directory(); (Application.FOLDER + "/ttl-data");
+		File ttlFolder = new File(Application.FOLDER + "/ttl-data");
+		File rdfFolder = new File(Application.FOLDER + "/rdf-data");
 
 		try {
 			if (repositoryType == RepositoryType.DEFAULT) {
-				initializeDefaultRepository(ttlFile);
+				initializeDefaultRepository(ttlFolder, rdfFolder);
 
 			} else if (repositoryType == RepositoryType.NATIVE) {
-				initializeNativeRepository(ttlFile);
+				initializeNativeRepository(ttlFolder, rdfFolder);
 
 			} else if (repositoryType == RepositoryType.MARK_LOGIC) {
-				initializeMarklogicRepository(ttlFile);
+				initializeMarklogicRepository(ttlFolder, rdfFolder);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -82,17 +89,24 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 	}
 
 	// load data in-memory
-	private void initializeDefaultRepository(File ttlFile) throws RDFParseException, RepositoryException, IOException {
+	private void initializeDefaultRepository(File ttlFolder, File rdfFolder)
+			throws RDFParseException, RepositoryException, IOException {
 		logger.info("Initializing in memory repository");
 		repository = new SailRepository(new MemoryStore());
 		repository.init();
 
-		logger.info("Loading turtle files from " + ttlFile);
-		addTTLFiles(ttlFile, repository.getConnection());
+		RepositoryConnection connection = repository.getConnection();
+
+		logger.info("Loading turtle files from " + ttlFolder);
+		addTTLFiles(ttlFolder, connection);
+
+		logger.info("Loading turtle files from " + rdfFolder);
+		addRDFFiles(rdfFolder, connection);
 	}
 
 	// file storage
-	private void initializeNativeRepository(File ttlFile) throws RDFParseException, RepositoryException, IOException {
+	private void initializeNativeRepository(File ttlFolder, File rdfFolder)
+			throws RDFParseException, RepositoryException, IOException {
 		File rdf4jDataFolder = new File(Application.FOLDER + "/rdf4j-db");
 		File rdf4jDataValueFile = new File(rdf4jDataFolder.getPath() + "/values.dat");
 
@@ -104,11 +118,13 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 			repository.init();
 
 			logger.info("No previous sesame repository found in " + rdf4jDataValueFile);
-			logger.info("Loading turtle files from " + ttlFile);
-			logger.info(
-					"Depending on the number of triplets, this may take some time to load the first time, please be patient ....");
+			RepositoryConnection connection = repository.getConnection();
 
-			addTTLFiles(ttlFile, repository.getConnection());
+			logger.info("Loading turtle files from " + ttlFolder);
+			addTTLFiles(ttlFolder, connection);
+
+			logger.info("Loading turtle files from " + rdfFolder);
+			addRDFFiles(rdfFolder, connection);
 
 		} else { // do not load data, as file already exists... read log info
 			repository.init();
@@ -119,7 +135,7 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 	}
 
 	// ml connection
-	private void initializeMarklogicRepository(File ttlFile)
+	private void initializeMarklogicRepository(File ttlFolder, File rdfFolder)
 			throws RDFParseException, RepositoryException, IOException {
 		logger.info("Initializing MarkLogic repository");
 
@@ -134,8 +150,13 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 			return;
 		}
 
-		logger.info("Loading turtle files from " + ttlFile);
-		addTTLFiles(ttlFile, repository.getConnection());
+		RepositoryConnection connection = repository.getConnection();
+
+		logger.info("Loading turtle files from " + ttlFolder);
+		addTTLFiles(ttlFolder, connection);
+
+		logger.info("Loading turtle files from " + rdfFolder);
+		addRDFFiles(rdfFolder, connection);
 	}
 
 	private void addTTLFiles(final File folder, RepositoryConnection connection)
@@ -147,6 +168,21 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 				logger.debug("Loading " + fileEntry);
 
 				connection.add(fileEntry, null, RDFFormat.TURTLE, (Resource) null);
+			}
+		}
+
+		logger.info("Loading turtle files finished in " + (System.currentTimeMillis() - start) + " ms");
+	}
+
+	private void addRDFFiles(final File folder, RepositoryConnection connection)
+			throws RDFParseException, RepositoryException, IOException {
+		long start = System.currentTimeMillis();
+
+		for (final File fileEntry : folder.listFiles()) {
+			if (!fileEntry.isDirectory()) {
+				logger.debug("Loading " + fileEntry);
+
+				connection.add(fileEntry, null, RDFFormat.RDFXML, (Resource) null);
 			}
 		}
 

@@ -1,0 +1,16 @@
+#title:Example 1 (Using a function)
+#comment:Find all features that feature my:A contains, where spatial calculations are based on my:hasExactGeometry.
+#comment:result => my:B, my:F
+
+#tags:geof:sfContains,function
+#color:ex-blue
+#img:geosparql-example-objects
+
+SELECT ?f
+WHERE {
+    my:A my:hasExactGeometry ?aGeom .
+    ?aGeom geo:asWKT ?aWKT .
+    ?f my:hasExactGeometry ?fGeom .
+    ?fGeom geo:asWKT ?fWKT .
+    FILTER (geof:sfContains(?aWKT, ?fWKT) && !sameTerm(?aGeom, ?fGeom))
+}

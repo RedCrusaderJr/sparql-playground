@@ -1,0 +1,12 @@
+#title:Example 5
+#comment:Find all features or geometries that overlap feature my:A.
+#comment:result => my:D, my:DExactGeom
+
+#tags:geo:sfOverlaps,predicate
+#color:ex-blue
+#img:geosparql-example-objects
+
+SELECT ?f
+WHERE {
+    ?f geo:sfOverlaps my:AExactGeom
+}

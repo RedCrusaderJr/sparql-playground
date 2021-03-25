@@ -1,0 +1,18 @@
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
+@prefix wkt: <http://www.opengis.net/ont/geosparql#> .
+
+[] 	geo:asWKT "POINT (2 6)"^^wkt:wktLiteral;
+	rdfs:label "Point 1".
+
+[] 	geo:asWKT "POLYGON ((1 6, 3 6, 3 8, 1 8, 1 6))"^^wkt:wktLiteral;
+	rdfs:label "Polygon 1".
+	
+[] 	geo:asWKT "POLYGON ((3 4, 4 4, 4 5, 3 5, 3 4))"^^wkt:wktLiteral;
+	rdfs:label "Polygon 2".
+
+[] 	geo:asWKT "POLYGON ((6 1, 7 1, 7 2, 6 2, 6 1))"^^wkt:wktLiteral;
+	rdfs:label "Polygon 3".
+
+[] 	geo:asWKT "POLYGON ((2 3, 5 3, 5 7, 2 7, 2 3))"^^wkt:wktLiteral;
+	rdfs:label "Polygon 4".
