@@ -1,0 +1,15 @@
+#title:longitude-latitude
+#comment:query has a lot of loopholes
+
+#tags:point,long,lat
+#color:ex-red
+#img:400-data
+
+select distinct ?wkt ?point ?long ?lat
+where {
+	?x geo:asWKT ?wkt.
+	
+  bind(replace(str(?wkt), "^POINT(.*)$", "$1" ) as ?point)
+  bind( replace( str(?point), "^[^0-9\\.]*([0-9\\.]+) .*$", "$1" ) as ?long )
+  bind( replace( str(?point), "^.* ([0-9\\.]+)[^0-9\\.]*$", "$1" ) as ?lat )
+}
