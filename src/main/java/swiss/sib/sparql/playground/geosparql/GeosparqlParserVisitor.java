@@ -1,12 +1,13 @@
 package swiss.sib.sparql.playground.geosparql;
 
-//import org.eclipse.rdf4j.query.parser.serql.ASTVisitorBase;
-//import org.eclipse.rdf4j.query.parser.sparql.ast.SyntaxTreeBuilderVisitor;
+import java.util.Map;
+import org.eclipse.rdf4j.query.parser.sparql.AbstractASTVisitor;
 
-public class GeosparqlParserVisitor {// xtends ASTVisitorBase//implements GeosparqlParserVisitor {
+public class GeosparqlParserVisitor extends AbstractASTVisitor {
 
-	// public void visit() {
-	// //TODOs
-	// }
+	Map<String, String> prefixMap;
 
+	public GeosparqlParserVisitor(Map<String, String> prefixMap) {
+		this.prefixMap = prefixMap;
+	}
 }

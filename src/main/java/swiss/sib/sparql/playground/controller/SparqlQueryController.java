@@ -1,6 +1,9 @@
 package swiss.sib.sparql.playground.controller;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -10,13 +13,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.eclipse.rdf4j.query.*;
+import org.eclipse.rdf4j.query.parser.ParsedGraphQuery;
+import org.eclipse.rdf4j.query.parser.ParsedQuery;
+import org.eclipse.rdf4j.query.parser.ParsedTupleQuery;
+import org.eclipse.rdf4j.query.parser.QueryParserUtil;
+import org.eclipse.rdf4j.query.parser.sparql.ast.*;
 import org.eclipse.rdf4j.query.resultio.TupleQueryResultWriter;
 import org.eclipse.rdf4j.query.resultio.TupleQueryResultWriterFactory;
 import org.eclipse.rdf4j.query.resultio.sparqljson.SPARQLResultsJSONWriterFactory;
 import org.eclipse.rdf4j.query.resultio.sparqlxml.SPARQLResultsXMLWriterFactory;
 import org.eclipse.rdf4j.query.resultio.text.csv.SPARQLResultsCSVWriterFactory;
 import org.eclipse.rdf4j.query.resultio.text.tsv.SPARQLResultsTSVWriterFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MimeTypeUtils;
@@ -39,36 +46,118 @@ public class SparqlQueryController {
 			@RequestParam(value = "output", required = false) String output, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
-		if (queryStr != null) {
-			synchronized (this) {
-
-				TupleQueryResult queryResult = (TupleQueryResult) sparqlService.evaluateQuery(queryStr);
-
-				TupleQueryResultWriterFactory factory;
-				if (output != null && output.equalsIgnoreCase("csv")) {
-					factory = new SPARQLResultsCSVWriterFactory();
-					response.setContentType(MimeTypeUtils.TEXT_PLAIN_VALUE);
-					response.setHeader("Content-Disposition", "attachment; filename=" + "result." + output);
-
-				} else if (output != null && output.equalsIgnoreCase("tsv")) {
-					factory = new SPARQLResultsTSVWriterFactory();
-					response.setContentType(MimeTypeUtils.TEXT_PLAIN_VALUE);
-
-				} else if (output != null && output.equalsIgnoreCase("xml")) {
-					factory = new SPARQLResultsXMLWriterFactory();
-					response.setContentType(MimeTypeUtils.APPLICATION_XML_VALUE);
-
-				} else {
-					factory = new SPARQLResultsJSONWriterFactory();
-					response.setContentType(MimeTypeUtils.APPLICATION_JSON_VALUE);
-				}
-
-				renderInternal(factory, queryResult, request, response);
-			}
-
-		} else {
+		if (queryStr == null) {
 			throw new SparqlTutorialException("Missing parameter: ");
 		}
+
+		synchronized (this) {
+			TupleQueryResult queryResult = null;
+
+			try {
+				queryResult = (TupleQueryResult) sparqlService.evaluateQuery(queryStr);
+
+			} catch (SparqlTutorialException e) {
+				if (!e.getMessage().contains("Server Message: XDMP-UNDFUN")) {
+					logger.error(e.getMessage(), e);
+					throw e;
+				}
+
+				logger.debug(e.getMessage());
+				evaluateGeosparqlQuery(queryStr);
+
+			} finally {
+				finalize(queryStr, queryResult, output, request, response);
+			}
+		}
+	}
+
+	private void evaluateGeosparqlQuery(String queryStr) throws TokenMgrError, ParseException {
+		// try {
+		// parseQueryWithQueryParserUtil(queryStr);
+
+		// } catch (Exception e) {
+		// logger.error(e.getMessage(), e);
+		// }
+
+		try {
+			parseQueryWithSyntaxTreeBuilder(queryStr);
+
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	private void parseQueryWithQueryParserUtil(String queryStr) {
+		ParsedQuery pq = QueryParserUtil.parseQuery(QueryLanguage.SPARQL, queryStr, null);
+		logger.info(pq.toString());
+
+		if (pq instanceof ParsedTupleQuery) {
+			// SailTupleQuery query = new SailTupleQuery(pq, sparqlService Connection);
+			// TupleQueryResult result = query.evaluate();
+		} else if (pq instanceof ParsedGraphQuery) {
+			// etc for other query types
+		}
+	}
+
+	private void parseQueryWithSyntaxTreeBuilder(String queryStr) throws TokenMgrError, ParseException {
+		// Abstract Syntax Tree Query Container
+		ASTQueryContainer parsedTree = SyntaxTreeBuilder.parseQuery(queryStr);
+
+		List<ASTPrefixDecl> prefixDeclList = parsedTree.getPrefixDeclList();
+		Map<String, String> prefixMap = new LinkedHashMap<String, String>();
+
+		for (ASTPrefixDecl prefixDecl : prefixDeclList) {
+			String prefix = prefixDecl.getPrefix();
+			String iri = prefixDecl.getIRI().getValue();
+
+			if (prefixMap.containsKey(prefix)) {
+				throw new MalformedQueryException("Multiple prefix declarations for prefix: " + prefix);
+			}
+
+			prefixMap.put(prefix, iri);
+		}
+
+		SyntaxTreeBuilderVisitor v = null;
+		// QNameProcessor visitor = new QNameProcessor(prefixMap);
+
+		try {
+			// JJT - support for the Visitor Design Pattern jj tree
+			// .jj file extention -> The JavaCC grammar file
+			parsedTree.jjtAccept(v, null);
+
+		} catch (VisitorException e) {
+			throw new MalformedQueryException(e);
+		}
+	}
+
+	private void finalize(String queryStr, TupleQueryResult queryResult, String output, HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		TupleQueryResultWriterFactory factory;
+
+		if (queryResult == null) {
+			logger.error("Query Result is null.");
+			response.sendError(500, "Serialization error: Query Result is null.");
+		}
+
+		if (output != null && output.equalsIgnoreCase("csv")) {
+			factory = new SPARQLResultsCSVWriterFactory();
+			response.setContentType(MimeTypeUtils.TEXT_PLAIN_VALUE);
+			response.setHeader("Content-Disposition", "attachment; filename=" + "result." + output);
+
+		} else if (output != null && output.equalsIgnoreCase("tsv")) {
+			factory = new SPARQLResultsTSVWriterFactory();
+			response.setContentType(MimeTypeUtils.TEXT_PLAIN_VALUE);
+
+		} else if (output != null && output.equalsIgnoreCase("xml")) {
+			factory = new SPARQLResultsXMLWriterFactory();
+			response.setContentType(MimeTypeUtils.APPLICATION_XML_VALUE);
+
+		} else {
+			factory = new SPARQLResultsJSONWriterFactory();
+			response.setContentType(MimeTypeUtils.APPLICATION_JSON_VALUE);
+		}
+
+		renderInternal(factory, queryResult, request, response);
 	}
 
 	private void renderInternal(TupleQueryResultWriterFactory factory, TupleQueryResult tupleQueryResult,

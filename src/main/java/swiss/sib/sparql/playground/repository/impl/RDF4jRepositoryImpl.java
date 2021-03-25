@@ -52,7 +52,7 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 
 	@PostConstruct
 	public void init() throws Exception {
-		String repositoryTypeProperty = "";
+		String repositoryTypeProperty = "marklogic";
 		if (System.getProperty("repository.type") != null) {
 			repositoryTypeProperty = System.getProperty("repository.type");
 		}
