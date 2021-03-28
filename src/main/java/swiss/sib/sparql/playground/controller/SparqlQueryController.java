@@ -13,10 +13,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.eclipse.rdf4j.query.*;
-import org.eclipse.rdf4j.query.parser.ParsedGraphQuery;
-import org.eclipse.rdf4j.query.parser.ParsedQuery;
-import org.eclipse.rdf4j.query.parser.ParsedTupleQuery;
-import org.eclipse.rdf4j.query.parser.QueryParserUtil;
 import org.eclipse.rdf4j.query.parser.sparql.ast.*;
 import org.eclipse.rdf4j.query.resultio.TupleQueryResultWriter;
 import org.eclipse.rdf4j.query.resultio.TupleQueryResultWriterFactory;
@@ -31,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import swiss.sib.sparql.playground.exception.SparqlTutorialException;
+import swiss.sib.sparql.playground.geosparql.GeosparqlParserVisitor;
+import swiss.sib.sparql.playground.geosparql.functions.FunctionFactory;
 import swiss.sib.sparql.playground.service.SparqlService;
 
 @Controller
@@ -39,6 +37,11 @@ public class SparqlQueryController {
 
 	@Autowired
 	private SparqlService sparqlService;
+	private FunctionFactory factory;
+
+	public SparqlQueryController() {
+		factory = new FunctionFactory();
+	}
 
 	// Code taken from Sesame (before used to be in SparqlController)
 	@RequestMapping(value = "/sparql")
@@ -72,30 +75,13 @@ public class SparqlQueryController {
 	}
 
 	private void evaluateGeosparqlQuery(String queryStr) throws TokenMgrError, ParseException {
-		// try {
-		// parseQueryWithQueryParserUtil(queryStr);
-
-		// } catch (Exception e) {
-		// logger.error(e.getMessage(), e);
-		// }
-
 		try {
 			parseQueryWithSyntaxTreeBuilder(queryStr);
 
+			// todo: rest of the funtionalitz
+
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-		}
-	}
-
-	private void parseQueryWithQueryParserUtil(String queryStr) {
-		ParsedQuery pq = QueryParserUtil.parseQuery(QueryLanguage.SPARQL, queryStr, null);
-		logger.info(pq.toString());
-
-		if (pq instanceof ParsedTupleQuery) {
-			// SailTupleQuery query = new SailTupleQuery(pq, sparqlService Connection);
-			// TupleQueryResult result = query.evaluate();
-		} else if (pq instanceof ParsedGraphQuery) {
-			// etc for other query types
 		}
 	}
 
@@ -117,13 +103,12 @@ public class SparqlQueryController {
 			prefixMap.put(prefix, iri);
 		}
 
-		SyntaxTreeBuilderVisitor v = null;
-		// QNameProcessor visitor = new QNameProcessor(prefixMap);
+		GeosparqlParserVisitor visitor = new GeosparqlParserVisitor(factory, prefixMap);
 
 		try {
 			// JJT - support for the Visitor Design Pattern jj tree
 			// .jj file extention -> The JavaCC grammar file
-			parsedTree.jjtAccept(v, null);
+			parsedTree.jjtAccept(visitor, null);
 
 		} catch (VisitorException e) {
 			throw new MalformedQueryException(e);
