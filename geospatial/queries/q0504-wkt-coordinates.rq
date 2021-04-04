@@ -19,5 +19,6 @@ WHERE {
   ?postionPointId cim:PositionPoint.xPosition ?xPosition.
   ?postionPointId cim:PositionPoint.yPosition ?yPosition.
   
-  BIND(concat("POINT (", str(?xPosition), " ", str(?yPosition), ")") as ?wktPoint)
+  BIND(concat("POINT (", str(?xPosition), " ", str(?yPosition), ")") as ?strPoint)
+  BIND(strdt(?strPoint, geo:wktLiteral) as ?wktPoint)
 }
