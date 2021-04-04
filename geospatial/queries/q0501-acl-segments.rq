@@ -1,0 +1,16 @@
+#title:Get ACL segments
+#comment:
+
+#tags:aclSegment
+#color:ex-green
+#img:
+
+PREFIX cim: <http://iec.ch/TC57/CIM-generic#>
+
+SELECT DISTINCT ?name ?length ?mrid
+WHERE {
+  ?s cim:IdentifiedObject.name ?name.
+  ?s rdf:type cim:ACLineSegment.
+  ?s cim:Conductor.length ?length.
+  ?s cim:IdentifiedObject.mRID ?mrid.
+}

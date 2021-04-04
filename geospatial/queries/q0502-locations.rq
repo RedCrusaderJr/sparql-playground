@@ -1,0 +1,19 @@
+#title:Get Locations
+#comment:
+
+#tags:locations
+#color:ex-green
+#img:
+
+
+
+SELECT DISTINCT ?locationName ?psrName
+WHERE {
+  ?locationId rdf:type cim:Location.
+  ?locationId cim:IdentifiedObject.name ?locationName.
+  
+  ?psr rdfs:subClassOf+ cim:PowerSystemResource.
+  ?psrId rdf:type ?psr.
+  ?psrId cim:PowerSystemResource.Location ?locationId.
+  ?psrId cim:IdentifiedObject.name ?psrName.
+}
