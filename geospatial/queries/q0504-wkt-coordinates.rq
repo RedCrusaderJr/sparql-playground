@@ -1,0 +1,24 @@
+#title:Get WKT Coordinates
+#comment:
+
+#tags:wkt,coordinates
+#color:ex-green
+#img:
+
+SELECT DISTINCT ?psrName ?xPosition ?yPosition ?wktPoint
+WHERE {
+  ?locationId rdf:type cim:Location.
+  
+  ?psr rdfs:subClassOf+ cim:PowerSystemResource.
+  ?psrId rdf:type ?psr.
+  ?psrId cim:PowerSystemResource.Location ?locationId.
+  ?psrId cim:IdentifiedObject.name ?psrName.
+
+  ?postionPointId rdf:type cim:PositionPoint.
+  ?postionPointId cim:PositionPoint.Location ?locationId.
+  ?postionPointId cim:PositionPoint.xPosition ?xPosition.
+  ?postionPointId cim:PositionPoint.yPosition ?yPosition.
+  
+  BIND(concat("POINT (", str(?xPosition), " ", str(?yPosition), ")") as ?strPoint)
+  BIND(strdt(?strPoint, geo:wktLiteral) as ?wktPoint)
+}

@@ -1,0 +1,21 @@
+#title:Get Coordinates
+#comment:
+
+#tags:coordinates,position point
+#color:ex-green
+#img:
+
+SELECT DISTINCT ?psrName ?xPosition ?yPosition
+WHERE {
+  ?locationId rdf:type cim:Location.
+  
+  ?psr rdfs:subClassOf+ cim:PowerSystemResource.
+  ?psrId rdf:type ?psr.
+  ?psrId cim:PowerSystemResource.Location ?locationId.
+  ?psrId cim:IdentifiedObject.name ?psrName.
+
+  ?postionPointId rdf:type cim:PositionPoint.
+  ?postionPointId cim:PositionPoint.Location ?locationId.
+  ?postionPointId cim:PositionPoint.xPosition ?xPosition.
+  ?postionPointId cim:PositionPoint.yPosition ?yPosition.
+}
