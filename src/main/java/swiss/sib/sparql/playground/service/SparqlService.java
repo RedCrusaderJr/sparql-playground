@@ -7,13 +7,7 @@ import java.util.TreeMap;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.rdf4j.query.BooleanQuery;
-import org.eclipse.rdf4j.query.GraphQuery;
-import org.eclipse.rdf4j.query.Query;
-import org.eclipse.rdf4j.query.QueryEvaluationException;
-import org.eclipse.rdf4j.query.QueryInterruptedException;
-import org.eclipse.rdf4j.query.TupleQuery;
-import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.query.*;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +16,9 @@ import swiss.sib.sparql.playground.Application;
 import swiss.sib.sparql.playground.controller.SparqlController;
 import swiss.sib.sparql.playground.domain.SparqlQueryType;
 import swiss.sib.sparql.playground.exception.SparqlTutorialException;
+import swiss.sib.sparql.playground.geosparql.MarklogicSupport;
 import swiss.sib.sparql.playground.repository.RDF4jRepository;
+import swiss.sib.sparql.playground.repository.impl.RepositoryType;
 import swiss.sib.sparql.playground.utils.IOUtils;
 
 /**
@@ -33,14 +29,19 @@ import swiss.sib.sparql.playground.utils.IOUtils;
  */
 @Service
 public class SparqlService implements InitializingBean {
-
 	private static final Log logger = LogFactory.getLog(SparqlController.class);
 
 	@Autowired
 	private RDF4jRepository repository;
+	// TODO: autowire
+	private MarklogicSupport marklogicSupport;
 
 	private Map<String, String> prefixes = null;
 	private String prefixesString;
+
+	public SparqlService() {
+		marklogicSupport = new MarklogicSupport();
+	}
 
 	public Query getQuery(String queryStr) throws SparqlTutorialException {
 		return repository.prepareQuery(queryStr);
@@ -57,21 +58,36 @@ public class SparqlService implements InitializingBean {
 	}
 
 	public Object evaluateQuery(String queryStr) {
-		Query query = repository.prepareQuery(queryStr);
-		return evaluateQuery(query, SparqlQueryType.getQueryType(query));
+		try {
+			Query query = repository.prepareQuery(queryStr);
+			return evaluateQuery(query, SparqlQueryType.getQueryType(query));
+
+		} catch (QueryEvaluationException e) {
+			RepositoryType repositoryType = Application.getRepositoryType();
+
+			if (e.getMessage().contains("Server Message: XDMP-UNDFUN") && repositoryType == RepositoryType.MARK_LOGIC) {
+				return evaluateQueryWithMarklogic(queryStr);
+
+			} else {
+				logger.info("Query evaluation error", e);
+				throw new SparqlTutorialException("Query evaluation error: " + e.getMessage());
+			}
+		}
 	}
 
-	private Object evaluateQuery(Query query, SparqlQueryType queryType) throws SparqlTutorialException {
+	private Object evaluateQuery(Query query, SparqlQueryType queryType)
+			throws SparqlTutorialException, QueryEvaluationException {
 		try {
-
 			switch (queryType) {
-
 			case TUPLE_QUERY:
 				return ((TupleQuery) query).evaluate();
+
 			case GRAPH_QUERY:
 				return ((GraphQuery) query).evaluate();
+
 			case BOOLEAN_QUERY:
 				return ((BooleanQuery) query).evaluate();
+
 			default:
 				throw new SparqlTutorialException("Unsupported query type: " + query.getClass().getName());
 			}
@@ -79,10 +95,15 @@ public class SparqlService implements InitializingBean {
 		} catch (QueryInterruptedException e) {
 			logger.info("Query interrupted", e);
 			throw new SparqlTutorialException("Query evaluation took too long");
+		}
+	}
 
-		} catch (QueryEvaluationException e) {
-			logger.info("Query evaluation error", e);
-			throw new SparqlTutorialException("Query evaluation error: " + e.getMessage());
+	private Object evaluateQueryWithMarklogic(String queryStr) {
+		try {
+			return marklogicSupport.evaluateQuery(queryStr);
+
+		} catch (Exception e) {
+			throw new SparqlTutorialException(e);
 		}
 	}
 
@@ -104,7 +125,7 @@ public class SparqlService implements InitializingBean {
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		this.prefixesString = IOUtils.readFile(Application.FOLDER + "/prefixes.ttl", "");
+		this.prefixesString = IOUtils.readFile(Application.getFolder() + "/prefixes.ttl", "");
 
 		String prefixes[] = this.prefixesString.split("\n");
 		Map<String, String> m = new TreeMap<String, String>();
@@ -154,5 +175,4 @@ public class SparqlService implements InitializingBean {
 	public long countNumberOfTriples() {
 		return repository.countTriplets();
 	}
-
 }

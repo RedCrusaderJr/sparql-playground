@@ -1,4 +1,6 @@
-<export><workspace name="Sparql-playground-GeoSpatial"><query name="Distance" focus="true" listorder="1" taborder="1" active="true" database="8967445921499680360" server="17378417203308661926" database-name="sparql-playground" server-name="8111-sparql-playground" mode="javascript">'use strict';
+<export>
+<workspace name="Sparql-playground-GeoSpatial">
+<query name="Distance" focus="false" listorder="1" taborder="1" active="true" database="8967445921499680360" server="17378417203308661926" database-name="sparql-playground" server-name="8111-sparql-playground" mode="javascript">
 
 //landmarks
 let lmTriples = Array.from(cts.triples([], 
@@ -35,4 +37,109 @@ let point2 = sem.tripleObject(pointTriple2);
 //distance
 let distance = geo.distance(point1, point2, "units=meters")/1000;
 
-distance</query></workspace></export>
+distance
+</query>
+
+<query name="Idea 1" focus="false" listorder="2" taborder="2" active="true" database="8967445921499680360" server="17378417203308661926" database-name="sparql-playground" server-name="8111-sparql-playground" mode="javascript">
+declareUpdate();
+var sem = require("/MarkLogic/semantics.xqy");
+
+var query = `
+select distinct ?intersect ?myIntersect ?xGeom ?yGeom
+where {
+	?x geo:asWKT ?xGeom.
+	?y geo:asWKT ?yGeom.
+  
+  BIND(?myIntersect as ?intersect)
+  
+  FILTER(str(?xGeom) = str(?yGeom))
+}`;
+
+var functionResult = geo:polygon-intersects(xGeom, yGeom);
+var results = sem.sparql(query,{myIntersect:functionResult}});
+results
+</query>
+
+<query name="Idea 2" focus="false" listorder="3" taborder="3" active="true" database="8967445921499680360" server="17378417203308661926" database-name="sparql-playground" server-name="8111-sparql-playground" mode="javascript">
+declareUpdate();
+var sem = require("/MarkLogic/semantics.xqy");
+
+var query = `
+PREFIX xdmp: <http://marklogic.com/xdmp#>
+PREFIX geo:<http://www.opengis.net/ont/geosparql#>
+
+SELECT DISTINCT ?intersect ?xGeom ?yGeom
+WHERE {
+  ?x geo:asWKT ?xGeom.
+	?y geo:asWKT ?yGeom.
+  bind(xdmp:apply(?intersectFunction, ?xGeom, ?yGeom) as ?intersect)
+}`;
+
+var params = {  intersectFunction: geo.polygonIntersects }
+var results = sem.sparql(query,params);
+results
+</query>
+
+<query name="Insert Data" focus="false" listorder="4" taborder="4" active="true" database="5523013009738475207" server="6083025199173533748" database-name="my-new-db" server-name="App-Services" mode="javascript">
+declareUpdate();
+var sem = require("/MarkLogic/semantics.xqy");
+
+sem.rdfInsert(
+  sem.triple(sem.iri("http://www.example.org/dept/108/invoices/20963"),
+	     sem.iri("http://www.example.org/dept/108/invoices/paid"),
+             "true")) ;</query><query name="Evaluate Query" focus="false" listorder="5" taborder="5" active="true" database="5523013009738475207" server="6083025199173533748" database-name="my-new-db" server-name="App-Services" mode="javascript">declareUpdate();
+var sem = require("/MarkLogic/semantics.xqy");
+
+var query =`
+PREFIX inv: &lt;http://www.example.org/dept/108/invoices/&gt;
+SELECT ?predicate ?object
+WHERE { 
+  inv:20963 ?predicate ?object 
+}`;
+
+var result = sem.sparql(query);
+result</query><query name="Example 1 - Intersection" focus="true" listorder="6" taborder="6" active="true" database="8967445921499680360" server="17378417203308661926" database-name="sparql-playground" server-name="8111-sparql-playground" mode="javascript">declareUpdate();
+var sem = require("/MarkLogic/semantics.xqy");
+
+var query =`
+PREFIX cim:&lt;http://iec.ch/TC57/CIM-generic#&gt;
+PREFIX dbo:&lt;http://dbpedia.org/ontology/&gt;
+PREFIX dbp:&lt;http://dbpedia.org/property/&gt;
+PREFIX dbpedia:&lt;http://dbpedia.org/resource/&gt;
+PREFIX ex:&lt;http://example.org/&gt;
+PREFIX geo:&lt;http://www.opengis.net/ont/geosparql#&gt;
+PREFIX geof:&lt;http://www.opengis.net/def/function/geosparql/&gt;
+PREFIX my:&lt;http://example.org/ApplicationSchema#&gt;
+PREFIX rdf:&lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+PREFIX rdfs:&lt;http://www.w3.org/2000/01/rdf-schema#&gt;
+PREFIX tto:&lt;http://example.org/tuto/ontology#&gt;
+PREFIX ttr:&lt;http://example.org/tuto/resource#&gt;
+PREFIX uom:&lt;http://www.opengis.net/def/uom/OGC/1.0/&gt;
+PREFIX xsd:&lt;http://www.w3.org/2001/XMLSchema#&gt;
+PREFIX xdmp: &lt;http://marklogic.com/xdmp#&gt;
+
+SELECT DISTINCT ?psrName ?xPosition ?yPosition ?wktPoint ?intersect
+WHERE {
+  ?locationId rdf:type cim:Location.
+  
+  ?psr rdfs:subClassOf+ cim:PowerSystemResource.
+  ?psrId rdf:type ?psr.
+  ?psrId cim:PowerSystemResource.Location ?locationId.
+  ?psrId cim:IdentifiedObject.name ?psrName.
+
+  ?postionPointId rdf:type cim:PositionPoint.
+  ?postionPointId cim:PositionPoint.Location ?locationId.
+  ?postionPointId cim:PositionPoint.xPosition ?xPosition.
+  ?postionPointId cim:PositionPoint.yPosition ?yPosition.
+  
+  BIND(concat("POINT (", str(?xPosition), " ", str(?yPosition), ")") as ?strPoint)
+  BIND(strdt(?strPoint, geo:wktLiteral) as ?wktPoint)
+  BIND(xdmp:apply(?intersectFunction, ?wktPoint, ?wktPoint) as ?intersect) 
+}`;
+
+var params = {  intersectFunction: geo.polygonIntersects }
+var results = sem.sparql(query,params);
+results
+</query>
+</workspace>
+</export>

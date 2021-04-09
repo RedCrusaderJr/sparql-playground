@@ -18,14 +18,15 @@ import swiss.sib.sparql.playground.service.PageService;
 import swiss.sib.sparql.playground.utils.IOUtils;
 
 /**
- * Controller used to serve markdown pages (and images) located under pages folder
- * 
+ * Controller used to serve markdown pages (and images) located under pages
+ * folder
+ *
  * @author Daniel Teixeira http://github.com/ddtxra
  *
  */
 @RestController
 public class PagesController {
-	
+
 	@Autowired
 	PageService pageService;
 
@@ -38,24 +39,21 @@ public class PagesController {
 	public String page(@PathVariable("folder") String folder, @PathVariable("page") String page) throws IOException {
 		return pageService.getPage(page);
 	}
-	
+
 	@RequestMapping(value = "/assets/{asset}.{extension}")
-	public @ResponseBody byte[] asset(@PathVariable("asset") String asset, @PathVariable("extension") String extension) throws IOException {
-		return pageService.getFileOrTry(Application.FOLDER + "/pages/assets/" + asset + "." + extension, "assets/" + asset + "." + extension, extension);
+	public @ResponseBody byte[] asset(@PathVariable("asset") String asset, @PathVariable("extension") String extension)
+			throws IOException {
+		return pageService.getFileOrTry(Application.getFolder() + "/pages/assets/" + asset + "." + extension,
+				"assets/" + asset + "." + extension, extension);
 	}
-	
-	
 
 	@RequestMapping(value = "/assets/{asset}.pdf")
 	public void pdfDownload(@PathVariable("asset") String asset, HttpServletResponse response) throws IOException {
-        // set headers for the response
-        String headerKey = "Content-Disposition";
-        String headerValue = String.format("attachment; filename=\"%s\"", asset);
-        response.setHeader(headerKey, headerValue);
+		// set headers for the response
+		String headerKey = "Content-Disposition";
+		String headerValue = String.format("attachment; filename=\"%s\"", asset);
+		response.setHeader(headerKey, headerValue);
 
-        IOUtils.streamFile(new File("assets/" + asset + ".pdf"), response.getOutputStream());
-		 
+		IOUtils.streamFile(new File("assets/" + asset + ".pdf"), response.getOutputStream());
 	}
-	
-
 }

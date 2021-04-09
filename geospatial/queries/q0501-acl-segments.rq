@@ -5,8 +5,6 @@
 #color:ex-green
 #img:
 
-PREFIX cim: <http://iec.ch/TC57/CIM-generic#>
-
 SELECT DISTINCT ?name ?length ?mrid
 WHERE {
   ?s cim:IdentifiedObject.name ?name.

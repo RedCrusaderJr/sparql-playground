@@ -1,81 +1,105 @@
 package swiss.sib.sparql.playground.geosparql;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.*;
 import org.eclipse.rdf4j.query.parser.sparql.AbstractASTVisitor;
 import org.eclipse.rdf4j.query.parser.sparql.ast.*;
-
-import swiss.sib.sparql.playground.geosparql.functions.FunctionFactory;
-import swiss.sib.sparql.playground.geosparql.functions.GeosparqlFunction;
-import swiss.sib.sparql.playground.geosparql.functions.GeosparqlFunctionParameters;
 
 public class GeosparqlParserVisitor extends AbstractASTVisitor {
 	private static final Log logger = LogFactory.getLog(GeosparqlParserVisitor.class);
 
-	private FunctionFactory factory;
+	private FunctionMapper functionMapper;
 	private Map<String, String> prefixMap;
 
-	public GeosparqlParserVisitor(FunctionFactory factory, Map<String, String> prefixMap) {
-		this.factory = factory;
+	public GeosparqlParserVisitor(FunctionMapper functionMapper, Map<String, String> prefixMap) {
+		this.functionMapper = functionMapper;
 		this.prefixMap = prefixMap;
 	}
 
 	@Override
 	public Object visit(ASTFunctionCall node, Object data) throws VisitorException {
-		String functionName = extractFunctionName(node);
-		GeosparqlFunctionParameters parameters = extractFunctionParameters(node, functionName);
+		ASTQName functionName = extractFunctionName(node);
+		List<ASTVar> params = extractFunctionParams(node);
 
 		try {
-			GeosparqlFunction function = factory.createFunction(functionName, parameters);
-			Object result = function.Execute();
-			return result;
+			ASTFunctionCall applyFunctionCall = new ASTFunctionCall(node.hashCode());
+			ASTQName applyFunctionName = new ASTQName(functionName.hashCode());
+			applyFunctionName.setValue(getFullUri("xdmp:apply"));
+
+			int index = 0;
+			applyFunctionCall.jjtAddChild(applyFunctionName, index++);
+
+			ASTVar functionPointer = new ASTVar(555);
+			functionPointer.setName(functionMapper.getFunctionAbbreviationByUri(getFullUri(functionName.getValue())));
+			applyFunctionCall.jjtAddChild(functionPointer, index++);
+
+			for (ASTVar param : params) {
+				applyFunctionCall.jjtAddChild(param, index++);
+			}
+
+			node.jjtReplaceWith(applyFunctionCall);
+			// TODO: random ID for function pointer
+			// TODO: parent children relations, check in detail
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			return null;
 		}
+
+		return null;
 	}
 
-	private String extractFunctionName(ASTFunctionCall node) {
+	private ASTQName extractFunctionName(ASTFunctionCall node) {
 		try {
 			String className = "org.eclipse.rdf4j.query.parser.sparql.ast.ASTQName";
 
 			@SuppressWarnings("unchecked")
 			Class<ASTQName> type = (Class<ASTQName>) Class.forName(className);
 			ASTQName qName = node.jjtGetChild(type);
-
-			String functioName = qName.getValue();
-			String fullFunctionName = functioName;
-
-			String[] splitParts = functioName.split(":");
-			if (splitParts.length == 2 && prefixMap.containsKey(splitParts[0])) {
-				fullFunctionName = prefixMap.get(splitParts[0]) + splitParts[1];
-			}
-
-			return fullFunctionName;
+			return qName;
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			return "";
+			return null;
 		}
 	}
 
-	private GeosparqlFunctionParameters extractFunctionParameters(ASTFunctionCall node, String functionName) {
+	private List<ASTVar> extractFunctionParams(ASTFunctionCall node) {
 		try {
 			String className = "org.eclipse.rdf4j.query.parser.sparql.ast.ASTVar";
-
 			@SuppressWarnings("unchecked")
 			Class<ASTVar> type = (Class<ASTVar>) Class.forName(className);
-			List<ASTVar> argumetns = node.jjtGetChildren(type); // ASTVar has only a variable name.... and value is
-																// determined by the rest of the query....
-			return null;
+			List<ASTVar> params = node.jjtGetChildren(type);
+			return params;
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			return null;
+			return new ArrayList<ASTVar>();
 		}
 	}
+
+	private String getFullUri(String functioName) {
+		String fullFunctionName = functioName;
+
+		String[] splitParts = functioName.split(":");
+		if (splitParts.length == 2 && prefixMap.containsKey(splitParts[0])) {
+			fullFunctionName = prefixMap.get(splitParts[0]) + splitParts[1];
+		}
+
+		return fullFunctionName;
+	}
 }
+
+// TODO:
+// sb.append("var params = { intersectFunction: geo.polygon-intersects }" +
+// newLine);
+// sb.append("prefix xdmp: <http://marklogic.com/xdmp#>" + newLine);
+// sb.append("select distinct ?intersect ?xGeom ?yGeom" + newLine);
+// sb.append("where {" + newLine);
+// sb.append("?x geo:asWKT ?xGeom." + newLine);
+// sb.append("?y geo:asWKT ?yGeom." + newLine);
+// sb.append("bind(xdmp:apply(?intersectFunction, ?xGeom, ?yGeom) as
+// ?intersect)" + newLine);
+// sb.append("}" + newLine);

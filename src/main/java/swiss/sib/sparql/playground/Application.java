@@ -8,6 +8,8 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 
+import swiss.sib.sparql.playground.repository.impl.RepositoryType;
+
 import java.io.File;
 
 /**
@@ -21,15 +23,33 @@ public class Application {
 
 	private static final Log logger = LogFactory.getLog(Application.class);
 
-	public static String FOLDER = "default"; // e.g. nextprot or uniprot
-	public static String MARKLOGIC_ADDRESS = "localhost";
-	public static int MARKLOGIC_PORT = 8111;
+	private static String FOLDER = "default"; // e.g. nextprot or uniprot
+	private static RepositoryType REPOSITORY_TYPE = RepositoryType.DEFAULT;
+	private static String MARKLOGIC_ADDRESS = "localhost";
+	private static int MARKLOGIC_PORT = 8111;
+
+	public static String getFolder() {
+		return FOLDER;
+	}
+
+	public static RepositoryType getRepositoryType() {
+		return REPOSITORY_TYPE;
+	}
+
+	public static String getMarklogicAddress() {
+		return MARKLOGIC_ADDRESS;
+	}
+
+	public static int getMarklogicPort() {
+		return MARKLOGIC_PORT;
+	}
 
 	public static void main(String[] args) {
 		logger.info("SPARQL Playground\n");
 
 		try {
 			setFolder(args);
+			setRepositoryType();
 			setMarkLogicSettings(args);
 
 			SpringApplication.run(Application.class, args);
@@ -56,6 +76,21 @@ public class Application {
 		}
 
 		logger.debug("FOLDER set to: " + FOLDER);
+	}
+
+	private static void setRepositoryType() {
+		String repositoryTypeProperty = "marklogic";
+		if (System.getProperty("repository.type") != null) {
+			repositoryTypeProperty = System.getProperty("repository.type");
+		}
+
+		REPOSITORY_TYPE = RepositoryType.getRepositoryType(repositoryTypeProperty);
+
+		if (REPOSITORY_TYPE != RepositoryType.DEFAULT) {
+			logger.info("Found repository type property! Value: " + REPOSITORY_TYPE);
+		} else {
+			logger.info("Repository type was set to a default value: " + REPOSITORY_TYPE);
+		}
 	}
 
 	private static void setMarkLogicSettings(String[] args) {

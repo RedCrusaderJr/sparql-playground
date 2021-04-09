@@ -1,9 +1,6 @@
 package swiss.sib.sparql.playground.controller;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +10,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import org.eclipse.rdf4j.query.*;
-import org.eclipse.rdf4j.query.parser.sparql.ast.*;
 import org.eclipse.rdf4j.query.resultio.TupleQueryResultWriter;
 import org.eclipse.rdf4j.query.resultio.TupleQueryResultWriterFactory;
 import org.eclipse.rdf4j.query.resultio.sparqljson.SPARQLResultsJSONWriterFactory;
@@ -27,8 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import swiss.sib.sparql.playground.exception.SparqlTutorialException;
-import swiss.sib.sparql.playground.geosparql.GeosparqlParserVisitor;
-import swiss.sib.sparql.playground.geosparql.functions.FunctionFactory;
 import swiss.sib.sparql.playground.service.SparqlService;
 
 @Controller
@@ -37,11 +31,6 @@ public class SparqlQueryController {
 
 	@Autowired
 	private SparqlService sparqlService;
-	private FunctionFactory factory;
-
-	public SparqlQueryController() {
-		factory = new FunctionFactory();
-	}
 
 	// Code taken from Sesame (before used to be in SparqlController)
 	@RequestMapping(value = "/sparql")
@@ -50,7 +39,7 @@ public class SparqlQueryController {
 			HttpServletResponse response) throws Exception {
 
 		if (queryStr == null) {
-			throw new SparqlTutorialException("Missing parameter: ");
+			throw new SparqlTutorialException("Missing parameter: query string is missing.");
 		}
 
 		synchronized (this) {
@@ -60,58 +49,12 @@ public class SparqlQueryController {
 				queryResult = (TupleQueryResult) sparqlService.evaluateQuery(queryStr);
 
 			} catch (SparqlTutorialException e) {
-				if (!e.getMessage().contains("Server Message: XDMP-UNDFUN")) {
-					logger.error(e.getMessage(), e);
-					throw e;
-				}
-
-				logger.debug(e.getMessage());
-				evaluateGeosparqlQuery(queryStr);
+				logger.error(e.getMessage(), e);
+				throw e;
 
 			} finally {
 				finalize(queryStr, queryResult, output, request, response);
 			}
-		}
-	}
-
-	private void evaluateGeosparqlQuery(String queryStr) throws TokenMgrError, ParseException {
-		try {
-			parseQueryWithSyntaxTreeBuilder(queryStr);
-
-			// todo: rest of the funtionalitz
-
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		}
-	}
-
-	private void parseQueryWithSyntaxTreeBuilder(String queryStr) throws TokenMgrError, ParseException {
-		// Abstract Syntax Tree Query Container
-		ASTQueryContainer parsedTree = SyntaxTreeBuilder.parseQuery(queryStr);
-
-		List<ASTPrefixDecl> prefixDeclList = parsedTree.getPrefixDeclList();
-		Map<String, String> prefixMap = new LinkedHashMap<String, String>();
-
-		for (ASTPrefixDecl prefixDecl : prefixDeclList) {
-			String prefix = prefixDecl.getPrefix();
-			String iri = prefixDecl.getIRI().getValue();
-
-			if (prefixMap.containsKey(prefix)) {
-				throw new MalformedQueryException("Multiple prefix declarations for prefix: " + prefix);
-			}
-
-			prefixMap.put(prefix, iri);
-		}
-
-		GeosparqlParserVisitor visitor = new GeosparqlParserVisitor(factory, prefixMap);
-
-		try {
-			// JJT - support for the Visitor Design Pattern jj tree
-			// .jj file extention -> The JavaCC grammar file
-			parsedTree.jjtAccept(visitor, null);
-
-		} catch (VisitorException e) {
-			throw new MalformedQueryException(e);
 		}
 	}
 
