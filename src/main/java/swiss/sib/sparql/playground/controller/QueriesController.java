@@ -32,17 +32,18 @@ public class QueriesController {
 
 	@RequestMapping(value = "/queries", produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<SparqlQuery> queries() throws IOException {
-		return queryDictionary.getQueries(Application.FOLDER + "/queries");
+		return queryDictionary.getQueries(Application.getFolder() + "/queries");
 	}
 
 	@RequestMapping(value = "/queries/{queryId}.{extension}")
 	public @ResponseBody byte[] queryImage(@PathVariable("queryId") String queryId,
 			@PathVariable("extension") String extension) throws IOException {
-		return pageService.getFileOrTry(Application.FOLDER + "/queries/" + queryId + "." + extension, null, extension);
+		return pageService.getFileOrTry(Application.getFolder() + "/queries/" + queryId + "." + extension, null,
+				extension);
 	}
 
 	@RequestMapping(value = "/rdfhelp", produces = MediaType.APPLICATION_JSON_VALUE)
 	public String rdfhelp() throws IOException {
-		return IOUtils.readFile(Application.FOLDER + "/rdfhelp.json", "");
+		return IOUtils.readFile(Application.getFolder() + "/rdfhelp.json", "");
 	}
 }

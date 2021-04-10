@@ -15,7 +15,6 @@ import com.marklogic.semantics.rdf4j.MarkLogicRepository;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.eclipse.rdf4j.common.iteration.Iterations;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
@@ -52,30 +51,17 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 
 	@PostConstruct
 	public void init() throws Exception {
-		String repositoryTypeProperty = "";
-		if (System.getProperty("repository.type") != null) {
-			repositoryTypeProperty = System.getProperty("repository.type");
-		}
-
-		RepositoryType repositoryType = RepositoryType.getRepositoryType(repositoryTypeProperty);
-
-		if (repositoryType != RepositoryType.DEFAULT) {
-			logger.info("Found repository type property! Value:" + repositoryType);
-		}
-
-		// File ttlFile = new Directory(); (Application.FOLDER + "/ttl-data");
-		File ttlFolder = new File(Application.FOLDER + "/ttl-data");
-		File rdfFolder = new File(Application.FOLDER + "/rdf-data");
-
 		try {
+			RepositoryType repositoryType = Application.getRepositoryType();
+
 			if (repositoryType == RepositoryType.DEFAULT) {
-				initializeDefaultRepository(ttlFolder, rdfFolder);
+				initializeDefaultRepository();
 
 			} else if (repositoryType == RepositoryType.NATIVE) {
-				initializeNativeRepository(ttlFolder, rdfFolder);
+				initializeNativeRepository();
 
 			} else if (repositoryType == RepositoryType.MARK_LOGIC) {
-				initializeMarklogicRepository(ttlFolder, rdfFolder);
+				initializeMarklogicRepository();
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -89,25 +75,19 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 	}
 
 	// load data in-memory
-	private void initializeDefaultRepository(File ttlFolder, File rdfFolder)
-			throws RDFParseException, RepositoryException, IOException {
+	private void initializeDefaultRepository() throws RDFParseException, RepositoryException, IOException {
 		logger.info("Initializing in memory repository");
 		repository = new SailRepository(new MemoryStore());
 		repository.init();
 
 		RepositoryConnection connection = repository.getConnection();
-
-		logger.info("Loading turtle files from " + ttlFolder);
-		addTTLFiles(ttlFolder, connection);
-
-		logger.info("Loading turtle files from " + rdfFolder);
-		addRDFFiles(rdfFolder, connection);
+		addTTLFiles(connection);
+		addRDFFiles(connection);
 	}
 
 	// file storage
-	private void initializeNativeRepository(File ttlFolder, File rdfFolder)
-			throws RDFParseException, RepositoryException, IOException {
-		File rdf4jDataFolder = new File(Application.FOLDER + "/rdf4j-db");
+	private void initializeNativeRepository() throws RDFParseException, RepositoryException, IOException {
+		File rdf4jDataFolder = new File(Application.getFolder() + "/rdf4j-db");
 		File rdf4jDataValueFile = new File(rdf4jDataFolder.getPath() + "/values.dat");
 
 		logger.info("Initializing native repository in " + rdf4jDataFolder);
@@ -118,13 +98,10 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 			repository.init();
 
 			logger.info("No previous sesame repository found in " + rdf4jDataValueFile);
+
 			RepositoryConnection connection = repository.getConnection();
-
-			logger.info("Loading turtle files from " + ttlFolder);
-			addTTLFiles(ttlFolder, connection);
-
-			logger.info("Loading turtle files from " + rdfFolder);
-			addRDFFiles(rdfFolder, connection);
+			addTTLFiles(connection);
+			addRDFFiles(connection);
 
 		} else { // do not load data, as file already exists... read log info
 			repository.init();
@@ -135,12 +112,11 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 	}
 
 	// ml connection
-	private void initializeMarklogicRepository(File ttlFolder, File rdfFolder)
-			throws RDFParseException, RepositoryException, IOException {
+	private void initializeMarklogicRepository() throws RDFParseException, RepositoryException, IOException {
 		logger.info("Initializing MarkLogic repository");
 
 		SecurityContext securityContext = new DatabaseClientFactory.DigestAuthContext("admin", "admin");
-		repository = new MarkLogicRepository(Application.MARKLOGIC_ADDRESS, Application.MARKLOGIC_PORT,
+		repository = new MarkLogicRepository(Application.getMarklogicAddress(), Application.getMarklogicPort(),
 				securityContext);
 		repository.init();
 
@@ -151,19 +127,22 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 		}
 
 		RepositoryConnection connection = repository.getConnection();
-
-		logger.info("Loading turtle files from " + ttlFolder);
-		addTTLFiles(ttlFolder, connection);
-
-		logger.info("Loading turtle files from " + rdfFolder);
-		addRDFFiles(rdfFolder, connection);
+		addTTLFiles(connection);
+		addRDFFiles(connection);
 	}
 
-	private void addTTLFiles(final File folder, RepositoryConnection connection)
+	private void addTTLFiles(RepositoryConnection connection)
 			throws RDFParseException, RepositoryException, IOException {
 		long start = System.currentTimeMillis();
 
-		for (final File fileEntry : folder.listFiles()) {
+		File ttlFolder = new File(Application.getFolder() + "/ttl-data");
+		if (!ttlFolder.exists()) {
+			logger.error("Folder with Turtle data was not found. Path: " + ttlFolder);
+		}
+
+		logger.info("Loading turtle files from " + ttlFolder);
+
+		for (final File fileEntry : ttlFolder.listFiles()) {
 			if (!fileEntry.isDirectory()) {
 				logger.debug("Loading " + fileEntry);
 
@@ -174,11 +153,19 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 		logger.info("Loading turtle files finished in " + (System.currentTimeMillis() - start) + " ms");
 	}
 
-	private void addRDFFiles(final File folder, RepositoryConnection connection)
+	private void addRDFFiles(RepositoryConnection connection)
 			throws RDFParseException, RepositoryException, IOException {
 		long start = System.currentTimeMillis();
 
-		for (final File fileEntry : folder.listFiles()) {
+		File rdfFolder = new File(Application.getFolder() + "/rdf-data");
+
+		if (!rdfFolder.exists()) {
+			logger.error("Folder with RDF data was not found. Path: " + rdfFolder);
+		}
+
+		logger.info("Loading rdf files from " + rdfFolder);
+
+		for (final File fileEntry : rdfFolder.listFiles()) {
 			if (!fileEntry.isDirectory()) {
 				logger.debug("Loading " + fileEntry);
 

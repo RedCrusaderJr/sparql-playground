@@ -16,7 +16,6 @@ import org.eclipse.rdf4j.query.resultio.sparqljson.SPARQLResultsJSONWriterFactor
 import org.eclipse.rdf4j.query.resultio.sparqlxml.SPARQLResultsXMLWriterFactory;
 import org.eclipse.rdf4j.query.resultio.text.csv.SPARQLResultsCSVWriterFactory;
 import org.eclipse.rdf4j.query.resultio.text.tsv.SPARQLResultsTSVWriterFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MimeTypeUtils;
@@ -39,36 +38,54 @@ public class SparqlQueryController {
 			@RequestParam(value = "output", required = false) String output, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 
-		if (queryStr != null) {
-			synchronized (this) {
+		if (queryStr == null) {
+			throw new SparqlTutorialException("Missing parameter: query string is missing.");
+		}
 
-				TupleQueryResult queryResult = (TupleQueryResult) sparqlService.evaluateQuery(queryStr);
+		synchronized (this) {
+			TupleQueryResult queryResult = null;
 
-				TupleQueryResultWriterFactory factory;
-				if (output != null && output.equalsIgnoreCase("csv")) {
-					factory = new SPARQLResultsCSVWriterFactory();
-					response.setContentType(MimeTypeUtils.TEXT_PLAIN_VALUE);
-					response.setHeader("Content-Disposition", "attachment; filename=" + "result." + output);
+			try {
+				queryResult = (TupleQueryResult) sparqlService.evaluateQuery(queryStr);
 
-				} else if (output != null && output.equalsIgnoreCase("tsv")) {
-					factory = new SPARQLResultsTSVWriterFactory();
-					response.setContentType(MimeTypeUtils.TEXT_PLAIN_VALUE);
+			} catch (SparqlTutorialException e) {
+				logger.error(e.getMessage(), e);
+				throw e;
 
-				} else if (output != null && output.equalsIgnoreCase("xml")) {
-					factory = new SPARQLResultsXMLWriterFactory();
-					response.setContentType(MimeTypeUtils.APPLICATION_XML_VALUE);
-
-				} else {
-					factory = new SPARQLResultsJSONWriterFactory();
-					response.setContentType(MimeTypeUtils.APPLICATION_JSON_VALUE);
-				}
-
-				renderInternal(factory, queryResult, request, response);
+			} finally {
+				finalize(queryStr, queryResult, output, request, response);
 			}
+		}
+	}
+
+	private void finalize(String queryStr, TupleQueryResult queryResult, String output, HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		TupleQueryResultWriterFactory factory;
+
+		if (queryResult == null) {
+			logger.error("Query Result is null.");
+			response.sendError(500, "Serialization error: Query Result is null.");
+		}
+
+		if (output != null && output.equalsIgnoreCase("csv")) {
+			factory = new SPARQLResultsCSVWriterFactory();
+			response.setContentType(MimeTypeUtils.TEXT_PLAIN_VALUE);
+			response.setHeader("Content-Disposition", "attachment; filename=" + "result." + output);
+
+		} else if (output != null && output.equalsIgnoreCase("tsv")) {
+			factory = new SPARQLResultsTSVWriterFactory();
+			response.setContentType(MimeTypeUtils.TEXT_PLAIN_VALUE);
+
+		} else if (output != null && output.equalsIgnoreCase("xml")) {
+			factory = new SPARQLResultsXMLWriterFactory();
+			response.setContentType(MimeTypeUtils.APPLICATION_XML_VALUE);
 
 		} else {
-			throw new SparqlTutorialException("Missing parameter: ");
+			factory = new SPARQLResultsJSONWriterFactory();
+			response.setContentType(MimeTypeUtils.APPLICATION_JSON_VALUE);
 		}
+
+		renderInternal(factory, queryResult, request, response);
 	}
 
 	private void renderInternal(TupleQueryResultWriterFactory factory, TupleQueryResult tupleQueryResult,

@@ -30,7 +30,7 @@ public class PageService {
 		Map<String, Object> tree = new HashMap<String, Object>();
 		List<Object> pages = new ArrayList<Object>();
 		tree.put("tree", pages);
-		for (final File fileEntry : new File(Application.FOLDER + "/pages/").listFiles()) {
+		for (final File fileEntry : new File(Application.getFolder() + "/pages/").listFiles()) {
 			if (fileEntry.isFile()) {
 				pages.add(buildPage(fileEntry, fileEntry.getName()));
 			}
@@ -54,7 +54,7 @@ public class PageService {
 			return IOUtils.readFile("README.md", null);
 
 		} else {
-			return IOUtils.readFile(Application.FOLDER + "/pages/" + page + ".md", null);
+			return IOUtils.readFile(Application.getFolder() + "/pages/" + page + ".md", null);
 		}
 	}
 
