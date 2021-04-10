@@ -6,17 +6,27 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Launch Current File",
-            "request": "launch",
-            "mainClass": "${file}"
-        },
-        {
-            "type": "java",
-            "name": "Launch Application",
+            "name": "Default geospatial",
             "request": "launch",
             "mainClass": "swiss.sib.sparql.playground.Application",
             "projectName": "sparql-playground",
-            "args": "geospatial localhost 8111"
+            "args": "geospatial default"
+        },
+        {
+            "type": "java",
+            "name": "Native geospatial",
+            "request": "launch",
+            "mainClass": "swiss.sib.sparql.playground.Application",
+            "projectName": "sparql-playground",
+            "args": "geospatial native"
+        },
+        {
+            "type": "java",
+            "name": "Marklogic geospatial",
+            "request": "launch",
+            "mainClass": "swiss.sib.sparql.playground.Application",
+            "projectName": "sparql-playground",
+            "args": "geospatial marklogic localhost 8111"
         }
     ]
 }

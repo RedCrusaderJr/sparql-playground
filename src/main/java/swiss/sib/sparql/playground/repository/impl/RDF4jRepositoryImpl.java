@@ -136,8 +136,13 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 		long start = System.currentTimeMillis();
 
 		File ttlFolder = new File(Application.getFolder() + "/ttl-data");
+
 		if (!ttlFolder.exists()) {
-			logger.error("Folder with Turtle data was not found. Path: " + ttlFolder);
+			logger.warn("Folder for Turtle data was not found. Path: " + ttlFolder);
+			if (ttlFolder.mkdirs()) {
+				logger.debug("Folder for Turtle data successfully created. Path: " + ttlFolder);
+			}
+			return;
 		}
 
 		logger.info("Loading turtle files from " + ttlFolder);
@@ -160,7 +165,11 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 		File rdfFolder = new File(Application.getFolder() + "/rdf-data");
 
 		if (!rdfFolder.exists()) {
-			logger.error("Folder with RDF data was not found. Path: " + rdfFolder);
+			logger.warn("Folder for RDF data was not found. Path: " + rdfFolder);
+			if (rdfFolder.mkdirs()) {
+				logger.debug("Folder for RDF data successfully created. Path: " + rdfFolder);
+			}
+			return;
 		}
 
 		logger.info("Loading rdf files from " + rdfFolder);

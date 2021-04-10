@@ -23,9 +23,13 @@ public class Application {
 
 	private static final Log logger = LogFactory.getLog(Application.class);
 
+	// argument with index 0
 	private static String FOLDER = "default"; // e.g. nextprot or uniprot
+	// argument with index 1
 	private static RepositoryType REPOSITORY_TYPE = RepositoryType.DEFAULT;
+	// argument with index 2
 	private static String MARKLOGIC_ADDRESS = "localhost";
+	// argument with index 3
 	private static int MARKLOGIC_PORT = 8111;
 
 	public static String getFolder() {
@@ -49,7 +53,7 @@ public class Application {
 
 		try {
 			setFolder(args);
-			setRepositoryType();
+			setRepositoryType(args);
 			setMarkLogicSettings(args);
 
 			SpringApplication.run(Application.class, args);
@@ -61,6 +65,7 @@ public class Application {
 		}
 	}
 
+	// argument with index 0
 	private static void setFolder(String[] args) {
 		if (args.length == 0) {
 			return;
@@ -78,33 +83,34 @@ public class Application {
 		logger.debug("FOLDER set to: " + FOLDER);
 	}
 
-	private static void setRepositoryType() {
-		String repositoryTypeProperty = "marklogic";
+	// argument with index 1
+	private static void setRepositoryType(String[] args) {
+		String repositoryTypeStr = "";
+		if (args.length >= 2 && args[1] != "") {
+			repositoryTypeStr = args[1];
+		}
+
 		if (System.getProperty("repository.type") != null) {
-			repositoryTypeProperty = System.getProperty("repository.type");
+			repositoryTypeStr = System.getProperty("repository.type");
 		}
 
-		REPOSITORY_TYPE = RepositoryType.getRepositoryType(repositoryTypeProperty);
-
-		if (REPOSITORY_TYPE != RepositoryType.DEFAULT) {
-			logger.info("Found repository type property! Value: " + REPOSITORY_TYPE);
-		} else {
-			logger.info("Repository type was set to a default value: " + REPOSITORY_TYPE);
-		}
+		REPOSITORY_TYPE = RepositoryType.getRepositoryType(repositoryTypeStr);
+		logger.debug("REPOSITORY_TYPE set to: " + REPOSITORY_TYPE);
 	}
 
+	// arguments with index 2 and 3
 	private static void setMarkLogicSettings(String[] args) {
-		if (args.length < 3) {
+		if (args.length < 4) {
 			return;
 		}
 
-		if (args[1] != "") {
-			MARKLOGIC_ADDRESS = args[1];
+		if (args[2] != "") {
+			MARKLOGIC_ADDRESS = args[2];
 			logger.debug("MARKLOGIC_ADDRESS set to: " + MARKLOGIC_ADDRESS);
 		}
 
-		if (args[2] != "") {
-			String portString = args[2];
+		if (args[3] != "") {
+			String portString = args[3];
 
 			try {
 				MARKLOGIC_PORT = Integer.parseInt(portString);
