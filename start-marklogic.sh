@@ -1,1 +1,0 @@
-java -Dserver.port=8887 -Drepository.type=marklogic -jar sparql-playground.war geospatial localhost 8111
