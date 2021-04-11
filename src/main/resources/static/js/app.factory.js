@@ -228,7 +228,6 @@ function snorql($http, $q, $timeout, $location, config) {
     return this.query
   }
 
-
   //
   // start a sparql query,
   //  http filter define : query* (default), describe, class, property and output=json* (default)
@@ -246,7 +245,6 @@ function snorql($http, $q, $timeout, $location, config) {
    var accept={'Accept':defaultAcceptHeaders[params.output]};
 
    var url=defaultSnorql.sparqlEndpoint;
-
 
    /*if(params.output!=='html'){
      self.reset();
@@ -274,16 +272,17 @@ function snorql($http, $q, $timeout, $location, config) {
       params.output='json'
       this.$promise=$http({method:'GET', url:url,params:params,headers:accept, timeout: this.canceler.promise});
       this.$promise.then(function(config){
-         self.result=(config.data);
-         console.log(self.result);
-         if (self.result.head.vars.includes("xPosition") && self.result.head.vars.includes("yPosition")){
-           var elements = self.result.results.bindings;
-           elements.forEach(element => {
-              L.marker([element.xPosition.value, element.yPosition.value]).addTo(geomap);
-            });
-            var length = elements.length;
-            geomap.setView([elements[length-1].xPosition.value, elements[length-1].yPosition.value], 13);
-            }
+        self.result=(config.data);
+        console.log(self.result);
+        window.mapMarkers.clearLayers();
+        if (self.result.head.vars.includes("xPosition") && self.result.head.vars.includes("yPosition")){
+          var elements = self.result.results.bindings;
+          elements.forEach(element => {
+            new L.marker([element.xPosition.value, element.yPosition.value]).addTo(window.mapMarkers);
+          });
+          var length = elements.length;
+          geomap.setView([elements[length-1].xPosition.value, elements[length-1].yPosition.value], 13);
+          }
       })
 
    }
