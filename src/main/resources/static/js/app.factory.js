@@ -280,7 +280,9 @@ function snorql($http, $q, $timeout, $location, config) {
             self.result.results.bindings.forEach(element => {
               L.marker([element.xPosition.value, element.yPosition.value]).addTo(geomap);
             });
-             }
+            var length = self.result.results.bindings.length;
+            geomap.setView([self.result.results.bindings[length-1].xPosition.value, self.result.results.bindings[length-1].yPosition.value], 13);
+            }
       })
 
    }
