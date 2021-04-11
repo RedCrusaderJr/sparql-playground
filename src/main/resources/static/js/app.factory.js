@@ -276,6 +276,11 @@ function snorql($http, $q, $timeout, $location, config) {
       this.$promise.then(function(config){
          self.result=(config.data);
          console.log(self.result);
+         if (self.result.head.vars.includes("xPosition") && self.result.head.vars.includes("yPosition")){
+            self.result.results.bindings.forEach(element => {
+              L.marker([element.xPosition.value, element.yPosition.value]).addTo(geomap);
+            });
+             }
       })
 
    }
