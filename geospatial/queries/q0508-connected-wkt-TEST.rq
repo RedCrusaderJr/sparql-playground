@@ -1,0 +1,47 @@
+#title:Connected-wkt-TEST
+#comment:
+
+#tags:wkt,coordinates
+#color:ex-green
+#img:
+
+SELECT DISTINCT ?g_wktLine ?condEqName1 ?xPosition1 ?yPosition1 ?condEqName2 ?xPosition2 ?yPosition2 
+WHERE {
+  ?termId1 rdf:type cim:Terminal.
+  ?termId1 cim:IdentifiedObject.name ?termName1.
+  ?termId2 rdf:type cim:Terminal.
+  ?termId1 cim:IdentifiedObject.name ?termName2.
+  
+	?termId1 cim:Terminal.ConductingEquipment ?condEqId1.
+  ?condEqId1 cim:IdentifiedObject.name ?condEqName1.
+  ?termId1 cim:Terminal.ConnectivityNode ?conNodeId1.
+  
+  
+  ?termId2 cim:Terminal.ConductingEquipment ?condEqId2.
+  ?condEqId2 cim:IdentifiedObject.name ?condEqName2.
+  ?termId2 cim:Terminal.ConnectivityNode ?conNodeId2.
+  
+  ?condEqId1 cim:PowerSystemResource.Location ?locationId1.
+  ?condEqId2 cim:PowerSystemResource.Location ?locationId2.
+  
+  ?postionPointId1 rdf:type cim:PositionPoint.
+  ?postionPointId2 rdf:type cim:PositionPoint.
+  
+  ?postionPointId1 cim:PositionPoint.Location ?locationId1.
+  ?postionPointId1 cim:PositionPoint.xPosition ?xPosition1.
+  ?postionPointId1 cim:PositionPoint.yPosition ?yPosition1.
+  
+  ?postionPointId2 cim:PositionPoint.Location ?locationId2.
+  ?postionPointId2 cim:PositionPoint.xPosition ?xPosition2.
+  ?postionPointId2 cim:PositionPoint.yPosition ?yPosition2.
+  
+  BIND(concat("LINESTRING (", str(?xPosition1), " ", str(?yPosition1), ", ", str(?xPosition2), " ", str(?yPosition2), ")") as ?lineStr)
+  BIND(strdt(?lineStr, geo:wktLiteral) as ?g_wktLine)
+  
+  FILTER(?conNodeId1 = ?conNodeId2)
+  FILTER(str(?termId1) < str(?termId2))
+  FILTER(str(?condEqId1) < str(?condEqId2))
+  FILTER(str(?locationId1) < str(?locationId2))
+	FILTER(?xPosition1 != ?xPosition2 || ?yPosition1 != ?yPosition2)
+  
+}
