@@ -274,24 +274,21 @@ function snorql($http, $q, $timeout, $location, config) {
       this.$promise.then(function(config){
         self.result=(config.data);
         console.log(self.result);
-        window.queryShapes.clearLayers();
 
+        //drawing on map if geospatial data in query
+        window.queryShapes.clearLayers();
         var geoSpatialColumnHeaders = self.result.head.vars.filter(function(item){
           var finder = 'g_';
           return eval('/'+finder+'/').test(item);
         });
-        //if (self.result.head.vars.includes("xPosition") && self.result.head.vars.includes("yPosition")){
         if (geoSpatialColumnHeaders.length > 0){
           var elements = self.result.results.bindings;
           geoSpatialColumnHeaders.forEach(column => {
             elements.forEach(element => {
               var parsedElement = parseElement(element, column);
-              //new L.marker([element.xPosition.value, element.yPosition.value]).addTo(window.queryShapes);
               addElementToMap(parsedElement);
             });
           });
-          var length = elements.length;
-          //geomap.setView([elements[length-1].xPosition.value, elements[length-1].yPosition.value], 13);
           geomap.setView([window.mapViewLat, window.mapViewLong], 13);
           }
       })
