@@ -274,7 +274,7 @@ function snorql($http, $q, $timeout, $location, config) {
       this.$promise.then(function(config){
         self.result=(config.data);
         console.log(self.result);
-        window.mapMarkers.clearLayers();
+        window.queryShapes.clearLayers();
 
         var geoSpatialColumnHeaders = self.result.head.vars.filter(function(item){
           var finder = 'g_';
@@ -286,12 +286,13 @@ function snorql($http, $q, $timeout, $location, config) {
           geoSpatialColumnHeaders.forEach(column => {
             elements.forEach(element => {
               var parsedElement = parseElement(element, column);
-              //new L.marker([element.xPosition.value, element.yPosition.value]).addTo(window.mapMarkers);
-
+              //new L.marker([element.xPosition.value, element.yPosition.value]).addTo(window.queryShapes);
+              addElementToMap(parsedElement);
             });
           });
           var length = elements.length;
-          geomap.setView([elements[length-1].xPosition.value, elements[length-1].yPosition.value], 13);
+          //geomap.setView([elements[length-1].xPosition.value, elements[length-1].yPosition.value], 13);
+          geomap.setView([window.mapViewLat, window.mapViewLong], 13);
           }
       })
 
@@ -597,17 +598,58 @@ function removeParentheses(str){
   return str;
 }
 
-function addElementToMap(){
-  switch(expression) {
-    case x:
-      // code block
+function addElementToMap(parsedElement){
+  switch(parsedElement.Name) {
+    case "POINT":
+      drawPoint(parsedElement);
       break;
-    case y:
-      // code block
+    case "LINESTRING":
+      drawLine(parsedElement);
+      break;
+    case "POLYGON":
+      drawPolygon(parsedElement);
       break;
     default:
-      // code block
+      break;
   } 
+}
+
+function drawPoint(parsedElement){
+  parsedElement.Coordinates.Shapes.forEach(point => {
+    var x = point[0].x;
+    var y = point[0].y;
+    new L.marker([x, y]).addTo(window.queryShapes);
+    window.mapViewLat = x;
+    window.mapViewLong = y;
+  });
+}
+
+function drawLine(parsedElement){
+  parsedElement.Coordinates.Shapes.forEach(line => {
+    var latlongs = [];
+    line.forEach(point => {
+      var x = point.x;
+      var y = point.y;
+      latlongs.push([x,y]);
+      window.mapViewLat = x;
+      window.mapViewLong = y;
+    });
+    new L.polyline(latlongs, {color: 'red'}).addTo(window.queryShapes);
+  });
+}
+
+function drawPolygon(parsedElement){
+  parsedElement.Coordinates.Shapes.forEach(polygon => {
+    var latlongs = [];
+    polygon.forEach(point => {
+      var x = point.x;
+      var y = point.y;
+      latlongs.push([x,y]);
+      window.mapViewLat = x;
+      window.mapViewLong = y;
+    });
+    new L.polygon(latlongs, {color: 'red'}).addTo(window.queryShapes);
+  });
 }
 
 })(angular);
