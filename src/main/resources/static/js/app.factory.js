@@ -275,10 +275,20 @@ function snorql($http, $q, $timeout, $location, config) {
         self.result=(config.data);
         console.log(self.result);
         window.mapMarkers.clearLayers();
-        if (self.result.head.vars.includes("xPosition") && self.result.head.vars.includes("yPosition")){
+
+        var geoSpatialColumnHeaders = self.result.head.vars.filter(function(item){
+          var finder = 'g_';
+          return eval('/'+finder+'/').test(item);
+        });
+        //if (self.result.head.vars.includes("xPosition") && self.result.head.vars.includes("yPosition")){
+        if (geoSpatialColumnHeaders.length > 0){
           var elements = self.result.results.bindings;
-          elements.forEach(element => {
-            new L.marker([element.xPosition.value, element.yPosition.value]).addTo(window.mapMarkers);
+          geoSpatialColumnHeaders.forEach(column => {
+            elements.forEach(element => {
+              var parsedElement = parseElement(element, column);
+              //new L.marker([element.xPosition.value, element.yPosition.value]).addTo(window.mapMarkers);
+
+            });
           });
           var length = elements.length;
           geomap.setView([elements[length-1].xPosition.value, elements[length-1].yPosition.value], 13);
@@ -539,5 +549,65 @@ function snorql($http, $q, $timeout, $location, config) {
   return new Snorql()
 };
 
+function parseElement(element, column){
+  var parsedElement = new Object;
+  var splittedElement = element[column].value.substring(0, element[column].value.length - 1).split(" (");
+  parsedElement.Name = splittedElement[0].trim();
+  parsedElement.Coordinates = parseCoordinates(splittedElement[1]);
+
+  return parsedElement;
+}
+
+function parseCoordinates(unparsedCoordinates){
+  var coordinates = new Object;
+  coordinates.Shapes = [];
+  if(unparsedCoordinates.charAt(0) ==='('){
+    var splittedByComma = unparsedCoordinates.split("), (");
+    if(splittedByComma.length > 1){
+      splittedByComma.forEach(shape => {
+        shape = removeParentheses(shape);
+        coordinates.Shapes.push(parseShape(shape));
+      });
+    }
+    else{
+      coordinates.Shapes.push(parseShape(unparsedCoordinates));
+    }
+  }
+  else {
+    coordinates.Shapes.push(parseShape(unparsedCoordinates));
+  }
+
+  return coordinates;
+}
+
+function parseShape(coordinates){
+  var shape = [];
+  coordinates = removeParentheses(coordinates);
+  var splittedCoordinates = coordinates.split(',');
+  splittedCoordinates.forEach(pointPair => {
+    var splittedPointPair = pointPair.trim().split(' ');
+    shape.push({ x: splittedPointPair[0].trim(), y: splittedPointPair[1].trim() });
+  });
+  return shape;
+}
+
+function removeParentheses(str){
+  str = str.replaceAll("(", "");
+  str = str.replaceAll(")", "");
+  return str;
+}
+
+function addElementToMap(){
+  switch(expression) {
+    case x:
+      // code block
+      break;
+    case y:
+      // code block
+      break;
+    default:
+      // code block
+  } 
+}
 
 })(angular);
