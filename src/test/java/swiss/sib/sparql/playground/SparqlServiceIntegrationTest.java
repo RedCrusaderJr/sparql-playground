@@ -20,29 +20,42 @@ public class SparqlServiceIntegrationTest {
 	private SparqlService sparqlService;
 
 	@Test
-	// @Ignore
 	public void testAskQuery() throws Exception {
-		String query = "ASK {FILTER(2>1)} ";
+		StringBuilder sb = new StringBuilder();
+		sb.append("ASK {").append(System.lineSeparator());
+		sb.append("  FILTER (2>1)").append(System.lineSeparator());
+		sb.append("}");
+		String query = sb.toString();
+
 		Boolean result = (Boolean) sparqlService.evaluateQuery(query);
 		Assert.assertTrue(result);
 	}
 
 	@Test
-	// @Ignore
 	public void testQueryWithURI() throws Exception {
-		String query = "select ?x where { ?x rdf:type <http://example.org/tuto/ontology#Cat> . }";
-		TupleQueryResult result = (TupleQueryResult) sparqlService.evaluateQuery(query);
-		Assert.assertEquals(countResults(result), 2);
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT ?x").append(System.lineSeparator());
+		sb.append("WHERE {").append(System.lineSeparator());
+		sb.append("  ?x rdf:type <http://example.org/tuto/ontology#Cat>.").append(System.lineSeparator());
+		sb.append("}");
+		String query = sb.toString();
 
+		TupleQueryResult result = (TupleQueryResult) sparqlService.evaluateQuery(query);
+		Assert.assertEquals(2, countResults(result));
 	}
 
 	@Test
-	// @Ignore
 	public void testQueryWithNamespaces() throws Exception {
-		String query = sparqlService.getPrefixesString();
-		query += " select ?x where { ?x rdf:type tto:Cat . }";
+		StringBuilder sb = new StringBuilder();
+		sb.append(sparqlService.getPrefixesString()).append(System.lineSeparator());
+		sb.append("SELECT ?x").append(System.lineSeparator());
+		sb.append("WHERE {").append(System.lineSeparator());
+		sb.append("  ?x rdf:type tto:Cat.").append(System.lineSeparator());
+		sb.append("}");
+		String query = sb.toString();
+
 		TupleQueryResult result = (TupleQueryResult) sparqlService.evaluateQuery(query);
-		Assert.assertEquals(countResults(result), 2);
+		Assert.assertEquals(2, countResults(result));
 	}
 
 	// This query stopped working from 2.8.7 upgrade
@@ -52,27 +65,40 @@ public class SparqlServiceIntegrationTest {
 	@Test
 	@Ignore
 	public void testFederatedQueryWithEBI() throws Exception {
-
-		String federatedQuery = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> "
-				+ "PREFIX msi: <http://rdf.ebi.ac.uk/resource/biosamples/msi/>" + "SELECT * where { "
-				+ "	SERVICE <http://www.ebi.ac.uk/rdf/services/biosamples/servlet/query> { "
-				+ "	msi:GAE-GEOD-25609 rdf:type ?obj " + "} }";
+		StringBuilder sb = new StringBuilder();
+		sb.append("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>").append(System.lineSeparator());
+		sb.append("PREFIX msi: <http://rdf.ebi.ac.uk/resource/biosamples/msi/>").append(System.lineSeparator());
+		sb.append("SELECT *").append(System.lineSeparator());
+		sb.append("WHERE {").append(System.lineSeparator());
+		sb.append("  SERVICE <http://www.ebi.ac.uk/rdf/services/biosamples/servlet/query> {");
+		sb.append(System.lineSeparator());
+		sb.append("    msi:GAE-GEOD-25609 rdf:type ?obj.").append(System.lineSeparator());
+		sb.append("  }").append(System.lineSeparator());
+		sb.append("}");
+		String federatedQuery = sb.toString();
 
 		TupleQueryResult result = sparqlService.executeSelectQuery(federatedQuery);
-		Assert.assertEquals(countResults(result), 2);
+		Assert.assertEquals(2, countResults(result));
 	}
 
 	@Test
-	// @Ignore
 	public void testFederatedQueryWithDBPedia() throws Exception {
-
-		String federatedQuery = "PREFIX dbp:<http://dbpedia.org/property/>\n"
-				+ "PREFIX tto:<http://example.org/tuto/ontology#>\n" + "\n" + "select *  where {\n"
-				+ "    SERVICE <http://dbpedia.org/sparql> {\n"
-				+ "      select ?person ?birthDate ?occupation ?pet where {\n"
-				+ "        VALUES ?birthDate { \"1942-07-13\"^^xsd:date }\n"
-				+ "        ?person dbp:birthDate ?birthDate .\n" + "        ?person dbp:occupation ?occupation .\n"
-				+ "      } \n" + "    }\n" + "    OPTIONAL { ?person tto:pet ?pet } .\n" + "}";
+		StringBuilder sb = new StringBuilder();
+		sb.append("PREFIX dbp: <http://dbpedia.org/property/>").append(System.lineSeparator());
+		sb.append("PREFIX tto:<http://example.org/tuto/ontology#>").append(System.lineSeparator());
+		sb.append("SELECT *").append(System.lineSeparator());
+		sb.append("WHERE {").append(System.lineSeparator());
+		sb.append("  SERVICE <http://dbpedia.org/sparql> {").append(System.lineSeparator());
+		sb.append("    SELECT ?person ?birthDate ?occupation ?pet").append(System.lineSeparator());
+		sb.append("    WHERE {").append(System.lineSeparator());
+		sb.append("      VALUES ?birthDate { \"1942-07-13\"^^xsd:date }").append(System.lineSeparator());
+		sb.append("      ?person dbp:birthDate ?birthDate.").append(System.lineSeparator());
+		sb.append("      ?person dbp:occupation ?occupation.").append(System.lineSeparator());
+		sb.append("    }").append(System.lineSeparator());
+		sb.append("  }").append(System.lineSeparator());
+		sb.append("  OPTIONAL { ?person tto:pet ?pet. }").append(System.lineSeparator());
+		sb.append("}");
+		String federatedQuery = sb.toString();
 
 		TupleQueryResult result = sparqlService.executeSelectQuery(federatedQuery);
 		Assert.assertTrue(countResults(result) > 3);
@@ -81,20 +107,34 @@ public class SparqlServiceIntegrationTest {
 	@Test
 	@Ignore
 	public void testFederatedQuery() throws Exception {
-		String query = sparqlService.getPrefixesString();
-		query += " select ?subj ?pred ?obj where { values (?subj ?pred) { (dbpedia:Harrison_Ford dbo:birthDate) (dbpedia:Harrison_Ford dbp:name) (dbpedia:Harrison_Ford dbp:occupation) } { ?subj ?pred ?obj.  }UNION{ service <http://dbpedia.org/sparql> { ?subj ?pred ?obj.}}}";
-		TupleQueryResult result = (TupleQueryResult) sparqlService.evaluateQuery(query);
-		Assert.assertEquals(countResults(result), 2);
+		StringBuilder sb = new StringBuilder();
+		sb.append(sparqlService.getPrefixesString()).append(System.lineSeparator());
+		sb.append("SELECT ?subj ?pred ?obj").append(System.lineSeparator());
+		sb.append("WHERE {").append(System.lineSeparator());
+		sb.append("  VALUES (?subj ?pred) {").append(System.lineSeparator());
+		sb.append("    (dbpedia:Harrison_Ford dbo:birthDate)").append(System.lineSeparator());
+		sb.append("    (dbpedia:Harrison_Ford dbp:name)").append(System.lineSeparator());
+		sb.append("    (dbpedia:Harrison_Ford dbp:occupation)").append(System.lineSeparator());
+		sb.append("  }").append(System.lineSeparator());
+		sb.append("  { ?subj ?pred ?obj. }").append(System.lineSeparator());
+		sb.append("  UNION {").append(System.lineSeparator());
+		sb.append("    SERVICE <http://dbpedia.org/sparql> {").append(System.lineSeparator());
+		sb.append("       ?subj ?pred ?obj.").append(System.lineSeparator());
+		sb.append("    }").append(System.lineSeparator());
+		sb.append("  }").append(System.lineSeparator());
+		sb.append("}");
+		String federatedQuery = sb.toString();
+
+		TupleQueryResult result = (TupleQueryResult) sparqlService.evaluateQuery(federatedQuery);
+		Assert.assertEquals(2, countResults(result));
 	}
 
 	@Test
-	// @Ignore
 	public void testCountNumberOfTriples() throws Exception {
 		Long n = sparqlService.countNumberOfTriples();
 		System.out.println(n + " triples");
 		Assert.assertTrue(n > 50);
 		Assert.assertTrue(n < 100);
-
 	}
 
 	private long countResults(TupleQueryResult results) {
@@ -110,5 +150,4 @@ public class SparqlServiceIntegrationTest {
 			return 0;
 		}
 	}
-
 }

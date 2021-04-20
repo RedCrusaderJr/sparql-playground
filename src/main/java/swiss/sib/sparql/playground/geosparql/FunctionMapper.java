@@ -35,6 +35,8 @@ public class FunctionMapper {
 
 	private Map<String, String> geosparqlUriToFunctionAbbreviationMap;
 	private Map<String, String> functionAbbreviationToGeosparqlUriMap;
+	private Map<String, String> geosparqlUriToMarklogicFunctionMap;
+	private Map<String, String> functionAbbreviationToMarklogicFunctionMap;
 
 	private void importFunctions() throws ClassNotFoundException {
 		geosparqlUriToFunctionAbbreviationMap = new HashMap<String, String>();
@@ -44,6 +46,13 @@ public class FunctionMapper {
 		functionAbbreviationToGeosparqlUriMap = new HashMap<String, String>();
 		functionAbbreviationToGeosparqlUriMap.put("intersectionFunction",
 				"http://www.opengis.net/def/function/geosparql/intersection");
+
+		geosparqlUriToMarklogicFunctionMap = new HashMap<String, String>();
+		geosparqlUriToMarklogicFunctionMap.put("http://www.opengis.net/def/function/geosparql/intersection",
+				"geo.regionIntersects");
+
+		functionAbbreviationToMarklogicFunctionMap = new HashMap<String, String>();
+		functionAbbreviationToMarklogicFunctionMap.put("intersectionFunction", "geo.regionIntersects");
 	}
 
 	public Boolean findAbbreviationByUri(String functionUri) {
@@ -54,12 +63,28 @@ public class FunctionMapper {
 		return functionAbbreviationToGeosparqlUriMap.containsKey(functionAbbreviation);
 	}
 
+	public Boolean findMarklogicFunctionByUri(String functionUri) {
+		return geosparqlUriToMarklogicFunctionMap.containsKey(functionUri);
+	}
+
+	public Boolean findMarklogicFunctionByAbbreviation(String functionAbbreviation) {
+		return functionAbbreviationToMarklogicFunctionMap.containsKey(functionAbbreviation);
+	}
+
 	public String getFunctionAbbreviationByUri(String functionUri) {
 		return geosparqlUriToFunctionAbbreviationMap.getOrDefault(functionUri, null);
 	}
 
 	public String getFunctionUriByAbbreviation(String abbreviation) {
 		return functionAbbreviationToGeosparqlUriMap.getOrDefault(abbreviation, null);
+	}
+
+	public String getMarklogicFunctionByUri(String functionUri) {
+		return geosparqlUriToMarklogicFunctionMap.getOrDefault(functionUri, null);
+	}
+
+	public String getMarklogicFunctionByAbbreviation(String functionAbbreviation) {
+		return functionAbbreviationToMarklogicFunctionMap.getOrDefault(functionAbbreviation, null);
 	}
 
 	public Set<String> getAllSupportedFunctionByAbbreviations() {

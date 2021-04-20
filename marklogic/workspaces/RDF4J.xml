@@ -1,0 +1,107 @@
+<export>
+<workspace name="RDF4J">
+<query name="Functions on Strings" focus="false" listorder="8" taborder="2" active="true" database="8967445921499680360" server="17378417203308661926" database-name="sparql-playground" server-name="8111-sparql-playground" mode="sparql">
+select *
+where {
+  bind(&lt;http://www.w3.org/2005/xpath-functions#string-length&gt;("abc") as ?b1)
+  bind(strlen("abc") as ?b2)
+  bind(&lt;http://www.w3.org/2005/xpath-functions#substring&gt;("abc", "abc") as ?b3)
+  bind(substr("abc", "abc") as ?b4)
+  bind(&lt;http://www.w3.org/2005/xpath-functions#upper-case&gt;("abc") as ?b5)
+  bind(ucase("abc") as ?b6)
+  bind(&lt;http://www.w3.org/2005/xpath-functions#lower-case&gt;("abc") as ?b7)
+  bind(lcase("abc") as ?b8)
+  bind(&lt;http://www.w3.org/2005/xpath-functions#starts-with&gt;("abc", "abc") as ?9)
+  bind(strstarts("abc", "abc") as ?b10)
+  bind(&lt;http://www.w3.org/2005/xpath-functions#ends-with&gt;("abc", "abc") as ?b11)
+  bind(strends("abc", "abc") as ?b12)
+  bind(&lt;http://www.w3.org/2005/xpath-functions#contains&gt;("abc", "abc") as ?b13)
+  bind(contains("abc", "abc") as ?b14)
+  bind(&lt;http://www.w3.org/2005/xpath-functions#substring-before&gt;("abc", "abc") as ?b15)
+  bind(strbefore("abc", "abc") as ?b16)
+  bind(&lt;http://www.w3.org/2005/xpath-functions#substring-after&gt;("abc", "abc") as ?b17)
+  bind(strafter("abc", "abc") as ?b18)
+  bind(&lt;http://www.w3.org/2005/xpath-functions#encode-for-uri&gt;("abc") as ?b19)
+  bind(encode_for_uri("abc") as ?b20)
+  bind(&lt;http://www.w3.org/2005/xpath-functions#concat&gt;("abc", "abc", "abc") as ?b21)
+  bind(concat("abc", "abc", "abc") as ?b22)
+  bind(langmatches(lang("abc"), "abc") as ?b23)
+  bind(&lt;http://www.w3.org/2005/xpath-functions#matches&gt;("abc", "abc") as ?b24)
+  bind(regex("abc", "abc") as ?b25)
+  bind(&lt;http://www.w3.org/2005/xpath-functions#replace&gt;("abc", "abc", "abc") as ?b26)
+  bind(replace("abc", "abc", "abc") as ?b27)
+}
+</query>
+
+
+<query name="Functions on Numerics" focus="false" listorder="9" taborder="9" active="true" database="8967445921499680360" server="17378417203308661926" database-name="sparql-playground" server-name="8111-sparql-playground" mode="sparql">
+select *
+where {
+  bind(&lt;http://www.w3.org/2005/xpath-functions#numeric-abs&gt;(1) as ?b1).
+  bind(abs(1) as ?b2).
+  bind(&lt;http://www.w3.org/2005/xpath-functions#numeric-round&gt;(1.9) as ?b3).
+  bind(round(1.9) as ?b4).
+  bind(&lt;http://www.w3.org/2005/xpath-functions#numeric-ceil&gt;(1.5) as ?b5).
+  bind(ceil(1.5 ) as ?b6).
+  bind(&lt;http://www.w3.org/2005/xpath-functions#numeric-floor&gt;(1.1) as ?b7).
+  bind(floor(1.1) as ?b8).
+  bind(rand() as ?b9).
+}
+</query>
+
+
+<query name="Functions on Dates and Times" focus="false" listorder="10" taborder="10" active="true" database="8967445921499680360" server="17378417203308661926" database-name="sparql-playground" server-name="8111-sparql-playground" mode="sparql">
+prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+select *
+where {
+  bind(now() as ?b1).
+  bind(&lt;http://www.w3.org/2005/xpath-functions#year-from-dateTime&gt;("2011-01-10T14:45:13.815-05:00"^^xsd:dateTime) as ?b2).
+  bind(year("2011-01-10T14:45:13.815-05:00"^^xsd:dateTime) as ?b3).
+  bind(&lt;http://www.w3.org/2005/xpath-functions#month-from-dateTime&gt;("2011-01-10T14:45:13.815-05:00"^^xsd:dateTime) as ?b4).
+  bind(month("2011-01-10T14:45:13.815-05:00"^^xsd:dateTime) as ?b5).
+  bind(&lt;http://www.w3.org/2005/xpath-functions#day-from-dateTime&gt;("2011-01-10T14:45:13.815-05:00"^^xsd:dateTime) as ?b6).
+  bind(day("2011-01-10T14:45:13.815-05:00"^^xsd:dateTime) as ?b7).
+  bind(&lt;http://www.w3.org/2005/xpath-functions#hours-from-dateTime&gt;("2011-01-10T14:45:13.815-05:00"^^xsd:dateTime) as ?b8).
+  bind(hours("2011-01-10T14:45:13.815-05:00"^^xsd:dateTime) as ?b9).
+  bind(&lt;http://www.w3.org/2005/xpath-functions#minutes-from-dateTime&gt;("2011-01-10T14:45:13.815-05:00"^^xsd:dateTime) as ?b10).
+  bind(minutes("2011-01-10T14:45:13.815-05:00"^^xsd:dateTime) as ?b11).
+  bind(&lt;http://www.w3.org/2005/xpath-functions#seconds-from-dateTime&gt;("2011-01-10T14:45:13.815-05:00"^^xsd:dateTime) as ?b12).
+  bind(seconds("2011-01-10T14:45:13.815-05:00"^^xsd:dateTime) as ?b13).
+  bind(&lt;http://www.w3.org/2005/xpath-functions#timezone-from-dateTime&gt;("2011-01-10T14:45:13.815-05:00"^^xsd:dateTime) as ?b14).
+  bind(timezone("2011-01-10T14:45:13.815-05:00"^^xsd:dateTime) as ?b15).
+  bind(tz("2011-01-10T14:45:13.815-05:00"^^xsd:dateTime) as ?b16).
+}
+</query>
+
+
+<query name="Hash Functions" focus="false" listorder="11" taborder="11" active="true" database="8967445921499680360" server="17378417203308661926" database-name="sparql-playground" server-name="8111-sparql-playground" mode="sparql">
+select *
+where {
+  bind(md5("abc") as ?b1).
+  bind(sha1("abc") as ?b2).
+  bind(sha256("abc") as ?b3).
+  bind(sha384("abc") as ?b4).
+  bind(sha512("abc") as ?b5).
+}
+</query>
+
+
+<query name="Functions on RDF Terms" focus="false" listorder="12" taborder="12" active="true" database="8967445921499680360" server="17378417203308661926" database-name="sparql-playground" server-name="8111-sparql-playground" mode="sparql">select *
+where {
+  bind(isIRI(&lt;http://www.w3.org/2001/XMLSchema#integer&gt;) as ?b1).
+  bind(isNumeric(123) as ?b2).
+  bind(iri("http://example/") as ?b3).
+  bind(uri("http://example/") as ?b4).
+  bind(bnode("123") as ?b5).
+  bind(strdt("123", &lt;http://www.w3.org/2001/XMLSchema#integer&gt;) as ?b6).
+  bind(strlang("abc", "en") as ?b7).
+  bind(uuid() as ?b8).
+  bind(struuid() as ?b9).
+}</query>
+
+
+<query name="Functional Forms" focus="true" listorder="13" taborder="13" active="true" database="8967445921499680360" server="17378417203308661926" database-name="sparql-playground" server-name="8111-sparql-playground" mode="sparql">select *
+where {
+  bind(if(1 = 1, ":)", ":(") as ?b1).
+  bind(coalesce(?b1, 3) as ?b2).
+}</query></workspace></export>
