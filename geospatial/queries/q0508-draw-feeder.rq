@@ -1,11 +1,11 @@
-#title:Connected-equipment-coordinates
+#title:Draw-feeder
 #comment:
 
-#tags:connected-points,coordinates
+#tags:draw-geometry,connected-points,wkt,coordinates
 #color:ex-green
 #img:
 
-select DISTINCT ?xPosition1 ?yPosition1 ?xPosition2 ?yPosition2
+select DISTINCT ?g_wktLine ?g_wktPoint
 where {
   #terminals
   ?tmId rdf:type cim:Terminal.
@@ -34,4 +34,11 @@ where {
   
   ?postionPointId2 cim:PositionPoint.xPosition ?xPosition2.
   ?postionPointId2 cim:PositionPoint.yPosition ?yPosition2.
+
+  #construct WKTs (draw geometry)
+  BIND(concat("POINT (", str(?xPosition1), " ", str(?yPosition1), ")") as ?pointStr)
+  BIND(strdt(?pointStr, geo:wktLiteral) as ?g_wktPoint)
+  
+  BIND(concat("LINESTRING (", str(?xPosition1), " ", str(?yPosition1), ", ", str(?xPosition2), " ", str(?yPosition2), ")") as ?lineStr)
+  BIND(strdt(?lineStr, geo:wktLiteral) as ?g_wktLine)
 }
