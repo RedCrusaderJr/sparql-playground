@@ -96,8 +96,10 @@
                 zoomOffset: -1
               }).addTo(geomap);
 
-                // map markers
-              window.mapMarkers = L.layerGroup().addTo(geomap);
+              // map markers
+              window.queryShapes = L.layerGroup().addTo(geomap);
+              window.mapViewLat = 0;
+              window.mapViewLong = 0;
 
               /*L.marker([51.5, -0.09]).addTo(geomap);
 
