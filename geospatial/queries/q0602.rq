@@ -1,0 +1,13 @@
+#title:marklogic geospatial Test 2
+#comment:
+
+#tags:geof:intersection
+#color:ex-green
+#img:
+
+SELECT DISTINCT ?wktPoint1 ?wktPoint2 ?functionResult
+WHERE {
+  BIND(strdt("POINT (1 1)", geo:wktLiteral) as ?wktPoint1).
+  BIND(strdt("POINT (2 2)", geo:wktLiteral) as ?wktPoint2).
+  BIND(geof:intersection(?wktPoint1, ?wktPoint2) as ?functionResult).
+}

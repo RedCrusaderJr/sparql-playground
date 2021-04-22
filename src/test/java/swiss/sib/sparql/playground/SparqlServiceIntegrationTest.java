@@ -2,10 +2,13 @@ package swiss.sib.sparql.playground;
 
 import swiss.sib.sparql.playground.service.SparqlService;
 
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import org.eclipse.rdf4j.query.QueryEvaluationException;
 import org.eclipse.rdf4j.query.TupleQueryResult;
-import org.junit.*;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -48,6 +51,7 @@ public class SparqlServiceIntegrationTest {
 	public void testQueryWithNamespaces() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		sb.append(sparqlService.getPrefixesString()).append(System.lineSeparator());
+		sb.append(System.lineSeparator());
 		sb.append("SELECT ?x").append(System.lineSeparator());
 		sb.append("WHERE {").append(System.lineSeparator());
 		sb.append("  ?x rdf:type tto:Cat.").append(System.lineSeparator());
@@ -68,6 +72,7 @@ public class SparqlServiceIntegrationTest {
 		StringBuilder sb = new StringBuilder();
 		sb.append("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>").append(System.lineSeparator());
 		sb.append("PREFIX msi: <http://rdf.ebi.ac.uk/resource/biosamples/msi/>").append(System.lineSeparator());
+		sb.append(System.lineSeparator());
 		sb.append("SELECT *").append(System.lineSeparator());
 		sb.append("WHERE {").append(System.lineSeparator());
 		sb.append("  SERVICE <http://www.ebi.ac.uk/rdf/services/biosamples/servlet/query> {");
@@ -86,6 +91,7 @@ public class SparqlServiceIntegrationTest {
 		StringBuilder sb = new StringBuilder();
 		sb.append("PREFIX dbp: <http://dbpedia.org/property/>").append(System.lineSeparator());
 		sb.append("PREFIX tto:<http://example.org/tuto/ontology#>").append(System.lineSeparator());
+		sb.append(System.lineSeparator());
 		sb.append("SELECT *").append(System.lineSeparator());
 		sb.append("WHERE {").append(System.lineSeparator());
 		sb.append("  SERVICE <http://dbpedia.org/sparql> {").append(System.lineSeparator());
@@ -109,6 +115,7 @@ public class SparqlServiceIntegrationTest {
 	public void testFederatedQuery() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		sb.append(sparqlService.getPrefixesString()).append(System.lineSeparator());
+		sb.append(System.lineSeparator());
 		sb.append("SELECT ?subj ?pred ?obj").append(System.lineSeparator());
 		sb.append("WHERE {").append(System.lineSeparator());
 		sb.append("  VALUES (?subj ?pred) {").append(System.lineSeparator());

@@ -28,9 +28,11 @@ public class Application {
 	// argument with index 1
 	private static RepositoryType REPOSITORY_TYPE = RepositoryType.DEFAULT;
 	// argument with index 2
-	private static String MARKLOGIC_ADDRESS = "localhost";
+	private static String MARKLOGIC_HOST = "localhost";
 	// argument with index 3
 	private static int MARKLOGIC_PORT = 8111;
+	// argument with index 4
+	private static String MARKLOGIC_DB_NAME = "sparql-playground";
 
 	public static String getFolder() {
 		return FOLDER;
@@ -40,12 +42,16 @@ public class Application {
 		return REPOSITORY_TYPE;
 	}
 
-	public static String getMarklogicAddress() {
-		return MARKLOGIC_ADDRESS;
+	public static String getMarklogicHost() {
+		return MARKLOGIC_HOST;
 	}
 
 	public static int getMarklogicPort() {
 		return MARKLOGIC_PORT;
+	}
+
+	public static String getMarklogicDbName() {
+		return MARKLOGIC_DB_NAME;
 	}
 
 	public static void main(String[] args) {
@@ -80,7 +86,7 @@ public class Application {
 			logger.debug(folderAux + " folder not found");
 		}
 
-		logger.debug("FOLDER set to: " + FOLDER);
+		logger.debug("FOLDER: " + FOLDER);
 	}
 
 	// argument with index 1
@@ -95,18 +101,18 @@ public class Application {
 		}
 
 		REPOSITORY_TYPE = RepositoryType.getRepositoryType(repositoryTypeStr);
-		logger.debug("REPOSITORY_TYPE set to: " + REPOSITORY_TYPE);
+		logger.debug("REPOSITORY_TYPE: " + REPOSITORY_TYPE);
 	}
 
 	// arguments with index 2 and 3
 	private static void setMarkLogicSettings(String[] args) {
+		// HOST AND ADDRESS MUST BE SET IN PAIR
 		if (args.length < 4) {
 			return;
 		}
 
 		if (args[2] != "") {
-			MARKLOGIC_ADDRESS = args[2];
-			logger.debug("MARKLOGIC_ADDRESS set to: " + MARKLOGIC_ADDRESS);
+			MARKLOGIC_HOST = args[2];
 		}
 
 		if (args[3] != "") {
@@ -114,13 +120,19 @@ public class Application {
 
 			try {
 				MARKLOGIC_PORT = Integer.parseInt(portString);
-				logger.debug("MARKLOGIC_PORT set to: " + MARKLOGIC_PORT);
-
 			} catch (NumberFormatException e) {
 				logger.error(e.getMessage());
-				logger.debug("MARKLOGIC_PORT has default value of:" + MARKLOGIC_PORT);
 			}
 		}
+
+		// OPTIONAL
+		if (args.length > 4 && args[4] != "") {
+			MARKLOGIC_DB_NAME = args[4];
+		}
+
+		logger.debug("MARKLOGIC_ADDRESS: " + MARKLOGIC_HOST);
+		logger.debug("MARKLOGIC_PORT: " + MARKLOGIC_PORT);
+		logger.debug("MARKLOGIC_DB_NAME: " + MARKLOGIC_DB_NAME);
 	}
 
 	private static void logHostingAddress() {

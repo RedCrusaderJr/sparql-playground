@@ -8,9 +8,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,20 +23,45 @@ import org.eclipse.rdf4j.query.impl.TupleQueryResultBuilder;
 import org.eclipse.rdf4j.query.parser.ParsedQuery;
 import org.eclipse.rdf4j.query.parser.QueryParserUtil;
 import org.eclipse.rdf4j.queryrender.sparql.SPARQLQueryRenderer;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import java.util.regex.Matcher;
+import com.marklogic.client.DatabaseClient;
+import com.marklogic.client.DatabaseClientFactory;
+import com.marklogic.client.DatabaseClientFactory.SecurityContext;
+import com.marklogic.client.eval.EvalResultIterator;
+
 import swiss.sib.sparql.playground.Application;
 
 public class MarklogicSupport {
 	private static final Log logger = LogFactory.getLog(MarklogicSupport.class);
 
+	// #region Instance
+	private static MarklogicSupport instance;
+
+	public static MarklogicSupport getInstance() {
+		if (instance == null) {
+			synchronized (MarklogicSupport.class) {
+				if (instance == null) {
+					instance = new MarklogicSupport();
+				}
+			}
+		}
+
+		return instance;
+	}
+
+	private MarklogicSupport() {
+	}
+	// #endregion Instance
+
 	public TupleQueryResult evaluateQuery(String sparqlQuery) throws Exception {
 		try {
 			String alternatedSparqlQuery = alternateSparqlQuery(sparqlQuery);
 			String params = createParamsForJsQuery(alternatedSparqlQuery);
-
 			String jsQuery = createJSQuery(alternatedSparqlQuery, params);
-			return evaluateOnMarklogicRestApi(jsQuery);
+
+			return evaluateOnJavaApi(jsQuery);
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -44,6 +69,7 @@ public class MarklogicSupport {
 		}
 	}
 
+	// #region javascript query helpers
 	private String alternateSparqlQuery(String sparqlQuery) throws Exception {
 		GeosparqlQueryModelVisitor visitor = new GeosparqlQueryModelVisitor(FunctionMapper.getInstance());
 
@@ -93,25 +119,32 @@ public class MarklogicSupport {
 
 		return sb.toString();
 	}
+	// #endregion Create Javascript query
 
-	private TupleQueryResult evaluateOnMarklogicRestApi(String jsQuery) throws IOException {
-		String boundaryStr = "BOUNDARY";
-		String params = String.format("javascript=%s", jsQuery);
-		byte[] postData = params.getBytes(StandardCharsets.UTF_8);
-		int postDataLength = postData.length;
+	public TupleQueryResult evaluateOnRestApi(String jsQuery) throws IOException {
+		try {
+			String boundaryStr = "BOUNDARY";
+			String params = String.format("javascript=%s", jsQuery);
+			byte[] postData = params.getBytes(StandardCharsets.UTF_8);
+			int postDataLength = postData.length;
 
-		HttpURLConnection connection = createConnection(jsQuery, postDataLength, boundaryStr);
-		String responseData = sendRequest(connection, postData);
-		TupleQueryResult result = parseResponse(responseData, boundaryStr);
+			HttpURLConnection connection = createConnection(jsQuery, postDataLength, boundaryStr);
+			String responseData = sendRequest(connection, postData);
 
-		return result;
+			return parseHttpResponse(responseData, boundaryStr);
+
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
+	// #region rest api helpers
 	private HttpURLConnection createConnection(String jsQuery, int postDataLength, String boundaryStr)
 			throws IOException {
-		String address = Application.getMarklogicAddress();
+		String host = Application.getMarklogicHost();
 		Integer port = Application.getMarklogicPort();
-		URL url = new URL(String.format("http://%s:%d/v1/eval", address, port));
+		URL url = new URL(String.format("http://%s:%d/v1/eval", host, port));
 
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setRequestMethod("POST");
@@ -119,6 +152,8 @@ public class MarklogicSupport {
 		connection.setRequestProperty("Content-Length", Integer.toString(postDataLength));
 		connection.setRequestProperty("Accept-Charset", "utf-8");
 		connection.setRequestProperty("Accept", String.format("multipart/mixed; boundary=%s", boundaryStr));
+		connection.setRequestProperty("Accept-Encoding", String.format("gzip, deflate, br"));
+		connection.setRequestProperty("Connection", String.format("keep-alive"));
 
 		connection.setDoOutput(true);
 		connection.setInstanceFollowRedirects(false);
@@ -152,15 +187,16 @@ public class MarklogicSupport {
 	}
 
 	// TODO: can it be optimized?
-	private TupleQueryResult parseResponse(String responseData, String boundaryStr) {
+	private TupleQueryResult parseHttpResponse(String responseData, String boundaryStr) {
+		TupleQueryResultBuilder builder = new TupleQueryResultBuilder();
+
 		Boolean bindingNamesInitialized = false;
-		HashSet<String> bindingNames = new HashSet<String>();
-		List<String> bindingNamesList = new ArrayList<String>();
-		List<ListBindingSet> bindingSets = new ArrayList<ListBindingSet>();
+		List<String> bindingNames = new ArrayList<String>();
 		ValidatingValueFactory valueFactory = new ValidatingValueFactory();
 
 		Pattern bindingsPattern = Pattern.compile("map\\{(?<bindings>.*)\\}");
-		Pattern nameValuePattern = Pattern.compile("\"(?<bindingName>.*)\":\"(?<value>.*)\"");
+		Pattern nameStrValuePattern = Pattern.compile("\"(?<bindingName>.*)\":\"(?<value>.*)\"");
+		Pattern nameSimpleValuePattern = Pattern.compile("\"(?<bindingName>.*)\":(?<value>.*)");
 		String[] boundedParts = responseData.split(boundaryStr);
 
 		// for each triple in the result (could have many iterations)
@@ -175,42 +211,97 @@ public class MarklogicSupport {
 
 			// for each variable in select (shouldn't have many iterations)
 			for (String nameValuePair : nameValuePairs) {
-				Matcher nameValueMatcher = nameValuePattern.matcher(nameValuePair);
+				Matcher nameValueMatcher = nameStrValuePattern.matcher(nameValuePair);
 				if (!nameValueMatcher.find()) {
-					continue;
+					nameValueMatcher = nameSimpleValuePattern.matcher(nameValuePair);
+
+					if (!nameValueMatcher.find()) {
+						continue;
+					}
 				}
 
 				String bindingName = nameValueMatcher.group("bindingName");
-				String value = nameValueMatcher.group("value");
+				String valueStr = nameValueMatcher.group("value");
 
-				if (!bindingNamesInitialized && !bindingNames.contains(bindingName)) {
+				if (!bindingNamesInitialized) {
 					bindingNames.add(bindingName);
 				}
 
 				try {
-					values.add(valueFactory.createIRI(value));
+					values.add(valueFactory.createIRI(valueStr));
 
 				} catch (IllegalArgumentException e) {
-					values.add(valueFactory.createLiteral(value));
+					values.add(valueFactory.createLiteral(valueStr));
 				}
 			}
 
 			if (!bindingNamesInitialized) {
 				bindingNamesInitialized = true;
-				bindingNamesList = new ArrayList<String>(bindingNames);
+				builder.startQueryResult(bindingNames);
 			}
 
-			bindingSets.add(new ListBindingSet(bindingNamesList, values));
-
+			builder.handleSolution(new ListBindingSet(bindingNames, values));
 		}
 
-		TupleQueryResultBuilder builder = new TupleQueryResultBuilder();
-		builder.startQueryResult(bindingNamesList);
-		for (ListBindingSet bindingSet : bindingSets) {
-			builder.handleSolution(bindingSet);
-		}
 		builder.endQueryResult();
-
 		return builder.getQueryResult();
 	}
+	// #endregion
+
+	public TupleQueryResult evaluateOnJavaApi(String jsQuery) throws JSONException {
+		DatabaseClient client = createDbClient();
+		EvalResultIterator iterator = client.newServerEval().javascript(jsQuery).eval();
+		return handleEvalResult(iterator);
+	}
+
+	// #region java api helpers
+	private DatabaseClient createDbClient() {
+		String host = Application.getMarklogicHost();
+		Integer port = Application.getMarklogicPort();
+		String dbName = Application.getMarklogicDbName();
+		SecurityContext securityContext = new DatabaseClientFactory.DigestAuthContext("admin", "admin");
+
+		return DatabaseClientFactory.newClient(host, port, dbName, securityContext);
+	}
+
+	private TupleQueryResult handleEvalResult(EvalResultIterator iterator) throws JSONException {
+		Boolean bindingNamesInitialized = false;
+		List<String> bindingNames = new ArrayList<String>();
+		ValidatingValueFactory valueFactory = new ValidatingValueFactory();
+		TupleQueryResultBuilder builder = new TupleQueryResultBuilder();
+
+		while (iterator.hasNext()) {
+			String jsonStr = iterator.next().getAs(String.class);
+			JSONObject jsonObj = new JSONObject(jsonStr);
+
+			String[] names = JSONObject.getNames(jsonObj);
+			List<Value> values = new ArrayList<Value>();
+
+			for (String name : names) {
+				String valueStr = jsonObj.getString(name);
+
+				try {
+					values.add(valueFactory.createIRI(valueStr));
+
+				} catch (IllegalArgumentException e) {
+					values.add(valueFactory.createLiteral(valueStr));
+				}
+
+				if (!bindingNamesInitialized) {
+					bindingNames.add(name);
+				}
+			}
+
+			if (!bindingNamesInitialized) {
+				bindingNamesInitialized = true;
+				builder.startQueryResult(bindingNames);
+			}
+
+			builder.handleSolution(new ListBindingSet(bindingNames, values));
+		}
+
+		builder.endQueryResult();
+		return builder.getQueryResult();
+	}
+	// #endregion java api helpers
 }

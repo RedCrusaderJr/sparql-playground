@@ -40,7 +40,7 @@ public class SparqlService implements InitializingBean {
 	private String prefixesString;
 
 	public SparqlService() {
-		marklogicSupport = new MarklogicSupport();
+		marklogicSupport = MarklogicSupport.getInstance();
 	}
 
 	public Query getQuery(String queryStr) throws SparqlTutorialException {

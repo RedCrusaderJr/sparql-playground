@@ -87,6 +87,10 @@ public class FunctionMapper {
 		return functionAbbreviationToMarklogicFunctionMap.getOrDefault(functionAbbreviation, null);
 	}
 
+	public Set<String> getAllSupportedFunctionByUri() {
+		return geosparqlUriToFunctionAbbreviationMap.keySet();
+	}
+
 	public Set<String> getAllSupportedFunctionByAbbreviations() {
 		return functionAbbreviationToGeosparqlUriMap.keySet();
 	}

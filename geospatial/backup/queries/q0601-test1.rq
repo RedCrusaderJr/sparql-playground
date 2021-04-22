@@ -1,0 +1,13 @@
+#title:ml-geospatial-test-1
+#comment:
+
+#tags:wkt,coordinates
+#color:ex-green
+#img:
+
+SELECT DISTINCT ?wktPoint1 ?wktPoint2 ?functionResult
+WHERE {
+  BIND("POINT (1 1)"^^geo:wktLiteral as ?wktPoint1).
+  BIND("POINT (2 2)"^^geo:wktLiteral as ?wktPoint2).
+  BIND(geof:intersection(?wktPoint1, ?wktPoint2) as ?functionResult).
+}

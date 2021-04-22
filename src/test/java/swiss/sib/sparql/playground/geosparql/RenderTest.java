@@ -1,12 +1,11 @@
 package swiss.sib.sparql.playground.geosparql;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import org.eclipse.rdf4j.query.parser.ParsedQuery;
 import org.eclipse.rdf4j.query.parser.sparql.SPARQLParser;
 import org.eclipse.rdf4j.queryrender.sparql.SPARQLQueryRenderer;
-
-import org.junit.Test;
 
 public class RenderTest {
 	private static String lineSeparator = System.lineSeparator();
@@ -36,6 +35,6 @@ public class RenderTest {
 		ParsedQuery pq = new SPARQLParser().parseQuery(query, null);
 		String actual = new SPARQLQueryRenderer().render(pq);
 
-		assertEquals(expected, actual);
+		Assertions.assertEquals(expected, actual);
 	}
 }
