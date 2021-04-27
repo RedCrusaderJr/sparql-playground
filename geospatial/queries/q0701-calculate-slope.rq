@@ -1,0 +1,55 @@
+#title:calculate-slope
+#comment:
+
+#tags:slope,connected-points,wkt,coordinates
+#color:ex-green
+#img:
+
+select DISTINCT ?slope ?pSlope 
+where {
+  
+  #terminals
+  ?tmId rdf:type cim:Terminal.
+  ?tmId cim:IdentifiedObject.name ?tmName.
+   
+  #connectivity nodes of terminal
+  ?tmId cim:Terminal.ConnectivityNode ?cNodeId.
+  ?cNodeId cim:IdentifiedObject.name ?cNodeName.
+  
+  #conducting equipment of terminal
+  ?tmId cim:Terminal.ConductingEquipment ?condEqId.
+  ?condEqId cim:IdentifiedObject.name ?condEqName.
+  
+  #locations
+  ?condEqId cim:PowerSystemResource.Location ?locationId.
+  ?postionPointId1 rdf:type cim:PositionPoint.
+  ?postionPointId2 rdf:type cim:PositionPoint.
+  
+  ?postionPointId1 cim:PositionPoint.Location ?locationId.
+  ?postionPointId2 cim:PositionPoint.Location ?locationId.
+  
+  #coordinates
+  ?postionPointId1 cim:PositionPoint.xPosition ?x1.
+  ?postionPointId1 cim:PositionPoint.yPosition ?y1.
+  
+  ?postionPointId2 cim:PositionPoint.xPosition ?x2.
+  ?postionPointId2 cim:PositionPoint.yPosition ?y2.
+	
+  #construct WKTs (draw geometry)
+  BIND(concat("POINT (", str(?x1), " ", str(?y1), ")") as ?pointStr)
+  BIND(strdt(?pointStr, geo:wktLiteral) as ?g_wktPoint)
+  
+  BIND(concat("LINESTRING (", str(?x1), " ", str(?y1), ", ", str(?x2), " ", str(?y2), ")") as ?lineStr).
+  BIND(strdt(?lineStr, geo:wktLiteral) as ?g_wktLine).
+  
+  
+  
+  #BUFFERING LINES
+  #slope of acline segment: Slope = (y2 - y1) / (x2 - x1)
+  BIND((xsd:float(?y2) - xsd:float(?y1)) / (xsd:float(?x2) - xsd:float(?x1)) as ?slope).
+
+  #slope of perpendicular line: pSlope = -1 / Slope
+  BIND (-1 / ?slope as ?pSlope).
+
+  FILTER(?x1 != ?x2 || ?y1 != ?y2)
+}

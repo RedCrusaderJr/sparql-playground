@@ -41,4 +41,6 @@ where {
   
   BIND(concat("LINESTRING (", str(?xPosition1), " ", str(?yPosition1), ", ", str(?xPosition2), " ", str(?yPosition2), ")") as ?lineStr)
   BIND(strdt(?lineStr, geo:wktLiteral) as ?g_wktLine)
+
+  FILTER(?xPosition1 != ?xPosition2 || ?yPosition1 != ?yPosition2)
 }

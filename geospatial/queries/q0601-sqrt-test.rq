@@ -1,0 +1,11 @@
+#title:sqrt-test
+#comment:
+
+#tags:custom,sqrt
+#color:ex-red
+#img:
+
+SELECT DISTINCT ?result
+WHERE {
+  BIND(<http://example.org/custom-function/sqrt>(25) as ?result).
+}

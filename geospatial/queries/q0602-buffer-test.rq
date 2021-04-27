@@ -1,0 +1,17 @@
+#title:buffer-test
+#comment:
+
+#tags:custom,buffer
+#color:ex-red
+#img:
+
+SELECT DISTINCT ?g_line1 ?g_line2 ?g_line3 # ?g_result1 ?g_result2 ?g_result3
+WHERE {
+  BIND("LINESTRING (45.0 19.0, 45.0 20.0)"^^geo:wktLiteral as ?g_line1).
+  BIND("LINESTRING (45.0 19.0, 44.0 19.0)"^^geo:wktLiteral as ?g_line2).
+  BIND("LINESTRING (45.0 19.0, 44.0 20.0)"^^geo:wktLiteral as ?g_line3).
+
+  BIND(<http://example.org/custom-function/buffer>(?g_line1, 50) as ?g_result1).
+  BIND(<http://example.org/custom-function/buffer>(?g_line2, 50) as ?g_result2).
+  BIND(<http://example.org/custom-function/buffer>(?g_line3, 50) as ?g_result3).
+}

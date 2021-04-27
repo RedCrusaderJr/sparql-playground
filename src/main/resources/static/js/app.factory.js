@@ -85,10 +85,10 @@ function snorql($http, $q, $timeout, $location, config) {
     this.faqs=[];
 
     this.prefixes="";
-    
+
     // ttl data
     this.data="";
-    
+
     // initial sparql result
     this.result={head:[],results:[]};
 
@@ -100,7 +100,7 @@ function snorql($http, $q, $timeout, $location, config) {
 
     // initial selected query title
     this.queryTitle = defaultSnorql.title;
-    
+
     // initial url for examples
     this.examplesUrl=defaultSnorql.sparqlUrlExamples;
 
@@ -110,7 +110,7 @@ function snorql($http, $q, $timeout, $location, config) {
     // initial url for prefixes
     this.prefixesUrl=defaultSnorql.sparqlUrlPrefixes;
 
-    
+
     this.description = defaultSnorql.description;
     //
     // wrap promise to this object
@@ -178,7 +178,7 @@ function snorql($http, $q, $timeout, $location, config) {
 
    return this;
   };
-  
+
 //load sparql examples
   Snorql.prototype.loadFaqs=function(){
 	   var self=this;
@@ -197,7 +197,7 @@ function snorql($http, $q, $timeout, $location, config) {
 
   };
 
-  
+
   Snorql.prototype.pushData=function(){
 	   var self=this;
 	   console.log(this.dataURL);
@@ -211,7 +211,7 @@ function snorql($http, $q, $timeout, $location, config) {
 	   })
   };
 
-	  
+
   // manage default snorql state
   Snorql.prototype.updateQuery=function(params){
     if(params.class){
@@ -256,7 +256,7 @@ function snorql($http, $q, $timeout, $location, config) {
      },200)
      return self;
    }*/
-   
+
    if(params.output!=='html'){
 
        var encodedUrl = url+"?output="+params.output+"&query="+encodeURIComponent(params.query)
@@ -364,7 +364,7 @@ function snorql($http, $q, $timeout, $location, config) {
             }
             return tr;
         }
-        
+
         this._createTableBooleanRow = function(boolean) {
             var tr = document.createElement('tr');
             tr.className = 'odd';
@@ -581,7 +581,7 @@ function parseCoordinates(unparsedCoordinates){
 function parseShape(coordinates){
   var shape = [];
   coordinates = removeParentheses(coordinates);
-  var splittedCoordinates = coordinates.split(',');
+  var splittedCoordinates = coordinates.split(', ');
   splittedCoordinates.forEach(pointPair => {
     var splittedPointPair = pointPair.trim().split(' ');
     shape.push({ x: splittedPointPair[0].trim(), y: splittedPointPair[1].trim() });
@@ -608,7 +608,7 @@ function addElementToMap(parsedElement){
       break;
     default:
       break;
-  } 
+  }
 }
 
 function drawPoint(parsedElement){
@@ -645,7 +645,7 @@ function drawPolygon(parsedElement){
       window.mapViewLat = x;
       window.mapViewLong = y;
     });
-    new L.polygon(latlongs, {color: 'red'}).addTo(window.queryShapes);
+    new L.polygon(latlongs, {color: 'blue'}).addTo(window.queryShapes);
   });
 }
 
