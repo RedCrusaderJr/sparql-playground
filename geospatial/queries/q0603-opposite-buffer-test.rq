@@ -1,0 +1,34 @@
+#title:opposite-buffer-test
+#comment:
+
+#tags:custom,buffer
+#color:ex-red
+#img:
+
+SELECT DISTINCT *
+WHERE {
+  #BIND("LINESTRING (45.00 19.00, 45.00 19.01)"^^geo:wktLiteral as ?g_line1).
+  #BIND("LINESTRING (45.01 19.00, 45.01 19.01)"^^geo:wktLiteral as ?g_line2).
+  
+  #BIND("LINESTRING (45.00 19.00, 45.01 19.00)"^^geo:wktLiteral as ?g_line3).
+  #BIND("LINESTRING (45.00 19.01, 45.01 19.01)"^^geo:wktLiteral as ?g_line4).
+  
+  #BIND("LINESTRING (45.00 19.00, 45.01 19.01)"^^geo:wktLiteral as ?g_line5).
+  #BIND("LINESTRING (45.01 19.00, 45.00 19.01)"^^geo:wktLiteral as ?g_line6).
+
+  BIND("LINESTRING (45.00 19.01, 45.00 19.00)"^^geo:wktLiteral as ?g_line1).
+  BIND("LINESTRING (45.01 19.01, 45.01 19.00)"^^geo:wktLiteral as ?g_line2).
+  
+  BIND("LINESTRING (45.01 19.00, 45.00 19.00)"^^geo:wktLiteral as ?g_line3).
+  BIND("LINESTRING (45.01 19.01, 45.00 19.01)"^^geo:wktLiteral as ?g_line4).
+  
+  BIND("LINESTRING (45.01 19.01, 45.00 19.00)"^^geo:wktLiteral as ?g_line5).
+  BIND("LINESTRING (45.00 19.01, 45.01 19.00)"^^geo:wktLiteral as ?g_line6).
+
+  BIND(<http://example.org/custom-function/buffer>(?g_line1, 50) as ?g_result1).
+  BIND(<http://example.org/custom-function/buffer>(?g_line2, 50) as ?g_result2).
+  BIND(<http://example.org/custom-function/buffer>(?g_line3, 50) as ?g_result3).
+  BIND(<http://example.org/custom-function/buffer>(?g_line4, 50) as ?g_result4).
+  BIND(<http://example.org/custom-function/buffer>(?g_line5, 50) as ?g_result5).
+  BIND(<http://example.org/custom-function/buffer>(?g_line6, 50) as ?g_result6).
+}
