@@ -2,8 +2,11 @@ package swiss.sib.sparql.playground.geosparql;
 
 import java.util.*;
 
-import org.apache.commons.logging.*;
-import org.eclipse.rdf4j.query.algebra.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.eclipse.rdf4j.query.algebra.FunctionCall;
+import org.eclipse.rdf4j.query.algebra.ValueExpr;
+import org.eclipse.rdf4j.query.algebra.Var;
 import org.eclipse.rdf4j.query.algebra.helpers.AbstractQueryModelVisitor;
 
 public class GeosparqlQueryModelVisitor extends AbstractQueryModelVisitor<Exception> {
@@ -16,11 +19,12 @@ public class GeosparqlQueryModelVisitor extends AbstractQueryModelVisitor<Except
 	}
 
 	@Override
-	public void meet(FunctionCall node) {
-		if (!functionMapper.findAbbreviationByUri(node.getURI())) {
+	public void meet(FunctionCall node) throws Exception {
+		if (!functionMapper.findFunctionByUri(node.getURI())) {
 			logger.debug("Function call will not be changed. Function uri: " + node.getURI());
 			return;
 		}
+		logger.debug("Changing a Function call. Function uri: " + node.getURI());
 
 		String functionName = node.getURI();
 		List<ValueExpr> params = node.getArgs();
@@ -31,7 +35,7 @@ public class GeosparqlQueryModelVisitor extends AbstractQueryModelVisitor<Except
 		List<ValueExpr> args = new ArrayList<ValueExpr>();
 
 		Var functionPointer = new Var();
-		functionPointer.setName(functionMapper.getFunctionAbbreviationByUri(functionName));
+		functionPointer.setName(functionMapper.getFunctionByUri(functionName).abbreviation);
 		functionPointer.setParentNode(applyFunctionCall);
 		args.add(functionPointer);
 

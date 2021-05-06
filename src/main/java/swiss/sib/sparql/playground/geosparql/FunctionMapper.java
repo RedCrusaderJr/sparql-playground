@@ -25,6 +25,9 @@ public class FunctionMapper {
 	}
 
 	private FunctionMapper() {
+		this.functionUriToFunctionDesc = new HashMap<String, FunctionDescription>();
+		this.abbreviationToFunctionDesc = new HashMap<String, FunctionDescription>();
+
 		try {
 			importFunctions();
 		} catch (Exception e) {
@@ -33,65 +36,51 @@ public class FunctionMapper {
 	}
 	// #endregion Instance
 
-	private Map<String, String> geosparqlUriToFunctionAbbreviationMap;
-	private Map<String, String> functionAbbreviationToGeosparqlUriMap;
-	private Map<String, String> geosparqlUriToMarklogicFunctionMap;
-	private Map<String, String> functionAbbreviationToMarklogicFunctionMap;
+	private Map<String, FunctionDescription> functionUriToFunctionDesc;
+	private Map<String, FunctionDescription> abbreviationToFunctionDesc;
 
-	private void importFunctions() throws ClassNotFoundException {
-		geosparqlUriToFunctionAbbreviationMap = new HashMap<String, String>();
-		geosparqlUriToFunctionAbbreviationMap.put("http://www.opengis.net/def/function/geosparql/intersection",
-				"intersectionFunction");
+	private void importFunctions() {
+		FunctionDescription function1 = new FunctionDescription();
+		function1.functionUri = "http://www.opengis.net/def/function/geosparql/intersection";
+		function1.abbreviation = "intersectionFunction";
+		function1.marklogicFunction = "geo.regionIntersects";
 
-		functionAbbreviationToGeosparqlUriMap = new HashMap<String, String>();
-		functionAbbreviationToGeosparqlUriMap.put("intersectionFunction",
-				"http://www.opengis.net/def/function/geosparql/intersection");
+		CustomFunction function2 = new CustomFunction();
+		function2.functionUri = "http://example.org/custom-function/buffer";
+		function2.abbreviation = "bFun";
+		function2.marklogicFunction = "bufferFunction";
+		function2.modulePath = "/buffer-function.mjs";
 
-		geosparqlUriToMarklogicFunctionMap = new HashMap<String, String>();
-		geosparqlUriToMarklogicFunctionMap.put("http://www.opengis.net/def/function/geosparql/intersection",
-				"geo.regionIntersects");
-
-		functionAbbreviationToMarklogicFunctionMap = new HashMap<String, String>();
-		functionAbbreviationToMarklogicFunctionMap.put("intersectionFunction", "geo.regionIntersects");
+		addFunction(function1);
+		addFunction(function2);
 	}
 
-	public Boolean findAbbreviationByUri(String functionUri) {
-		return geosparqlUriToFunctionAbbreviationMap.containsKey(functionUri);
+	private void addFunction(FunctionDescription function) {
+		this.functionUriToFunctionDesc.put(function.functionUri, function);
+		this.abbreviationToFunctionDesc.put(function.abbreviation, function);
 	}
 
-	public Boolean findFunctionUriByAbbreviation(String functionAbbreviation) {
-		return functionAbbreviationToGeosparqlUriMap.containsKey(functionAbbreviation);
+	public Boolean findFunctionByUri(String functionUri) {
+		return functionUriToFunctionDesc.containsKey(functionUri);
 	}
 
-	public Boolean findMarklogicFunctionByUri(String functionUri) {
-		return geosparqlUriToMarklogicFunctionMap.containsKey(functionUri);
+	public Boolean findFunctionByAbbreviation(String functionAbbreviation) {
+		return abbreviationToFunctionDesc.containsKey(functionAbbreviation);
 	}
 
-	public Boolean findMarklogicFunctionByAbbreviation(String functionAbbreviation) {
-		return functionAbbreviationToMarklogicFunctionMap.containsKey(functionAbbreviation);
+	public FunctionDescription getFunctionByUri(String functionUri) {
+		return functionUriToFunctionDesc.getOrDefault(functionUri, null);
 	}
 
-	public String getFunctionAbbreviationByUri(String functionUri) {
-		return geosparqlUriToFunctionAbbreviationMap.getOrDefault(functionUri, null);
-	}
-
-	public String getFunctionUriByAbbreviation(String abbreviation) {
-		return functionAbbreviationToGeosparqlUriMap.getOrDefault(abbreviation, null);
-	}
-
-	public String getMarklogicFunctionByUri(String functionUri) {
-		return geosparqlUriToMarklogicFunctionMap.getOrDefault(functionUri, null);
-	}
-
-	public String getMarklogicFunctionByAbbreviation(String functionAbbreviation) {
-		return functionAbbreviationToMarklogicFunctionMap.getOrDefault(functionAbbreviation, null);
+	public FunctionDescription getFunctionByAbbreviation(String abbreviation) {
+		return abbreviationToFunctionDesc.getOrDefault(abbreviation, null);
 	}
 
 	public Set<String> getAllSupportedFunctionByUri() {
-		return geosparqlUriToFunctionAbbreviationMap.keySet();
+		return functionUriToFunctionDesc.keySet();
 	}
 
 	public Set<String> getAllSupportedFunctionByAbbreviations() {
-		return functionAbbreviationToGeosparqlUriMap.keySet();
+		return abbreviationToFunctionDesc.keySet();
 	}
 }

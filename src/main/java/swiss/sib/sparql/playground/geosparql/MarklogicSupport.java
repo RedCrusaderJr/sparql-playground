@@ -55,12 +55,23 @@ public class MarklogicSupport {
 	}
 	// #endregion Instance
 
+	private final Pattern bindingsPattern = Pattern.compile("map\\{(?<bindings>.*)\\}");
+	private final Pattern nameStrValuePattern = Pattern.compile("\"(?<bindingName>.*)\":\"(?<value>.*)\"");
+	private final Pattern nameSimpleValuePattern = Pattern.compile("\"(?<bindingName>.*)\":(?<value>.*)");
+	private final Pattern xdmpApplyArgsPattern = Pattern
+			.compile("<http:\\/\\/marklogic\\.com\\/xdmp#apply>\\((?<args>.*)\\)");
+	private final Pattern literalPattern = Pattern
+			.compile("(?<literalLong>\"\"\"(?<literalValue>.*)\"\"\"\\^\\^\\<.*\\>)");
+
 	public TupleQueryResult evaluateQuery(String sparqlQuery) throws Exception {
 		try {
 			String alternatedSparqlQuery = alternateSparqlQuery(sparqlQuery);
-			String params = createParamsForJsQuery(alternatedSparqlQuery);
-			String jsQuery = createJSQuery(alternatedSparqlQuery, params);
 
+			List<String> abbreviations = extractFunctionAbbreviationsFromQuery(alternatedSparqlQuery);
+			String importFunctionsStr = createImportFunctionsStr(abbreviations);
+			String params = createXdmpApplyParams(abbreviations);
+
+			String jsQuery = createJSQuery(alternatedSparqlQuery, importFunctionsStr, params);
 			return evaluateOnJavaApi(jsQuery);
 
 		} catch (Exception e) {
@@ -77,22 +88,75 @@ public class MarklogicSupport {
 		parsedQuery.getTupleExpr().visit(visitor);
 
 		SPARQLQueryRenderer renderer = new SPARQLQueryRenderer();
-		String queryStr = renderer.render(parsedQuery);
+		String renderedStr = renderer.render(parsedQuery);
+		String finalQueryStr = renderCorrection(renderedStr);
+		return finalQueryStr;
+	}
+
+	// replacing: """value"""^^<datatype> from xdmp:apply aguments
+	// with: 'value' - js can't cope with """literal""" notation
+	private String renderCorrection(String queryStr) {
+		Matcher xdmpApplyArgsMatcher = xdmpApplyArgsPattern.matcher(queryStr);
+		if (!xdmpApplyArgsMatcher.find()) {
+			return queryStr;
+		}
+
+		String args = xdmpApplyArgsMatcher.group("args");
+		String[] argsArray = args.split(", ");
+		for (String arg : argsArray) {
+			Matcher literalMatcher = literalPattern.matcher(arg);
+
+			if (!literalMatcher.find()) {
+				continue;
+			}
+
+			String literalLong = literalMatcher.group("literalLong");
+			String literalValue = literalMatcher.group("literalValue");
+			queryStr = queryStr.replace(literalLong, "'" + literalValue + "'");
+		}
 
 		return queryStr;
 	}
 
-	private String createParamsForJsQuery(String queryStr) {
+	private List<String> extractFunctionAbbreviationsFromQuery(String queryStr) {
+		List<String> functionAbrvs = new ArrayList<String>();
 		FunctionMapper mapper = FunctionMapper.getInstance();
-
-		Boolean isFirst = true;
-		StringBuilder sb = new StringBuilder();
 
 		for (String functionAbrv : mapper.getAllSupportedFunctionByAbbreviations()) {
 			if (!queryStr.contains(functionAbrv)) {
 				continue;
 			}
+			functionAbrvs.add(functionAbrv);
+		}
+		return functionAbrvs;
+	}
 
+	private String createImportFunctionsStr(List<String> functionAbrvs) {
+		StringBuilder sb = new StringBuilder();
+		FunctionMapper mapper = FunctionMapper.getInstance();
+		String newLine = System.getProperty("line.separator");
+
+		for (String abrv : functionAbrvs) {
+			FunctionDescription function = mapper.getFunctionByAbbreviation(abrv);
+			if (!(function instanceof CustomFunction)) {
+				continue;
+			}
+
+			String mlName = function.marklogicFunction;
+			String modulePath = ((CustomFunction) function).modulePath;
+			sb.append("import { ").append(mlName).append(" } from  '").append(modulePath).append("';");
+			sb.append(newLine);
+		}
+
+		return sb.toString();
+	}
+
+	private String createXdmpApplyParams(List<String> functionAbrvs) {
+		StringBuilder sb = new StringBuilder();
+		FunctionMapper mapper = FunctionMapper.getInstance();
+		Boolean isFirst = true;
+
+		for (String abrv : functionAbrvs) {
 			String separator = ", ";
 			if (isFirst) {
 				separator = "";
@@ -100,18 +164,19 @@ public class MarklogicSupport {
 			}
 
 			sb.append(separator);
-			sb.append(functionAbrv).append(": ").append(mapper.getMarklogicFunctionByAbbreviation(functionAbrv));
+			sb.append(abrv).append(": ");
+			sb.append(mapper.getFunctionByAbbreviation(abrv).marklogicFunction);
 		}
 
 		return sb.toString();
 	}
 
-	private String createJSQuery(String sparqlQuery, String params) {
+	private String createJSQuery(String sparqlQuery, String importFunctionsStr, String params) {
 		StringBuilder sb = new StringBuilder();
 		String newLine = System.getProperty("line.separator");
 
-		sb.append("declareUpdate();").append(newLine);
 		sb.append("var sem = require('/MarkLogic/semantics.xqy');").append(newLine);
+		sb.append(importFunctionsStr).append(newLine);
 		sb.append("var query = `" + sparqlQuery + "`;").append(newLine);
 		sb.append("var params = {" + params + "}").append(newLine);
 		sb.append("var results = sem.sparql(query,params);").append(newLine);
@@ -194,9 +259,6 @@ public class MarklogicSupport {
 		List<String> bindingNames = new ArrayList<String>();
 		ValidatingValueFactory valueFactory = new ValidatingValueFactory();
 
-		Pattern bindingsPattern = Pattern.compile("map\\{(?<bindings>.*)\\}");
-		Pattern nameStrValuePattern = Pattern.compile("\"(?<bindingName>.*)\":\"(?<value>.*)\"");
-		Pattern nameSimpleValuePattern = Pattern.compile("\"(?<bindingName>.*)\":(?<value>.*)");
 		String[] boundedParts = responseData.split(boundaryStr);
 
 		// for each triple in the result (could have many iterations)

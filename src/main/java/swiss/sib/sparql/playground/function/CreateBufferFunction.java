@@ -11,6 +11,9 @@ import org.eclipse.rdf4j.query.algebra.evaluation.function.Function;
 
 public class CreateBufferFunction implements Function {
 	public static final String NAMESPACE = "http://example.org/custom-function/";
+	// LINESTRING (x1 y1, x2 y2)
+	private final Pattern wktLinestringPattern = Pattern
+			.compile("LINESTRING \\((?<x1>.*) (?<y1>.*), (?<x2>.*) (?<y2>.*)\\)");
 
 	@Override
 	public String getURI() {
@@ -24,10 +27,13 @@ public class CreateBufferFunction implements Function {
 		}
 
 		Matcher wktLinestringMatcher = parseArg0(args[0]);
+		Double x1 = Double.parseDouble(wktLinestringMatcher.group("x1"));
+		Double y1 = Double.parseDouble(wktLinestringMatcher.group("y1"));
+		Double x2 = Double.parseDouble(wktLinestringMatcher.group("x2"));
+		Double y2 = Double.parseDouble(wktLinestringMatcher.group("y2"));
 		Double distanceArg = parseArg1(args[1]);
 
-		BufferCreator bufferCreator = new BufferCreator(wktLinestringMatcher, distanceArg);
-
+		BufferCreator bufferCreator = new BufferCreator(x1, y1, x2, y2, distanceArg);
 		String bufferStr = bufferCreator.create();
 		return valueFactory.createLiteral(bufferStr);
 	}
@@ -37,8 +43,6 @@ public class CreateBufferFunction implements Function {
 			throw new ValueExprEvaluationException("invalid argument (literal expected): " + arg);
 		}
 
-		// LINESTRING (x1 y1, x2 y2)
-		Pattern wktLinestringPattern = Pattern.compile("LINESTRING \\((?<x1>.*) (?<y1>.*), (?<x2>.*) (?<y2>.*)\\)");
 		Matcher wktLinestringMatcher = wktLinestringPattern.matcher(arg.stringValue());
 
 		if (!wktLinestringMatcher.find()) {

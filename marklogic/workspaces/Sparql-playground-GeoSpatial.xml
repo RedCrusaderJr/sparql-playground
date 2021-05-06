@@ -1,164 +1,6 @@
 <export>
-<workspace name="Sparql-playground-GeoSpatial">
-<query name="Distance" focus="false" listorder="1" taborder="1" active="true" database="8967445921499680360" server="17378417203308661926" database-name="sparql-playground" server-name="8111-sparql-playground" mode="javascript">
-'use strict';
-
-//landmarks
-let lmTriples = Array.from(cts.triples([], 
-                                     sem.iri("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"),
-                                     sem.iri("http://example.org/Landmark")));
-let landmark1 = sem.tripleSubject(lmTriples[0]);
-let landmark2 = sem.tripleSubject(lmTriples[1]);
-
-//geometry
-let geomTriple1 = cts.triples(landmark1, 
-                                     sem.iri("http://www.opengis.net/ont/geosparql#hasGeometry"),
-                                     []);
-let geometry1 = sem.tripleObject(geomTriple1);
-  
-
-let geomTriple2 = cts.triples(landmark2, 
-                                     sem.iri("http://www.opengis.net/ont/geosparql#hasGeometry"),
-                                     []);
-let geometry2 = sem.tripleObject(geomTriple2);
-
-
-//points
-let pointTriple1 = cts.triples(geometry1, 
-                                     sem.iri("http://www.opengis.net/ont/geosparql#asWKT"),
-                                     []);
-let point1 = sem.tripleObject(pointTriple1);
-  
-
-let pointTriple2 = cts.triples(geometry2, 
-                                     sem.iri("http://www.opengis.net/ont/geosparql#asWKT"),
-                                     []);
-let point2 = sem.tripleObject(pointTriple2);
-
-//distance
-let distance = geo.distance(point1, point2, "units=meters")/1000;
-
-distance
-</query>
-
-
-<query name="Idea 1" focus="false" listorder="2" taborder="1" active="false" database="8967445921499680360" server="17378417203308661926" database-name="sparql-playground" server-name="8111-sparql-playground" mode="javascript">
-'use strict';
-declareUpdate();
-var sem = require("/MarkLogic/semantics.xqy");
-
-var query = `
-select distinct ?intersect ?myIntersect ?xGeom ?yGeom
-where {
-	?x geo:asWKT ?xGeom.
-	?y geo:asWKT ?yGeom.
-  
-  BIND(?myIntersect as ?intersect)
-  
-  FILTER(str(?xGeom) = str(?yGeom))
-}`;
-
-var functionResult = geo:polygon-intersects(xGeom, yGeom);
-var results = sem.sparql(query,{myIntersect:functionResult}});
-results
-</query>
-
-
-<query name="Query 2" focus="false" listorder="3" taborder="1" active="false" database="8967445921499680360" server="17378417203308661926" database-name="sparql-playground" server-name="8111-sparql-playground" mode="javascript">
-'use strict';
-declareUpdate();
-var sem = require("/MarkLogic/semantics.xqy");
-
-var query = `
-prefix xdmp: &lt;http://marklogic.com/xdmp#&gt;
-select distinct ?intersect ?xGeom ?yGeom
-where {
-  ?x geo:asWKT ?xGeom.
-	?y geo:asWKT ?yGeom.
-  bind(xdmp:apply(?intersectFunction, ?xGeom, ?yGeom) as ?intersect)
-}`;
-
-var params = {  intersectFunction: geo.polygon-intersects }
-var results = sem.sparql(query,params);
-results
-</query>
-
-
-<query name="Insert Data" focus="false" listorder="4" taborder="2" active="false" database="5523013009738475207" server="6083025199173533748" database-name="my-new-db" server-name="App-Services" mode="javascript">
-declareUpdate();
-var sem = require("/MarkLogic/semantics.xqy");
-
-sem.rdfInsert(
-  sem.triple(sem.iri("http://www.example.org/dept/108/invoices/20963"),
-	     sem.iri("http://www.example.org/dept/108/invoices/paid"),
-             "true")) ;
-</query>
-
-
-<query name="Evaluate Query" focus="false" listorder="5" taborder="1" active="false" database="5523013009738475207" server="6083025199173533748" database-name="my-new-db" server-name="App-Services" mode="javascript">
-declareUpdate();
-var sem = require("/MarkLogic/semantics.xqy");
-
-var query =`
-PREFIX inv: &lt;http://www.example.org/dept/108/invoices/&gt;
-SELECT ?predicate ?object
-WHERE { 
-  inv:20963 ?predicate ?object 
-}`;
-
-var result = sem.sparql(query);
-result
-</query>
-
-
-<query name="Example 1 - Intersection" focus="false" listorder="6" taborder="1" active="false" database="8967445921499680360" server="17378417203308661926" database-name="sparql-playground" server-name="8111-sparql-playground" mode="javascript">
-declareUpdate();
-var sem = require("/MarkLogic/semantics.xqy");
-
-var query =`
-PREFIX cim:&lt;http://iec.ch/TC57/CIM-generic#&gt;
-PREFIX dbo:&lt;http://dbpedia.org/ontology/&gt;
-PREFIX dbp:&lt;http://dbpedia.org/property/&gt;
-PREFIX dbpedia:&lt;http://dbpedia.org/resource/&gt;
-PREFIX ex:&lt;http://example.org/&gt;
-PREFIX geo:&lt;http://www.opengis.net/ont/geosparql#&gt;
-PREFIX geof:&lt;http://www.opengis.net/def/function/geosparql/&gt;
-PREFIX my:&lt;http://example.org/ApplicationSchema#&gt;
-PREFIX rdf:&lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
-PREFIX rdfs:&lt;http://www.w3.org/2000/01/rdf-schema#&gt;
-PREFIX tto:&lt;http://example.org/tuto/ontology#&gt;
-PREFIX ttr:&lt;http://example.org/tuto/resource#&gt;
-PREFIX uom:&lt;http://www.opengis.net/def/uom/OGC/1.0/&gt;
-PREFIX xsd:&lt;http://www.w3.org/2001/XMLSchema#&gt;
-PREFIX xdmp: &lt;http://marklogic.com/xdmp#&gt;
-
-SELECT DISTINCT ?psrName ?xPosition ?yPosition ?wktPoint ?intersect
-WHERE {
-  ?locationId rdf:type cim:Location.
-  
-  ?psr rdfs:subClassOf+ cim:PowerSystemResource.
-  ?psrId rdf:type ?psr.
-  ?psrId cim:PowerSystemResource.Location ?locationId.
-  ?psrId cim:IdentifiedObject.name ?psrName.
-
-  ?postionPointId rdf:type cim:PositionPoint.
-  ?postionPointId cim:PositionPoint.Location ?locationId.
-  ?postionPointId cim:PositionPoint.xPosition ?xPosition.
-  ?postionPointId cim:PositionPoint.yPosition ?yPosition.
-  
-  BIND(concat("POINT (", str(?xPosition), " ", str(?yPosition), ")") as ?strPoint)
-  BIND(strdt(?strPoint, geo:wktLiteral) as ?wktPoint)
-  BIND(xdmp:apply(?intersectsFunction, ?wktPoint, ?wktPoint) as ?intersect) 
-}`;
-
-var params = {  intersectFunction: geo.regionIntersects }
-var results = sem.sparql(query,params);
-results
-</query>
-
-
-<query name="Query 3" focus="false" listorder="7" taborder="1" active="true" database="8967445921499680360" server="17378417203308661926" database-name="sparql-playground" server-name="8111-sparql-playground" mode="javascript">
-declareUpdate();
+<workspace name="Sparql-Playground-GeoSpatial">
+<query name="xdmp:apply" focus="false" listorder="1" taborder="2" active="true" database="8967445921499680360" server="17378417203308661926" database-name="sparql-playground" server-name="8111-sparql-playground" mode="javascript">
 var sem = require('/MarkLogic/semantics.xqy');
 var query = `select distinct ?psrName ?xPosition ?yPosition ?wktPoint ?intersect
 where {
@@ -178,6 +20,306 @@ where {
 var params = {intersectionFunction: geo.regionIntersects}
 var results = sem.sparql(query,params);
 results
+</query>
+<query name="Test JS query" focus="false" listorder="2" taborder="3" active="true" database="8967445921499680360" server="17378417203308661926" database-name="sparql-playground" server-name="8111-sparql-playground" mode="javascript">
+var sem = require('/MarkLogic/semantics.xqy');
+var query = `
+PREFIX geo:&lt;http://www.opengis.net/ont/geosparql#&gt;
+PREFIX xdmp:&lt;http://marklogic.com/xdmp#&gt;
+SELECT DISTINCT *
+WHERE {
+  BIND("POINT (1 1)"^^geo:wktLiteral as ?wktPoint1)
+  BIND("POINT (2 2)"^^geo:wktLiteral as ?wktPoint2)
+  BIND(xdmp:apply(?intersectionFunction, ?wktPoint1, ?wktPoint2) as ?functionResult).
+}`
+var params = {intersectionFunction: geo.regionIntersects}
+var results = sem.sparql(query,params);
+results
+</query>
+<query name="Test geospatial" focus="false" listorder="3" taborder="1" active="true" database="8967445921499680360" server="17378417203308661926" database-name="sparql-playground" server-name="8111-sparql-playground" mode="sparql">
+PREFIX cim:&lt;http://iec.ch/TC57/CIM-generic#&gt;
+PREFIX rdf:&lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt;
+SELECT DISTINCT ?condEqName1 ?xPosition1 ?yPosition1 ?condEqName2 ?xPosition2 ?yPosition2 
+WHERE {
+  ?termId1 rdf:type cim:Terminal.
+  ?termId1 cim:IdentifiedObject.name ?termName1.
+  ?termId2 rdf:type cim:Terminal.
+  ?termId1 cim:IdentifiedObject.name ?termName2.
+  
+	?termId1 cim:Terminal.ConductingEquipment ?condEqId1.
+  ?condEqId1 cim:IdentifiedObject.name ?condEqName1.
+  ?termId1 cim:Terminal.ConnectivityNode ?conNodeId1.
+  
+  
+  ?termId2 cim:Terminal.ConductingEquipment ?condEqId2.
+  ?condEqId2 cim:IdentifiedObject.name ?condEqName2.
+  ?termId2 cim:Terminal.ConnectivityNode ?conNodeId2.
+  
+  ?condEqId1 cim:PowerSystemResource.Location ?locationId1.
+  ?condEqId2 cim:PowerSystemResource.Location ?locationId2.
+  
+  ?postionPointId1 rdf:type cim:PositionPoint.
+  ?postionPointId2 rdf:type cim:PositionPoint.
+  
+  ?postionPointId1 cim:PositionPoint.Location ?locationId1.
+  ?postionPointId1 cim:PositionPoint.xPosition ?xPosition1.
+  ?postionPointId1 cim:PositionPoint.yPosition ?yPosition1.
+  
+  ?postionPointId2 cim:PositionPoint.Location ?locationId2.
+  ?postionPointId2 cim:PositionPoint.xPosition ?xPosition2.
+  ?postionPointId2 cim:PositionPoint.yPosition ?yPosition2.
+  
+  FILTER(?conNodeId1 = ?conNodeId2)
+  FILTER(str(?termId1) &lt; str(?termId2))
+}
+</query>
+<query name="BufferFuncton class" focus="true" listorder="5" taborder="5" active="true" database="8967445921499680360" server="17378417203308661926" database-name="sparql-playground" server-name="8111-sparql-playground" mode="javascript">
+const BigNumber = require('/bignumber.js');
+
+class BufferFunction {
+    constructor(x1, y1, x2, y2, distanceTotal) {
+          this.latUnit = new BigNumber(111200.0);
+          this.lonUnit = new BigNumber(78630.0);
+      
+          this.x1 = new BigNumber(x1);
+          this.y1 = new BigNumber(y1);
+          this.x2 = new BigNumber(x2);
+          this.y2 = new BigNumber(y2);
+          this.distanceTotal = new BigNumber(distanceTotal);
+      }
+    
+    hello() { 
+      return "Hello from BufferFunction(" +
+        this.x1 + ", " +
+        this.y1 + ", " + 
+        this.x2 + ", " + 
+        this.y2 + ", " + 
+        this.distanceTotal + ")!";
+    }
+    
+    createBuffer() {
+      var strResult = "";
+      if (this.x2.comparedTo(this.x1) == 0) {
+        strResult = this.equalLatitudesSpecialCase();
+        
+      } else if (this.y2.comparedTo(this.y1) == 0) {
+        strResult = this.equalLongitudesSpecialCase();
+          
+      } else {
+        strResult = this.basicCase();
+      }
+      
+      return strResult;
+    }
+    
+    // CASE x1 = x2
+    equalLatitudesSpecialCase() {
+      if (this.y2.comparedTo(this.y1) == -1) {
+          let temp = this.y2;
+          this.y2 = this.y1;
+          this.y1 = temp;
+      }
+  
+      // latitude change [deg]: latDeg = distanceTotal / latUnit
+      let latDeg = this.distanceTotal.dividedBy(this.latUnit); // latUnit will never be zero
+  
+      // longitude change [deg]: lonDeg = distanceTotal / lonUnit
+      let lonDeg = this.distanceTotal.dividedBy(this.lonUnit); // lonUnit will never be zero
+  
+      // POLYGONE POINTS
+          
+      // pX1 = x1 - latDeg
+          // pY1 = y1 - lonDeg
+          let pX1 = this.x1.minus(latDeg);
+          let pY1 = this.y1.minus(lonDeg);
+  
+          // pX2 = x1 + latDeg
+          // pY2 = y1 - lonDeg
+          let pX2 = this.x1.plus(latDeg);
+          let pY2 = this.y1.minus(lonDeg);
+  
+          // pX3 = x2 + latDeg
+          // pY3 = y2 + lonDeg
+          let pX3 = this.x2.plus(latDeg);
+          let pY3 = this.y2.plus(lonDeg);
+  
+          // pX4 = x2 - latDeg
+          // pY4 = y2 + lonDeg
+          let pX4 = this.x2.minus(latDeg);
+          let pY4 = this.y2.plus(lonDeg);
+  
+          return this.formatPolygonStr(pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4);
+    }
+    
+    // CASE y1 = y2
+    equalLongitudesSpecialCase() {
+      if (this.x2.comparedTo(this.x1) == -1) {
+              let temp = this.x2;
+              this.x2 = this.x1;
+              this.x1 = temp;
+          }
+  
+          // latitude change [deg]: latDeg = distanceTotal / latUnit
+          let latDeg = this.distanceTotal.dividedBy(this.latUnit); // latUnit will never be zero
+  
+          // longitude change [deg]: lonDeg = distanceTotal / lonUnit
+          let lonDeg = this.distanceTotal.dividedBy(this.lonUnit); // lonUnit will never be zero
+  
+          // POLYGONE POINTS
+  
+          // pX1 = x1 - latDeg
+          // pY1 = y1 - lonDeg
+          let pX1 = this.x1.minus(latDeg);
+          let pY1 = this.y1.minus(lonDeg);
+  
+          // pX2 = x1 - latDeg
+          // pY2 = y1 + lonDeg
+          let pX2 = this.x1.minus(latDeg);
+          let pY2 = this.y1.plus(lonDeg);
+  
+          // pX3 = x2 + latDeg
+          // pY3 = y2 + lonDeg
+          let pX3 = this.x2.plus(latDeg);
+          let pY3 = this.y2.plus(lonDeg);
+  
+          // pX4 = x2 + latDeg
+          // pY4 = y2 - lonDeg
+          let pX4 = this.x2.plus(latDeg);
+          let pY4 = this.y2.minus(lonDeg);
+  
+          return this.formatPolygonStr(pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4);
+    }
+    
+    // CASE x1 != x2 &amp;&amp; y1 != y2
+    basicCase() {
+      // slope of acline segment: slope = (y2 - y1) / (x2 - x1)
+          let slope = this.y2.minus(this.y1).dividedBy(this.x2.minus(this.x1)); // x2 and x1 will not be equal
+          let isSharp = slope.comparedTo(new BigNumber(0)) == 1;
+          
+      // puts coordinates in right order
+          this.correctCoordOrder(isSharp);
+          // extends line for distanceTotal length at each end
+          this.extendLine(slope);
+  
+          return this.createPolygonStr(slope);
+    }
+    
+    correctCoordOrder(isSharp) {
+      let correctionNeeded = false;
+  
+      if (this.x1.comparedTo(this.x2) == 1) {
+          correctionNeeded = true;
+      }
+  
+      if (isSharp &amp;&amp; this.y1.comparedTo(this.y2) == 1) {
+          correctionNeeded = true;
+      }
+  
+      if (!isSharp &amp;&amp; this.y1.comparedTo(this.y2) == -1) {
+          correctionNeeded = true;
+      }
+  
+      if (correctionNeeded) {
+          let temp = this.x1;
+          this.x1 = this.x2;
+          this.x2 = temp;
+  
+          temp = this.y1;
+          this.y1 = this.y2;
+          this.y2 = temp;
+      }
+    }
+      
+    // extends the line for distanceTotal at each end
+    extendLine(slope) {
+      // angle of line to x-axis [rad]: pAngle = arcus tangent(pSlope)
+          let angle = new BigNumber(Math.atan(slope));
+          //if (angle.doubleValue() == 0 || ((Double) angle.doubleValue()).isNaN()) {
+              //throw new ValueExprEvaluationException("perpendicular angle: " + angle.doubleValue());
+          //}
+  
+          // X and Y components of total distance [m]:
+          // distanceY = distanceTotal * sin(angle)
+          let angleSin = new BigNumber(Math.sin(angle));
+          let distanceY = this.distanceTotal.multipliedBy(angleSin);
+          // distanceX = distanceY / pSlope
+          let distanceX = distanceY.dividedBy(slope); // slope will not be zero if latitudes are not equal
+  
+          // latitude change [deg]
+          let latDeg = distanceX.dividedBy(this.latUnit); // latUnit will never be zero
+          // longitude change [deg]
+          let lonDeg = distanceY.dividedBy(this.lonUnit); // lonUnit will never be zero
+  
+          // x1 = x1 - latDeg
+          // y1 = y1 - lonDeg
+          this.x1 = this.x1.minus(latDeg);
+          this.y1 = this.y1.minus(lonDeg);
+  
+          // x2 = x2 + latDeg
+          // y2 = y2 + lonDeg
+          this.x2 = this.x2.plus(latDeg);
+          this.y2 = this.y2.plus(lonDeg);
+    }
+      
+    createPolygonStr(slope) {
+      // slope of perpendicular line: pSlope = - 1 / Slope
+          let pSlope = new BigNumber(-1).dividedBy(slope); // slope will not be zero if longitudes are not equal
+  
+          // angle of perpendicular line to x-axis [rad]: pAngle = arcus tangent(pSlope)
+          let pAngle = new BigNumber(Math.atan(pSlope));
+          //if (pAngle.doubleValue() == 0 || ((Double) pAngle.doubleValue()).isNaN()) {
+              //throw new ValueExprEvaluationException("perpendicular angle: " + pAngle.doubleValue());
+          //}
+  
+          // X and Y components of total distance [m]:
+          // distanceY = distanceTotal * sin(angle)
+          let angleSin = new BigNumber(Math.sin(pAngle));
+          let distanceY = this.distanceTotal.multipliedBy(angleSin);
+          // distanceX = distanceY / pSlope
+          let distanceX = distanceY.dividedBy(pSlope); // slope will not be zero if latitudes are not equal
+  
+          // latitude change [deg]
+          let latDeg = distanceX.dividedBy(this.latUnit); // latUnit will never be zero
+          // longitude change [deg]
+          let lonDeg = distanceY.dividedBy(this.lonUnit); // lonUnit will never be zero
+  
+          // pX1 = x1 - latDeg
+          // pY1 = y1 - lonDeg
+          let pX1 = this.x1.minus(latDeg);
+          let pY1 = this.y1.minus(lonDeg);
+  
+          // pX2 = x1 + latDeg
+          // pY2 = y1 + lonDeg
+          let pX2 = this.x1.plus(latDeg);
+          let pY2 = this.y1.plus(lonDeg);
+  
+          // pX3 = x2 + latDeg
+          // pY3 = y2 + lonDeg
+          let pX3 = this.x2.plus(latDeg);
+          let pY3 = this.y2.plus(lonDeg);
+  
+          // pX4 = x2 - latDeg
+          // pY4 = y2 - lonDeg
+        let	pX4 = this.x2.minus(latDeg);
+          let pY4 = this.y2.minus(lonDeg);
+  
+          return this.formatPolygonStr(pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4);
+    }
+    
+    formatPolygonStr(pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4) {
+      let str = "";
+      str = str.concat("POLYGON ((")
+               .concat(pX1).concat(" ").concat(pY1).concat(", ")
+               .concat(pX2).concat(" ").concat(pY2).concat(", ")
+               .concat(pX3).concat(" ").concat(pY3).concat(", ")
+               .concat(pX4).concat(" ").concat(pY4).concat(", ")
+               .concat(pX1).concat(" ").concat(pY1).concat("))");
+      return str;
+    }
+  }
+
+var bf = new BufferFunction(45.00, 19.01, 45.00, 19.00, 50)
+bf.createBuffer()
 </query>
 </workspace>
 </export>

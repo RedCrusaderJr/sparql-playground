@@ -59,9 +59,6 @@ public class SparqlService implements InitializingBean {
 
 	public Object evaluateQuery(String queryStr) {
 		try {
-			// TODO: for testing
-			// return evaluateQueryWithMarklogic(queryStr);
-
 			Query query = repository.prepareQuery(queryStr);
 			return evaluateQuery(query, SparqlQueryType.getQueryType(query));
 
