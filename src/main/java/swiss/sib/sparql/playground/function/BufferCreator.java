@@ -4,12 +4,11 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Locale;
-import java.util.regex.Matcher;
 
 import org.eclipse.rdf4j.query.algebra.evaluation.ValueExprEvaluationException;
 
 public class BufferCreator {
-	private final int prec = 15;
+	private final int prec = 20;
 	private final RoundingMode mode = RoundingMode.HALF_EVEN;
 	private final MathContext context = new MathContext(prec, mode);
 
@@ -24,11 +23,11 @@ public class BufferCreator {
 	private BigDecimal y2;
 	private BigDecimal distanceTotal;
 
-	public BufferCreator(Matcher wktLinestringMatcher, Double distance) {
-		this.x1 = BigDecimal.valueOf(Double.parseDouble(wktLinestringMatcher.group("x1"))).setScale(prec, mode);
-		this.y1 = BigDecimal.valueOf(Double.parseDouble(wktLinestringMatcher.group("y1"))).setScale(prec, mode);
-		this.x2 = BigDecimal.valueOf(Double.parseDouble(wktLinestringMatcher.group("x2"))).setScale(prec, mode);
-		this.y2 = BigDecimal.valueOf(Double.parseDouble(wktLinestringMatcher.group("y2"))).setScale(prec, mode);
+	public BufferCreator(Double x1, Double y1, Double x2, Double y2, Double distance) {
+		this.x1 = BigDecimal.valueOf(x1).setScale(prec, mode);
+		this.y1 = BigDecimal.valueOf(y1).setScale(prec, mode);
+		this.x2 = BigDecimal.valueOf(x2).setScale(prec, mode);
+		this.y2 = BigDecimal.valueOf(y2).setScale(prec, mode);
 		if (x2.compareTo(x1) == 0 && y2.compareTo(y1) == 0) {
 			throw new ValueExprEvaluationException(
 					"Invalid LINESTRING definition: x1 equals x2 and y1 equals y2. " + "x1: " + x1.doubleValue()
@@ -76,26 +75,26 @@ public class BufferCreator {
 		BigDecimal lonDeg = distanceTotal.divide(lonUnit, context); // lonUnit will never be zero
 
 		// POLYGONE POINTS
-		BigDecimal pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4;
-		// pX1 = x1 + latDeg
-		// pY1 = y1 - lonDeg
-		pX1 = x1.subtract(latDeg, context);
-		pY1 = y1.subtract(lonDeg, context);
 
-		// pX2 = x1 - latDeg
+		// pX1 = x1 - latDeg
+		// pY1 = y1 - lonDeg
+		BigDecimal pX1 = x1.subtract(latDeg, context);
+		BigDecimal pY1 = y1.subtract(lonDeg, context);
+
+		// pX2 = x1 + latDeg
 		// pY2 = y1 - lonDeg
-		pX2 = x1.add(latDeg, context);
-		pY2 = y1.subtract(lonDeg, context);
+		BigDecimal pX2 = x1.add(latDeg, context);
+		BigDecimal pY2 = y1.subtract(lonDeg, context);
 
 		// pX3 = x2 + latDeg
 		// pY3 = y2 + lonDeg
-		pX3 = x2.add(latDeg, context);
-		pY3 = y2.add(lonDeg, context);
+		BigDecimal pX3 = x2.add(latDeg, context);
+		BigDecimal pY3 = y2.add(lonDeg, context);
 
 		// pX4 = x2 - latDeg
 		// pY4 = y2 + lonDeg
-		pX4 = x2.subtract(latDeg, context);
-		pY4 = y2.add(lonDeg, context);
+		BigDecimal pX4 = x2.subtract(latDeg, context);
+		BigDecimal pY4 = y2.add(lonDeg, context);
 
 		return formatPolygonStr(pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4);
 	}
@@ -115,26 +114,26 @@ public class BufferCreator {
 		BigDecimal lonDeg = distanceTotal.divide(lonUnit, context); // lonUnit will never be zero
 
 		// POLYGONE POINTS
-		BigDecimal pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4;
+
 		// pX1 = x1 - latDeg
-		// pY1 = y1 + lonDeg
-		pX1 = x1.subtract(latDeg, context);
-		pY1 = y1.subtract(lonDeg, context);
+		// pY1 = y1 - lonDeg
+		BigDecimal pX1 = x1.subtract(latDeg, context);
+		BigDecimal pY1 = y1.subtract(lonDeg, context);
 
 		// pX2 = x1 - latDeg
-		// pY2 = y1 - lonDeg
-		pX2 = x1.subtract(latDeg, context);
-		pY2 = y1.add(lonDeg, context);
+		// pY2 = y1 + lonDeg
+		BigDecimal pX2 = x1.subtract(latDeg, context);
+		BigDecimal pY2 = y1.add(lonDeg, context);
 
 		// pX3 = x2 + latDeg
 		// pY3 = y2 + lonDeg
-		pX3 = x2.add(latDeg, context);
-		pY3 = y2.add(lonDeg, context);
+		BigDecimal pX3 = x2.add(latDeg, context);
+		BigDecimal pY3 = y2.add(lonDeg, context);
 
 		// pX4 = x2 + latDeg
 		// pY4 = y2 - lonDeg
-		pX4 = x2.add(latDeg, context);
-		pY4 = y2.subtract(lonDeg, context);
+		BigDecimal pX4 = x2.add(latDeg, context);
+		BigDecimal pY4 = y2.subtract(lonDeg, context);
 
 		return formatPolygonStr(pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4);
 	}
@@ -199,17 +198,6 @@ public class BufferCreator {
 		// longitude change [deg]
 		BigDecimal lonDeg = distanceY.divide(lonUnit, context); // lonUnit will never be zero
 
-		// Boolean isSharp = slope.compareTo(BigDecimal.valueOf(0).setScale(prec, mode))
-		// > 0;
-		// int exponent = 0;
-		// if (isSharp) {
-		// exponent = 1;
-		// }
-		// multiplier = (-1)^exponent
-		// BigDecimal multiplier = BigDecimal.valueOf(Math.pow(1,
-		// exponent)).setScale(prec, mode);
-		// BigDecimal multipliedLonDeg = lonDeg.multiply(multiplier, context);
-
 		// x1 = x1 - latDeg
 		// y1 = y1 - lonDeg
 		x1 = x1.subtract(latDeg, context);
@@ -245,26 +233,27 @@ public class BufferCreator {
 		// longitude change [deg]
 		BigDecimal lonDeg = distanceY.divide(lonUnit, context); // lonUnit will never be zero
 
-		BigDecimal pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4;
+		// POLYGONE POINTS
+
 		// pX1 = x1 - latDeg
 		// pY1 = y1 - lonDeg
-		pX1 = x1.subtract(latDeg, context);
-		pY1 = y1.subtract(lonDeg, context);
+		BigDecimal pX1 = x1.subtract(latDeg, context);
+		BigDecimal pY1 = y1.subtract(lonDeg, context);
 
 		// pX2 = x1 + latDeg
 		// pY2 = y1 + lonDeg
-		pX2 = x1.add(latDeg, context);
-		pY2 = y1.add(lonDeg, context);
+		BigDecimal pX2 = x1.add(latDeg, context);
+		BigDecimal pY2 = y1.add(lonDeg, context);
 
 		// pX3 = x2 + latDeg
 		// pY3 = y2 + lonDeg
-		pX3 = x2.add(latDeg, context);
-		pY3 = y2.add(lonDeg, context);
+		BigDecimal pX3 = x2.add(latDeg, context);
+		BigDecimal pY3 = y2.add(lonDeg, context);
 
 		// pX4 = x2 - latDeg
 		// pY4 = y2 - lonDeg
-		pX4 = x2.subtract(latDeg, context);
-		pY4 = y2.subtract(lonDeg, context);
+		BigDecimal pX4 = x2.subtract(latDeg, context);
+		BigDecimal pY4 = y2.subtract(lonDeg, context);
 
 		return formatPolygonStr(pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4);
 	}

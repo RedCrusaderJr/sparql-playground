@@ -20,6 +20,10 @@ public class ExtendLineFunctiion implements Function {
 	private final RoundingMode mode = RoundingMode.HALF_EVEN;
 	private final MathContext context = new MathContext(prec, mode);
 
+	// LINESTRING (x1 y1, x2 y2)
+	private final Pattern wktLinestringPattern = Pattern
+			.compile("LINESTRING \\((?<x1>.*) (?<y1>.*), (?<x2>.*) (?<y2>.*)\\)");
+
 	// [m / deg]
 	private final BigDecimal latUnit = BigDecimal.valueOf(111200.0).setScale(prec, mode);
 	// [m / deg]
@@ -48,8 +52,6 @@ public class ExtendLineFunctiion implements Function {
 			throw new ValueExprEvaluationException("invalid argument (literal expected): " + arg);
 		}
 
-		// LINESTRING (x1 y1, x2 y2)
-		Pattern wktLinestringPattern = Pattern.compile("LINESTRING \\((?<x1>.*) (?<y1>.*), (?<x2>.*) (?<y2>.*)\\)");
 		Matcher wktLinestringMatcher = wktLinestringPattern.matcher(arg.stringValue());
 
 		if (!wktLinestringMatcher.find()) {

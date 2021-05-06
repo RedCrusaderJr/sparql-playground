@@ -256,8 +256,9 @@ public class MarklogicSupportTest {
 			throw new IllegalArgumentException();
 		}
 
-		String functionAbbrv = FunctionMapper.getInstance().getFunctionAbbreviationByUri(functionUri);
-		String marklogicFunction = FunctionMapper.getInstance().getMarklogicFunctionByUri(functionUri);
+		FunctionDescription function = FunctionMapper.getInstance().getFunctionByUri(functionUri);
+		String functionAbbrv = function.abbreviation;
+		String marklogicFunction = function.marklogicFunction;
 		String functionCallStr = String.format("  BIND(xdmp:apply(?%s, ?wktPoint1) as ?functionResult).",
 				functionAbbrv);
 		String paramsStr = String.format("var params = {%s: %s}", functionAbbrv, marklogicFunction);
@@ -285,8 +286,9 @@ public class MarklogicSupportTest {
 			throw new IllegalArgumentException();
 		}
 
-		String functionAbbrv = FunctionMapper.getInstance().getFunctionAbbreviationByUri(functionUri);
-		String marklogicFunction = FunctionMapper.getInstance().getMarklogicFunctionByUri(functionUri);
+		FunctionDescription function = FunctionMapper.getInstance().getFunctionByUri(functionUri);
+		String functionAbbrv = function.abbreviation;
+		String marklogicFunction = function.marklogicFunction;
 		String functionCallStr = String.format("  BIND(xdmp:apply(?%s, ?wktPoint1, ?wktPoint2) as ?functionResult).",
 				functionAbbrv);
 		String paramsStr = String.format("var params = {%s: %s}", functionAbbrv, marklogicFunction);

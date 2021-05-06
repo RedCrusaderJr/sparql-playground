@@ -5,7 +5,7 @@
 #color:ex-green
 #img:
 
-SELECT DISTINCT ?psrName ?xPosition ?yPosition ?wktPoint
+SELECT DISTINCT ?psrName ?xPosition ?yPosition ?g_wktPoint
 WHERE {
   ?locationId rdf:type cim:Location.
   
@@ -20,5 +20,5 @@ WHERE {
   ?postionPointId cim:PositionPoint.yPosition ?yPosition.
   
   BIND(concat("POINT (", str(?xPosition), " ", str(?yPosition), ")") as ?strPoint)
-  BIND(strdt(?strPoint, geo:wktLiteral) as ?wktPoint)
+  BIND(strdt(?strPoint, geo:wktLiteral) as ?g_wktPoint)
 }
