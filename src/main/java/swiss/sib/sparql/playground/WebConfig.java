@@ -10,22 +10,23 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @Configuration
 public class WebConfig extends WebMvcConfigurationSupport {
 
-    @Override
-    protected void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
-    }
+	@Override
+	protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
+	}
 
-    @Override
-    protected void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("forward:/app.html");
-        registry.addViewController("/help/doc/*").setViewName("forward:/app.html");
-        registry.addViewController("/help/entity/*").setViewName("forward:/app.html");
-        registry.addViewController("/faq").setViewName("forward:/app.html");
-        registry.addViewController("/data").setViewName("forward:/app.html");
-    }
+	@Override
+	protected void addViewControllers(ViewControllerRegistry registry) {
+		registry.addViewController("/").setViewName("forward:/app.html");
+		registry.addViewController("/help/doc/*").setViewName("forward:/app.html");
+		registry.addViewController("/help/entity/*").setViewName("forward:/app.html");
+		registry.addViewController("/faq").setViewName("forward:/app.html");
+		registry.addViewController("/data").setViewName("forward:/app.html");
+		registry.addViewController("/simulator").setViewName("forward:/app.html");
+	}
 
-    @Bean
-    public InternalResourceViewResolver defaultViewResolver() {
-        return new InternalResourceViewResolver();
-    }
+	@Bean
+	public InternalResourceViewResolver defaultViewResolver() {
+		return new InternalResourceViewResolver();
+	}
 }
