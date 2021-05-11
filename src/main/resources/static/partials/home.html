@@ -1,4 +1,4 @@
-<div id="content" class="content " >
+<div id="content" class="content" >
     <div class="row row-offcanvas row-offcanvas-right">
         <div class="col-xs-12 col-sm-12 col-md-6 ">
 	        <p class="pull-right visible-sm visible-xs -visible-md">
@@ -82,42 +82,7 @@
             		</div>
             	</div>
 
-            	<div id="geomap" style="height: 400px;"></div>
-
-				<script>
-					var geomap = L.map('geomap').setView([51.505, -0.09], 13);
-
-					L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-						maxZoom: 18,
-						attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
-						'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-						id: 'mapbox/streets-v11',
-						tileSize: 512,
-						zoomOffset: -1
-					}).addTo(geomap);
-					//
-					// map markers
-					window.queryShapes = L.layerGroup().addTo(geomap);
-					window.mapViewLat = 0;
-					window.mapViewLong = 0;
-
-					/*
-					L.marker([51.5, -0.09]).addTo(geomap);
-
-					L.circle([51.508, -0.11], {
-						color: 'red',
-						fillColor: '#f03',
-						fillOpacity: 0.5,
-						radius: 500
-					}).addTo(geomap);
-
-					L.polygon([
-						[51.509, -0.08],
-						[51.503, -0.06],
-						[51.51, -0.047]
-					]).addTo(geomap);
-					*/
-				</script>
+            	<div id="geomapDiv" style="height: 400px;" ng-controller="SimulatorCtrl"></div>
           	</div>
         </div><!--/span-->
     </div><!--/row-->

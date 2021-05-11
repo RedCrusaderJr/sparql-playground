@@ -1,4 +1,5 @@
-(function (angular, undefined) {'use strict';
+(function (angular, undefined) {
+	'use strict';
 	/**
 	 * create application snorql and load deps
 	 */
@@ -12,7 +13,9 @@
 		'snorql.ui',
 		'angular-jwt',  // token
 		'ipCookie'      // cookie
-	]).controller('SnorqlCtrl',SnorqlCtrl)
+	])
+	.controller('SnorqlCtrl',SnorqlCtrl)
+	.controller('SimulatorCtrl',SimulatorCtrl)
 	.factory('errorInterceptor',errorInterceptor)
 	.config(appConfig)
 	.run(appRun)
@@ -21,7 +24,7 @@
 	// init app
 	appRun.$inject=['gitHubContent', 'config']
 	function appRun(gitHubContent, config) {
-	gitHubContent.initialize({
+		gitHubContent.initialize({
 			// baseUrl:"http://uat-web2:8080",
 			helpPath:'rdfhelp.json',
 			helpTitle:'Documentation',
@@ -36,19 +39,23 @@
 	//
 	// implement controller SnorqlCtrl
 	SnorqlCtrl.$inject=['$scope','$timeout','$window','$location','snorql','config']
-	function SnorqlCtrl( $scope,  $timeout, $window, $location,  snorql,  config) {
+	function SnorqlCtrl($scope, $timeout, $window, $location, snorql, config) {
+		//
 		// go home link
 		$scope.home=config.home;
 		$scope.pushState=config.pushState;
 
+		//
 		// snorql service provide examples, examples tags, config and executeQuery
 		$scope.snorql=snorql;
 
+		//
 		// setup default output
 		$scope.outputs=['html','json','csv','tsv','xml'];
 		$scope.output='html';
 		$scope.showPrefixes = false;
 
+		//
 		// default message
 		$scope.message="Executing query ...";
 
@@ -173,6 +180,21 @@
 			}
 
 		})
+	};
+
+	//
+	// implement controller SimulatorCtrl
+	SimulatorCtrl.$inject=['$scope', 'simulator', 'geomapManipulation']
+	function SimulatorCtrl($scope, simulator, geomapManipulation) {
+		//
+		// snorql service provide examples, examples tags, config and executeQuery
+		$scope.simulator=simulator;
+		//
+		// setup default interval
+		$scope.intervals=['1 [sec]', '5 [sec]', '10 [sec]', '15 [sec]', '30 [sec]', '60 [sec]'];
+		$scope.interval='5 [sec]';
+
+		$scope.geomap = geomapManipulation.initMap();
 	};
 
 	/**
