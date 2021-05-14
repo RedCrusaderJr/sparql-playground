@@ -194,7 +194,7 @@
 		$scope.intervals=['1 [sec]', '5 [sec]', '10 [sec]', '15 [sec]', '30 [sec]', '60 [sec]'];
 		$scope.interval='5 [sec]';
 
-		$scope.geomap = geomapManipulation.initMap();
+		$scope.geomap = geomapManipulation.getMapInstance(51.505, -0.09, 13);
 	};
 
 	/**

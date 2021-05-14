@@ -568,8 +568,8 @@
 
 	//
 	// implement shapeRenderer factory
-	shapeRendererFactory.$inject=["$q"]
-	function shapeRendererFactory($q) {
+	shapeRendererFactory.$inject=["$q", "geomapManipulation"]
+	function shapeRendererFactory($q, geomapManipulation) {
 		class ShapeRenderer {
 			constructor() {
 				// wrap promise to this object
@@ -638,16 +638,16 @@
 		function addElementToMap(parsedElement) {
 			switch(parsedElement.Name) {
 				case "POINT":
-				drawPoint(parsedElement);
-				break;
+					drawPoint(parsedElement);
+					break;
 				case "LINESTRING":
-				drawLine(parsedElement);
-				break;
+					drawLine(parsedElement);
+					break;
 				case "POLYGON":
-				drawPolygon(parsedElement);
-				break;
+					drawPolygon(parsedElement);
+					break;
 				default:
-				break;
+					break;
 			}
 		};
 
@@ -655,9 +655,10 @@
 			parsedElement.Coordinates.Shapes.forEach(point => {
 				let x = point[0].x;
 				let y = point[0].y;
-				new L.marker([x, y]).addTo(window.queryShapes);
 				window.mapViewLat = x;
 				window.mapViewLong = y;
+
+				geomapManipulation.drawPoint(x, y);
 			});
 		};
 
@@ -671,7 +672,8 @@
 					window.mapViewLat = x;
 					window.mapViewLong = y;
 				});
-				new L.polyline(latlongs, {color: 'red'}).addTo(window.queryShapes);
+
+				geomapManipulation.drawLine(latlongs, {color: 'green'});
 			});
 		};
 
@@ -685,7 +687,8 @@
 					window.mapViewLat = x;
 					window.mapViewLong = y;
 				});
-				new L.polygon(latlongs, {color: 'blue'}).addTo(window.queryShapes);
+
+				geomapManipulation.drawPolygon(latlongs, {color: 'blue'});
 			});
 		};
 
@@ -694,41 +697,88 @@
 
 	//
 	// implement geomapManipulation factory
-	geomapManipulationFactory.$inject=["$q"]
-	function geomapManipulationFactory($q) {
+	geomapManipulationFactory.$inject=["$q", "$rootScope"]
+	function geomapManipulationFactory($q, $rootScope) {
 		class GeomapManipulation {
 			constructor() {
-				this.geomap = []
-
 				// wrap promise to this object
 				this.$promise = $q.when(this);
-
 				// manage cancel
 				this.canceler = $q.defer();
 			}
 
-			initMap() {
-				this.geomap = L.map('geomapDiv').setView([51.505, -0.09], 13);
-				L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-					maxZoom: 18,
-					attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
-					'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-					id: 'mapbox/streets-v11',
-					tileSize: 512,
-					zoomOffset: -1
-				}).addTo(this.geomap);
-				//
-				// map markers
-				window.queryShapes = L.layerGroup().addTo(this.geomap);
-				window.mapViewLat = 45;
-				window.mapViewLong = 19;
+			getMapInstance(latitude, longitude, zoom) {
+				if(typeof getGeomap() === 'undefined'){
+					setGeomap(createMap(latitude, longitude, zoom));
+				}
+				else {
+					this.setView(latitude, longitude, zoom);
+				}
 
-				return this.geomap;
+				return getGeomap();
 			}
 
 			setView(latitude, longitude, zoom) {
-				this.geomap.setView([latitude, longitude], zoom);
+				let geomap = getGeomap();
+				geomap.setView([latitude, longitude], zoom);
+				setGeomap(geomap);
 			}
+
+			drawPoint(x, y) {
+				let point = new L.marker([x, y]);
+				point.addTo(window.queryShapes);
+				point.bindPopup("POINT ("+ x + " " + y + ")").openPopup();
+			}
+
+			drawLine(latlongs, color) {
+				let line = new L.polyline(latlongs, color);
+				line.addTo(window.queryShapes);
+				line.bindPopup("LINESTRING (" + latlongs + ")");
+			}
+
+			drawPolygon(latlongs, color) {
+				let polygon = new L.polygon(latlongs, color);
+				polygon.addTo(window.queryShapes);
+				polygon.bindPopup("POLYGON ((" + latlongs + "))");
+			}
+		}
+
+		//
+		//HELPER FUNCTIONS
+		function getGeomap() {
+			return $rootScope.geomap;
+		}
+
+		function setGeomap(geomap) {
+			$rootScope.geomap = geomap;
+		}
+
+		function createMap(latitude, longitude, zoom) {
+			//TODO: specific map name
+			// mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
+			// var geomap = new mapboxgl.Map({
+			// 	container: 'map', // container element id
+			// 	style: 'mapbox://styles/mapbox/light-v10',
+			// 	center: [latitude, longitude], // initial map center in [lon, lat]
+			// 	zoom: zoom
+			// });
+			// return geomap;
+
+			let geomap = L.map('geomapDiv').setView([latitude, longitude], zoom);
+			L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+				maxZoom: 18,
+				attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+				'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+				id: 'mapbox/streets-v11',
+				tileSize: 512,
+				zoomOffset: -1
+			}).addTo(geomap);
+			//
+			// map markers
+			window.queryShapes = L.layerGroup().addTo(geomap);
+			window.mapViewLat = latitude;
+			window.mapViewLong = longitude;
+			return geomap;
 		}
 
 		return new GeomapManipulation();
