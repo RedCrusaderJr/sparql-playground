@@ -5,11 +5,7 @@
 	*/
 
 	angular.module('snorql.service', [])
-		   .factory('snorql', snorqlFactory)
-		   .factory('simulator', simulatorFactory)
-		   .factory('shapeRenderer', shapeRendererFactory)
-		   .factory('geomapManipulation', geomapManipulationFactory);
-
+		   .factory('snorql', snorqlFactory);
 
 	//
 	// implement snorql factory
@@ -263,7 +259,7 @@
 						console.log(self.result);
 
 						//drawing on map if geospatial data in query
-						window.queryShapes.clearLayers();
+						geomapManipulation.clearDrawnItems();
 						var geoSpatialColumnHeaders = self.result.head.vars.filter(function (item) {
 							var finder = 'g_';
 							return eval('/' + finder + '/').test(item);
@@ -271,13 +267,15 @@
 
 						if (geoSpatialColumnHeaders.length > 0) {
 							var elements = self.result.results.bindings;
+							shapeRenderer.startBulkRender();
 							geoSpatialColumnHeaders.forEach(column => {
 								elements.forEach(element => {
-									shapeRenderer.renderElement(element, column);
+									shapeRenderer.addElementToBulkRender(element, column);
+									//shapeRenderer.renderSingleElement(element, column);
 								});
 							});
-
-							geomapManipulation.setView(window.mapViewLat, window.mapViewLong, 13);
+							shapeRenderer.finishBulkRender();
+							geomapManipulation.setCurrentView();
 						}
 					});
 
@@ -531,257 +529,5 @@
 
 		return new Snorql()
 	};
-
-	//
-	// implement simulator factory
-	simulatorFactory.$inject=["$q", 'shapeRenderer']
-	function simulatorFactory($q, shapeRenderer) {
-		class Simulator {
-			constructor() {
-				// wrap promise to this object
-				this.$promise = $q.when(this);
-
-				// manage cancel
-				this.canceler = $q.defer();
-			}
-
-			start() {
-
-			}
-
-			pause() {
-
-			}
-
-			reset() {
-
-			}
-
-			stop() {
-
-			}
-		}
-
-
-		return new Simulator();
-	}
-
-	//
-	// implement shapeRenderer factory
-	shapeRendererFactory.$inject=["$q", "geomapManipulation"]
-	function shapeRendererFactory($q, geomapManipulation) {
-		class ShapeRenderer {
-			constructor() {
-				// wrap promise to this object
-				this.$promise = $q.when(this);
-
-				// manage cancel
-				this.canceler = $q.defer();
-			}
-
-			renderElement(element, column) {
-				let parsedElement = parseElement(element, column);
-				addElementToMap(parsedElement);
-			}
-		}
-
-		//
-		//HELPER FUNCTIONS
-		function parseElement(element, column) {
-			let parsedElement = new Object;
-			let splittedElement = element[column].value.substring(0, element[column].value.length - 1).split(" (");
-			parsedElement.Name = splittedElement[0].trim();
-			parsedElement.Coordinates = parseCoordinates(splittedElement[1]);
-
-			return parsedElement;
-		};
-
-		function parseCoordinates(unparsedCoordinates) {
-			let coordinates = new Object;
-			coordinates.Shapes = [];
-			if(unparsedCoordinates.charAt(0) ==='('){
-				let splittedByComma = unparsedCoordinates.split("), (");
-				if(splittedByComma.length > 1){
-				splittedByComma.forEach(shape => {
-					shape = removeParentheses(shape);
-					coordinates.Shapes.push(parseShape(shape));
-				});
-				}
-				else{
-				coordinates.Shapes.push(parseShape(unparsedCoordinates));
-				}
-			}
-			else {
-				coordinates.Shapes.push(parseShape(unparsedCoordinates));
-			}
-
-			return coordinates;
-		};
-
-		function parseShape(coordinates) {
-			let shape = [];
-			coordinates = removeParentheses(coordinates);
-			let splittedCoordinates = coordinates.split(', ');
-			splittedCoordinates.forEach(pointPair => {
-				let splittedPointPair = pointPair.trim().split(' ');
-				shape.push({ x: splittedPointPair[0].trim(), y: splittedPointPair[1].trim() });
-			});
-			return shape;
-		};
-
-		function removeParentheses(str) {
-			str = str.replaceAll("(", "");
-			str = str.replaceAll(")", "");
-			return str;
-		};
-
-		function addElementToMap(parsedElement) {
-			switch(parsedElement.Name) {
-				case "POINT":
-					drawPoint(parsedElement);
-					break;
-				case "LINESTRING":
-					drawLine(parsedElement);
-					break;
-				case "POLYGON":
-					drawPolygon(parsedElement);
-					break;
-				default:
-					break;
-			}
-		};
-
-		function drawPoint(parsedElement) {
-			parsedElement.Coordinates.Shapes.forEach(point => {
-				let x = point[0].x;
-				let y = point[0].y;
-				window.mapViewLat = x;
-				window.mapViewLong = y;
-
-				geomapManipulation.drawPoint(x, y);
-			});
-		};
-
-		function drawLine(parsedElement) {
-			parsedElement.Coordinates.Shapes.forEach(line => {
-				let latlongs = [];
-				line.forEach(point => {
-					let x = point.x;
-					let y = point.y;
-					latlongs.push([x,y]);
-					window.mapViewLat = x;
-					window.mapViewLong = y;
-				});
-
-				geomapManipulation.drawLine(latlongs, {color: 'green'});
-			});
-		};
-
-		function drawPolygon(parsedElement) {
-			parsedElement.Coordinates.Shapes.forEach(polygon => {
-				let latlongs = [];
-				polygon.forEach(point => {
-					let x = point.x;
-					let y = point.y;
-					latlongs.push([x,y]);
-					window.mapViewLat = x;
-					window.mapViewLong = y;
-				});
-
-				geomapManipulation.drawPolygon(latlongs, {color: 'blue'});
-			});
-		};
-
-		return new ShapeRenderer();
-	};
-
-	//
-	// implement geomapManipulation factory
-	geomapManipulationFactory.$inject=["$q", "$rootScope"]
-	function geomapManipulationFactory($q, $rootScope) {
-		class GeomapManipulation {
-			constructor() {
-				// wrap promise to this object
-				this.$promise = $q.when(this);
-				// manage cancel
-				this.canceler = $q.defer();
-			}
-
-			getMapInstance(latitude, longitude, zoom) {
-				if(typeof getGeomap() === 'undefined'){
-					setGeomap(createMap(latitude, longitude, zoom));
-				}
-				else {
-					this.setView(latitude, longitude, zoom);
-				}
-
-				return getGeomap();
-			}
-
-			setView(latitude, longitude, zoom) {
-				let geomap = getGeomap();
-				geomap.setView([latitude, longitude], zoom);
-				setGeomap(geomap);
-			}
-
-			drawPoint(x, y) {
-				let point = new L.marker([x, y]);
-				point.addTo(window.queryShapes);
-				point.bindPopup("POINT ("+ x + " " + y + ")").openPopup();
-			}
-
-			drawLine(latlongs, color) {
-				let line = new L.polyline(latlongs, color);
-				line.addTo(window.queryShapes);
-				line.bindPopup("LINESTRING (" + latlongs + ")");
-			}
-
-			drawPolygon(latlongs, color) {
-				let polygon = new L.polygon(latlongs, color);
-				polygon.addTo(window.queryShapes);
-				polygon.bindPopup("POLYGON ((" + latlongs + "))");
-			}
-		}
-
-		//
-		//HELPER FUNCTIONS
-		function getGeomap() {
-			return $rootScope.geomap;
-		}
-
-		function setGeomap(geomap) {
-			$rootScope.geomap = geomap;
-		}
-
-		function createMap(latitude, longitude, zoom) {
-			//TODO: specific map name
-			// mapboxgl.accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
-			// var geomap = new mapboxgl.Map({
-			// 	container: 'map', // container element id
-			// 	style: 'mapbox://styles/mapbox/light-v10',
-			// 	center: [latitude, longitude], // initial map center in [lon, lat]
-			// 	zoom: zoom
-			// });
-			// return geomap;
-
-			let geomap = L.map('geomapDiv').setView([latitude, longitude], zoom);
-			L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-				maxZoom: 18,
-				attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
-				'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-				id: 'mapbox/streets-v11',
-				tileSize: 512,
-				zoomOffset: -1
-			}).addTo(geomap);
-			//
-			// map markers
-			window.queryShapes = L.layerGroup().addTo(geomap);
-			window.mapViewLat = latitude;
-			window.mapViewLong = longitude;
-			return geomap;
-		}
-
-		return new GeomapManipulation();
-	}
 
 })(angular);

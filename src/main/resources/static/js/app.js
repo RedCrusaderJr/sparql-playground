@@ -10,6 +10,8 @@
 		'ui.codemirror',
 		'snorql.config',
 		'snorql.service',
+		'simulator.service',
+		'geomap.service',
 		'snorql.ui',
 		'angular-jwt',  // token
 		'ipCookie'      // cookie
@@ -195,6 +197,7 @@
 		$scope.interval='5 [sec]';
 
 		$scope.geomap = geomapManipulation.getMapInstance(51.505, -0.09, 13);
+		geomapManipulation.importGeojson();
 	};
 
 	/**

@@ -16,7 +16,9 @@
 					examples: BASE_URL + 'queries',
 					faqsURL: BASE_URL + 'faqs',
 					prefixes: BASE_URL + 'prefixes',
-					dataURL: BASE_URL + 'ttl-data'
+					dataURL: BASE_URL + 'ttl-data',
+					geoExport: BASE_URL + 'save-geo-data',
+					geoImport: BASE_URL + 'load-geo-data',
 				}
 			}
         	return defaultConfig;
