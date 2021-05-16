@@ -5,25 +5,23 @@
 #color:ex-green
 #img:
 
-select DISTINCT ?condEqName ?postionPointId1 ?postionPointId2
-where {
-  #terminals
-  ?tmId rdf:type cim:Terminal.
-  ?tmId cim:IdentifiedObject.name ?tmName.
-   
-  #connectivity nodes of terminal
-  ?tmId cim:Terminal.ConnectivityNode ?cNodeId.
-  ?cNodeId cim:IdentifiedObject.name ?cNodeName.
-  
-  #conducting equipment of terminal
-  ?tmId cim:Terminal.ConductingEquipment ?condEqId.
-  ?condEqId cim:IdentifiedObject.name ?condEqName.
-  
-  #locations
-  ?condEqId cim:PowerSystemResource.Location ?locationId.
-  ?postionPointId1 rdf:type cim:PositionPoint.
-  ?postionPointId2 rdf:type cim:PositionPoint.
-  
-  ?postionPointId1 cim:PositionPoint.Location ?locationId.
-  ?postionPointId2 cim:PositionPoint.Location ?locationId.
+SELECT DISTINCT ?condEqName1 ?condEqName2 WHERE {
+	?cNodeId1 rdf:type cim:ConnectivityNode.
+	?cNodeId1 cim:IdentifiedObject.name ?cNodeName1.
+	?cNodeId2 rdf:type cim:ConnectivityNode.
+	?cNodeId2 cim:IdentifiedObject.name ?cNodeName2.
+
+	?tmId1 cim:Terminal.ConnectivityNode ?cNodeId1.
+	?tmId1 cim:IdentifiedObject.name ?tmName1.
+	?tmId2 cim:Terminal.ConnectivityNode ?cNodeId2.
+	?tmId2 cim:IdentifiedObject.name ?tmName2.
+
+	?tmId1 cim:Terminal.ConductingEquipment ?condEqId1.
+	?condEqId1 cim:IdentifiedObject.name ?condEqName1.
+	?tmId2 cim:Terminal.ConductingEquipment ?condEqId2.
+	?condEqId2 cim:IdentifiedObject.name ?condEqName2.
+	
+  	FILTER (str(?cNodeName1) = str(?cNodeName2))
+	FILTER (str(?condEqId1) != str(?condEqId2))
 }
+ORDER BY DESC (?condEqName1)

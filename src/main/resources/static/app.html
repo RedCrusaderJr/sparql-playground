@@ -34,7 +34,9 @@
 
 		<!-- application script -->
 		<script src="js/app.js"></script>
-		<script src="js/app.factory.js"></script>
+		<script src="js/app.factory.snorql.js"></script>
+		<script src="js/app.factory.simulator.js"></script>
+		<script src="js/app.factory.geomap.js"></script>
 		<script src="js/app.config.js"></script>
 		<script src="js/app.directives.js"></script>
 
@@ -53,6 +55,8 @@
 				crossorigin=""></script>
 
 		<script src="https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js"></script>
+		<!-- <script src='https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.js'></script> -->
+		<!-- <link href='https://api.mapbox.com/mapbox-gl-js/v2.2.0/mapbox-gl.css' rel='stylesheet' /> -->
 	</head>
 
 	<body ng-controller="SnorqlCtrl">
@@ -194,35 +198,36 @@
 			</div><!-- /.container -->
 		</div><!-- /.navbar -->
 
-		<!-- Footer -->
+		<!-- router view -->
 		<div ng-view>
 		</div>
 
+		<!-- Footer -->
   		<footer class="container text-center small">
-    <hr/>
-    <div class="row">
-        <div class="col-md-3">
-          <ul class="nav nav-pills nav-stacked">
-            <li><a href="/help/doc/about">About 1.5.1</a></li>
-          </ul>
-        </div>
-        <div class="col-md-3">
-          <ul class="nav nav-pills nav-stacked">
-            <li><a target="_blank" href="https://github.com/calipho-sib/sparql-playground/tarball/master">Download latest version</a></li>
-          </ul>
-        </div>
-        <div class="col-md-3">
-          <ul class="nav nav-pills nav-stacked">
-            <li><a target="_blank" href="https://github.com/calipho-sib/sparql-playground/releases">Download archives</a></li>
-          </ul>
-        </div>
-        <div class="col-md-3">
-          <ul class="nav nav-pills nav-stacked">
-            <li><a target="_blank" href="https://github.com/calipho-sib/sparql-playground" target="_blank"><i class="icon-github"></i>For developers</a></li></a></li>
-          </ul>
-        </div>
-      </div>
-    <hr/>
+			<hr/>
+			<div class="row">
+				<div class="col-md-3">
+				<ul class="nav nav-pills nav-stacked">
+					<li><a href="/help/doc/about">About 1.5.1</a></li>
+				</ul>
+				</div>
+				<div class="col-md-3">
+				<ul class="nav nav-pills nav-stacked">
+					<li><a target="_blank" href="https://github.com/calipho-sib/sparql-playground/tarball/master">Download latest version</a></li>
+				</ul>
+				</div>
+				<div class="col-md-3">
+				<ul class="nav nav-pills nav-stacked">
+					<li><a target="_blank" href="https://github.com/calipho-sib/sparql-playground/releases">Download archives</a></li>
+				</ul>
+				</div>
+				<div class="col-md-3">
+				<ul class="nav nav-pills nav-stacked">
+					<li><a target="_blank" href="https://github.com/calipho-sib/sparql-playground" target="_blank"><i class="icon-github"></i>For developers</a></li></a></li>
+				</ul>
+				</div>
+			</div>
+			<hr/>
   		</footer>
 	</body>
 </html>
