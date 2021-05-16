@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -205,6 +206,18 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 			e.printStackTrace();
 			throw new SparqlTutorialException(e);
 		}
+	}
+
+	public void addStatements(List<Statement> statements) {
+		connection.add(statements);
+	}
+
+	public void removeStatements(List<Statement> statements) {
+		connection.remove(statements);
+	}
+
+	public boolean isEmpty() {
+		return connection.isEmpty();
 	}
 
 	public void clearData() {
