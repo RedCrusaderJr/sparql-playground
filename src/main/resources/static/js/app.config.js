@@ -19,6 +19,11 @@
 					dataURL: BASE_URL + 'ttl-data',
 					geoExport: BASE_URL + 'save-geo-data',
 					geoImport: BASE_URL + 'load-geo-data',
+					startSimulation: BASE_URL + 'start-simulation',
+					pauseSimulation: BASE_URL + 'pause-simulation',
+					resetSimulation: BASE_URL + 'reset-simulation',
+					stopSimulation: BASE_URL + 'stop-simulation',
+					nextSimulation: BASE_URL + 'next-simulation'
 				}
 			}
         	return defaultConfig;

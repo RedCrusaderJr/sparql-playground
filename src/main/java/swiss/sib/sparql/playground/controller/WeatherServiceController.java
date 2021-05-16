@@ -12,6 +12,9 @@ import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 import swiss.sib.sparql.playground.repository.impl.RDF4jRepositoryImpl;
 
 @Controller
@@ -39,6 +42,7 @@ public class WeatherServiceController {
     // geo data saver ?
     // import export, povratna vrednost body response-a, 2 get-a, start, stop
     //
+    @RequestMapping(value = "/start-simulation", method = RequestMethod.POST)
     public void start() throws IOException {
 
         int id = 0;
@@ -53,6 +57,22 @@ public class WeatherServiceController {
         }
     }
 
+    @RequestMapping(value = "/pause-simulation", method = RequestMethod.POST)
+    public void pause() throws IOException {
+
+    }
+
+    @RequestMapping(value = "/reset-simulation", method = RequestMethod.POST)
+    public void reset() throws IOException {
+
+    }
+
+    @RequestMapping(value = "/stop-simulation", method = RequestMethod.POST)
+    public void stop() throws IOException {
+
+    }
+
+    @RequestMapping(value = "/next-simulation", method = RequestMethod.POST)
     public void next() {
         List<Statement> oldStatements = new ArrayList<Statement>();
         List<Statement> newStatements = new ArrayList<Statement>();

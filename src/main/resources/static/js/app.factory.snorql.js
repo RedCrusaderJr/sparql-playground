@@ -109,6 +109,12 @@
 
 				this.description = defaultSnorql.description;
 
+				this.startSimulation = defaultSnorql.startSimulation;
+
+				this.stopSimulation = defaultSnorql.stopSimulation;
+
+				this.pauseSimulation = defaultSnorql.pauseSimulation;
+
 				// wrap promise to this object
 				this.$promise = $q.when(this);
 

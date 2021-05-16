@@ -2,8 +2,8 @@
 <div id="content" class="content" ng-controller="SimulatorCtrl">
 	<h1>Hello from SIMULATOR PAGE</h1>
 	<div class=" form-inline">
-		<select class="form-control" ng-disabled="waiting" ng-model="intervals" ng-options="interval for interval in intervals"></select>
-		<button type="button" class="btn btn-default" ng-disabled="waiting" ng-click="simulator.start">Start</button>
+		<select class="form-control" ng-disabled="waiting" ng-model="interval" ng-options="item for item in intervals"></select>
+		<button type="button" class="btn btn-default" ng-disabled="waiting" ng-click="simulator.start()">Start</button>
 		<button type="button" class="btn btn-primary" ng-click="simulator.pause()">Pause</button>
 		<button type="button" class="btn btn-primary" ng-click="simulator.reset()">Reset</button>
 		<button type="button" class="btn btn-primary" ng-click="simulator.stop()">Stop</button>
