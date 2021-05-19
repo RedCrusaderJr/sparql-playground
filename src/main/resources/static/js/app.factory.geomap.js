@@ -73,7 +73,7 @@
 			finishBulkRender() {
 				for(const groupKey of this.bulkRenderGroupKeys) {
 					let	bulkRenderGroup = this.bulkRenderMap.get(groupKey);
-					geomapManipulation.addMultipleElementsToGeomap(bulkRenderGroup);
+					addMultipleElementsToGeomap(groupKey, bulkRenderGroup);
 				}
 
 				geomapManipulation.exportGeojson();
@@ -82,7 +82,7 @@
 
 			renderSingleElement(element, column) {
 				let parsedElement = parseElement(element, column);
-				addElementToGeomap(parsedElement);
+				addSingleElementToGeomap(parsedElement);
 			}
 		}
 
@@ -168,7 +168,7 @@
 			return polygonCoordinates;
 		};
 
-		function addElementToGeomap(parsedElement) {
+		function addSingleElementToGeomap(parsedElement) {
 			switch(parsedElement.Name) {
 				case "POINT":
 					let point = geomapManipulation.createPoint(extractPointCoordinates(parsedElement));
@@ -190,6 +190,28 @@
 			}
 		};
 
+		function addMultipleElementsToGeomap(groupKey, bulkRenderGroup) {
+			switch(groupKey) {
+				case "POINT":
+					//let point = geomapManipulation.createPoint(extractPointCoordinates(parsedElement));
+					geomapManipulation.addMultipleMarkersToGeomap(bulkRenderGroup);
+					break;
+
+				case "LINESTRING":
+					//let line = geomapManipulation.createLine(extractLineCoordinates(parsedElement), { color: 'green' });
+					geomapManipulation.addMultipleLinesToGeomap(bulkRenderGroup);
+					break;
+
+				case "POLYGON":
+					//let polygon = geomapManipulation.createPolygon(extractPolygonCoordinates(parsedElement), { color: 'blue' })
+					geomapManipulation.addMultiplePolygonsToGeomap(bulkRenderGroup);
+					break;
+
+				default:
+					break;
+			}
+		};
+
 		return new ShapeRenderer();
 	};
 
@@ -200,7 +222,9 @@
 		class GeomapManipulation {
 			constructor() {
 				this.geomap = {};
-				this.drawnItems = {};
+				this.markerGroup = {};
+				this.lineGroup = {};
+				this.polygonGroup = {};
 
 				this.mapViewZoom = {};
 				this.mapViewLatitude = {};
@@ -217,6 +241,21 @@
 				//
 				// manage cancel
 				this.canceler = $q.defer();
+			}
+
+			//#region Get/Set
+			getMapInstance(latitude, longitude, zoom) {
+				this.geomap = createMap(latitude, longitude, zoom);
+				//this.markerGroup = L.markerClusterGroup().addTo(this.geomap);
+				this.markerGroup = L.layerGroup().addTo(this.geomap);
+				this.lineGroup = L.layerGroup().addTo(this.geomap);
+				this.polygonGroup = L.layerGroup().addTo(this.geomap);
+
+				this.mapViewZoom = zoom;
+				this.mapViewLatitude = latitude;
+				this.mapViewLongitude = longitude;
+
+				return this.geomap;
 			}
 
 			setMapViewLatitude(value) {
@@ -264,9 +303,26 @@
 				element.addTo(this.drawnItems);
 			}
 
-			addMultipleElementsToGeomap(elementArray) {
-				L.featureGroup(elementArray).addTo(this.drawnItems);
+			addSingleLineToGeomap(element) {
+				element.addTo(this.lineGroup);
 			}
+
+			addSinglePolygonToGeomap(element) {
+				element.addTo(this.polygonGroup);
+			}
+
+			addMultipleMarkersToGeomap(elementArray) {
+				L.featureGroup(elementArray).addTo(this.markerGroup);
+			}
+
+			addMultipleLinesToGeomap(elementArray) {
+				L.featureGroup(elementArray).addTo(this.lineGroup);
+			}
+
+			addMultiplePolygonsToGeomap(elementArray) {
+				L.featureGroup(elementArray).addTo(this.polygonGroup);
+			}
+			//#endregion
 
 			clearDrawnItems() {
 				this.drawnItems.clearLayers();
@@ -283,28 +339,78 @@
 					bounds.getNorthEast().lat
 				]];
 
-				console.log(collection);
+				let exportMap = new Map();
+				let markerCollection = this.markerGroup.toGeoJSON();
+				markerCollection.bbox = bbox;
+				exportMap.set('POINT', markerCollection);
+
+				let lineCollection = this.lineGroup.toGeoJSON();
+				lineCollection.bbox = bbox;
+				exportMap.set('LINESTRING', lineCollection);
+
+				let polygonCollection = this.polygonGroup.toGeoJSON();
+				polygonCollection.bbox = bbox;
+				exportMap.set('POLYGON', polygonCollection);
+
+				exportMap.set("VIEW", [this.mapViewLatitude, this.mapViewLongitude, this.mapViewZoom]);
+
+				console.log(exportMap);
 				console.log(this.exportURL);
 
-				return $http.post(this.exportURL, JSON.stringify(collection))
+				return $http.post(this.exportURL, JSON.stringify(exportMap, replacer))
 				.then(function (response) {
-					alert(response.data + " successfull EXPORT");
+					//TODO: if anything
+					//alert(response.data + " successfull EXPORT");
 				}, function (error) {
 					alert("error " + error.data.responseText);
 				});
 			}
 
-			//, { "Accept" : "application/json" }
 			importGeojson() {
 				let self = this;
 				return $http.get(this.importURL)
 				.then(function (response) {
-					//alert(response.data + " successfull IMPORT");
-					if(typeof response.data.features != 'undefined') {
-						L.geoJSON(response.data).addTo(self.geomap);
-						self.mapViewLatitude = response.data.features[0].geometry.coordinates[1];
-						self.mapViewLongitude = response.data.features[0].geometry.coordinates[0];
-						self.setCurrentView();
+					let geojsonMap = JSON.parse(JSON.stringify(response.data), reviver);
+					if(geojsonMap.length == 0) {
+						return;
+					}
+
+					for(const key of geojsonMap.keys()) {
+						let elements = geojsonMap.get(key);
+
+						switch(key) {
+							case "POINT":
+								L.geoJSON(elements).addTo(self.markerGroup);
+								break;
+
+							case "LINESTRING":
+								L.geoJSON(elements).addTo(self.lineGroup);
+								self.lineGroup.eachLayer(layer => {
+									layer.setStyle({
+										color: 'green'
+									});
+								});
+								break;
+
+							case "POLYGON":
+								L.geoJSON(elements).addTo(self.polygonGroup);
+								self.polygonGroup.eachLayer(layer => {
+									layer.setStyle({
+										color: 'blue'
+									});
+								});
+								break;
+
+							case "VIEW":
+								self.mapViewLatitude = elements[0];
+								self.mapViewLongitude = elements[1];
+								self.mapViewZoom = elements[2];
+								self.setCurrentView();
+								break;
+
+							default:
+								break;
+						}
 					}
 
 				}, function (error) {
@@ -317,7 +423,6 @@
 		//HELPER FUNCTIONS
 		function createMap(latitude, longitude, zoom) {
 			let geomap = L.map('geomapDiv').setView([latitude, longitude], zoom);
-
 			L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
 				maxZoom: 18,
 				attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
@@ -328,6 +433,26 @@
 			}).addTo(geomap);
 			return geomap;
 		}
+
+		function replacer(key, value) {
+			if(value instanceof Map) {
+			  return {
+				dataType: 'Map',
+				value: Array.from(value.entries()), // or with spread: value: [...value]
+			  };
+			} else {
+			  return value;
+			}
+		  }
+
+		  function reviver(key, value) {
+			if(typeof value === 'object' && value !== null) {
+			  if (value.dataType === 'Map') {
+				return new Map(value.value);
+			  }
+			}
+			return value;
+		  }
 
 		return new GeomapManipulation();
 	}
