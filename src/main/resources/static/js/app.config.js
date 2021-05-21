@@ -19,11 +19,15 @@
 					dataURL: BASE_URL + 'ttl-data',
 					geoExport: BASE_URL + 'save-geo-data',
 					geoImport: BASE_URL + 'load-geo-data',
-					startSimulation: BASE_URL + 'start-simulation',
-					pauseSimulation: BASE_URL + 'pause-simulation',
-					resetSimulation: BASE_URL + 'reset-simulation',
-					stopSimulation: BASE_URL + 'stop-simulation',
-					nextSimulation: BASE_URL + 'next-simulation'
+
+					weatherStartNew: BASE_URL + 'weather-service/start-new',
+					weatherNext: BASE_URL + 'weather-service/next',
+					weatherReset: BASE_URL + 'weather-service/reset',
+					weatherStop: BASE_URL + 'weather-service/stop',
+
+					simulatorStart: BASE_URL + 'simulator/start',
+					simulatorEvaluate: BASE_URL + 'simulator/evaluate',
+					simulatorStop: BASE_URL + 'simulator/stop',
 				}
 			}
         	return defaultConfig;

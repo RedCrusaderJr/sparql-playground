@@ -1,12 +1,14 @@
 package swiss.sib.sparql.playground.controller;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.rio.RDFFormat;
@@ -14,96 +16,112 @@ import org.eclipse.rdf4j.rio.Rio;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import swiss.sib.sparql.playground.repository.impl.RDF4jRepositoryImpl;
 
 @Controller
 
 public class WeatherServiceController {
-    public RDF4jRepositoryImpl rdf4j = new RDF4jRepositoryImpl();
-    Map<Integer, Model> collection = new HashMap<Integer, Model>();
-    int iterator = 0;
+	private static final Log logger = LogFactory.getLog(SparqlController.class);
 
-    // @RequestMapping(value = "/sparql") // trebace mi ovako za moj controller, i
-    // onda start, next pozivamo sa front-a
-    // mvc pattern, na frontu, svaki taj neki segment, upravljace start-om na http i
-    // start na mom, i pokrenuce se stoperica, to cemo videti jos
-    // mozda samo start i next da vrate da su zavrsili, kad se zavrsi next metoda,
-    // on okine neki simulator i svaki taj process data
-    // bice dosta query-a, iscrtavanje buffer-a,a kad pozovemo next, onda cemo imati
-    // query za isrctavanje
-    // gromovi, location - wkt, promenicemo ulazne file-ove, da budu type storm i
-    // taj propery location
-    // uvucemo te trojke i dodjemo do koordinata i isrctamo, i pokrenemo
-    // interception
-    // tu kazemo ovaj deo koji je interception-ovan njega posebno isrctamo
-    // oni line-ove ciji se poligoni seku, i to pocrvenimo
-    // gavru docekamo sa gotovim
-    // geo data saver ?
-    // import export, povratna vrednost body response-a, 2 get-a, start, stop
-    //
-    @RequestMapping(value = "/start-simulation", method = RequestMethod.POST)
-    public void start() throws IOException {
+	public RDF4jRepositoryImpl rdf4j = new RDF4jRepositoryImpl();
+	Map<Integer, Model> collection = new HashMap<Integer, Model>();
+	int iterator = 0;
 
-        int id = 0;
-        while (id < 4) {
-            File file = new File("C:\\Users\\ODBeast\\Desktop\\test" + id + ".ttl");
-            java.net.URL documentUrl = file.toURI().toURL();
-            InputStream inputStream = documentUrl.openStream();
+	// @RequestMapping(value = "/sparql") // trebace mi ovako za moj controller, i
+	// onda start, next pozivamo sa front-a
+	// mvc pattern, na frontu, svaki taj neki segment, upravljace start-om na http i
+	// start na mom, i pokrenuce se stoperica, to cemo videti jos
+	// mozda samo start i next da vrate da su zavrsili, kad se zavrsi next metoda,
+	// on okine neki simulator i svaki taj process data
+	// bice dosta query-a, iscrtavanje buffer-a,a kad pozovemo next, onda cemo imati
+	// query za isrctavanje
+	// gromovi, location - wkt, promenicemo ulazne file-ove, da budu type storm i
+	// taj propery location
+	// uvucemo te trojke i dodjemo do koordinata i isrctamo, i pokrenemo
+	// interception
+	// tu kazemo ovaj deo koji je interception-ovan njega posebno isrctamo
+	// oni line-ove ciji se poligoni seku, i to pocrvenimo
+	// gavru docekamo sa gotovim
+	// geo data saver ?
+	// import export, povratna vrednost body response-a, 2 get-a, start, stop
+	//
+	@RequestMapping(value = "weather-service/start-new", method = RequestMethod.GET)
+	public @ResponseBody Boolean startNewSimulation() {
+		return true;
 
-            Model results = Rio.parse(inputStream, documentUrl.toString(), RDFFormat.TURTLE);
-            collection.put(id, results);
-            id++;
-        }
-    }
+		// TODO: uncomment
+		// int id = 0;
+		// while (id < 4) {
+		// try {
+		// File file = new File("C:\\Users\\ODBeast\\Desktop\\test" + id + ".ttl");
+		// java.net.URL documentUrl = file.toURI().toURL();
+		// InputStream inputStream = documentUrl.openStream();
+		// Model results = Rio.parse(inputStream, documentUrl.toString(),
+		// RDFFormat.TURTLE);
+		// collection.put(id, results);
 
-    @RequestMapping(value = "/pause-simulation", method = RequestMethod.POST)
-    public void pause() throws IOException {
+		// } catch (Exception e) {
+		// logger.error(e.getMessage(), e);
+		// return false;
+		// }
 
-    }
+		// id++;
+		// }
 
-    @RequestMapping(value = "/reset-simulation", method = RequestMethod.POST)
-    public void reset() throws IOException {
+		// return true;
+	}
 
-    }
+	@RequestMapping(value = "weather-service/next", method = RequestMethod.GET)
+	public @ResponseBody Boolean nextIteration() {
+		return true;
 
-    @RequestMapping(value = "/stop-simulation", method = RequestMethod.POST)
-    public void stop() throws IOException {
+		// TODO: uncomment
+		// List<Statement> oldStatements = new ArrayList<Statement>();
+		// List<Statement> newStatements = new ArrayList<Statement>();
+		// Model oldModel;
+		// Model newModel;
 
-    }
+		// if (!rdf4j.isEmpty()) {
+		// if (iterator == 0) {
+		// int iteratorOld = 3;
+		// oldModel = collection.get(iteratorOld);
+		// } else {
+		// oldModel = collection.get(iterator - 1);
+		// }
 
-    @RequestMapping(value = "/next-simulation", method = RequestMethod.POST)
-    public void next() {
-        List<Statement> oldStatements = new ArrayList<Statement>();
-        List<Statement> newStatements = new ArrayList<Statement>();
-        Model oldModel;
-        Model newModel;
+		// for (Statement statement : oldModel) {
+		// oldStatements.add(statement);
+		// }
+		// rdf4j.removeStatements(oldStatements);
+		// }
 
-        if (!rdf4j.isEmpty()) {
-            if (iterator == 0) {
-                int iteratorOld = 3;
-                oldModel = collection.get(iteratorOld);
-            } else {
-                oldModel = collection.get(iterator - 1);
-            }
+		// newModel = collection.get(iterator);
+		// for (Statement statement : newModel) {
+		// newStatements.add(statement);
+		// }
 
-            for (Statement statement : oldModel) {
-                oldStatements.add(statement);
-            }
-            rdf4j.removeStatements(oldStatements);
-        }
+		// rdf4j.addStatements(newStatements);
 
-        newModel = collection.get(iterator);
-        for (Statement statement : newModel) {
-            newStatements.add(statement);
-        }
+		// if (iterator == 3) {
+		// iterator = 0;
+		// } else {
+		// iterator++;
+		// }
 
-        rdf4j.addStatements(newStatements);
+		// return true;
+	}
 
-        if (iterator == 3) {
-            iterator = 0;
-        } else {
-            iterator++;
-        }
-    }
+	@RequestMapping(value = "weather-service/reset", method = RequestMethod.GET)
+	public @ResponseBody Boolean resetSimulation() {
+		// todo: set begining options
+		return true;
+	}
+
+	@RequestMapping(value = "weather-service/stop", method = RequestMethod.GET)
+	public @ResponseBody Boolean stopSimulation() {
+		// todo: cleanup
+		return true;
+	}
 }

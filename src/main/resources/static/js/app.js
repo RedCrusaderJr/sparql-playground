@@ -10,7 +10,7 @@
 		'ui.codemirror',
 		'snorql.config',
 		'snorql.service',
-		'simulator.service',
+		'geosparql.simulator.service',
 		'geomap.service',
 		'snorql.ui',
 		'angular-jwt',  // token
@@ -186,15 +186,84 @@
 
 	//
 	// implement controller SimulatorCtrl
-	SimulatorCtrl.$inject=['$scope', 'simulator', 'geomapManipulation']
-	function SimulatorCtrl($scope, simulator, geomapManipulation) {
+	SimulatorCtrl.$inject=['$scope', 'geoSparqlSimulator', 'geomapManipulation']
+	function SimulatorCtrl($scope, geoSparqlSimulator, geomapManipulation) {
 		//
-		// snorql service provide examples, examples tags, config and executeQuery
-		$scope.simulator=simulator;
+		//HELPER FUNCTIONS
+		function setDefaultDisablerValues() {
+			$scope.isStartDisabled = false;
+			$scope.isPauseDisabled = true;
+			$scope.isResetDisabled = true;
+			$scope.isStopDisabled = true;
+		}
+
+		function setDisablerValuesStartPressed() {
+			$scope.isStartDisabled = true;
+			$scope.isPauseDisabled = false;
+			$scope.isResetDisabled = false;
+			$scope.isStopDisabled = false;
+		}
+
+		function setDisablerValuesPausedPressed() {
+			$scope.isStartDisabled = false;
+			$scope.isPauseDisabled = true;
+			$scope.isResetDisabled = false;
+			$scope.isStopDisabled = false;
+		}
+
+		function setDisablerValuesResetPressed() {
+			$scope.isStartDisabled = true;
+			$scope.isPauseDisabled = false;
+			$scope.isResetDisabled = false;
+			$scope.isStopDisabled = false;
+		}
+
+		function setDisablerValuesStopPressed() {
+			$scope.isStartDisabled = false;
+			$scope.isPauseDisabled = true;
+			$scope.isResetDisabled = true;
+			$scope.isStopDisabled = true;
+		}
+
+		//
+		// disablers
+		setDefaultDisablerValues();
+
+		//
+		// button implementation
+		$scope.start = function() {
+			let parsedInterval = Number.parseInt($scope.interval.split(" ")[0]);
+			if(!geoSparqlSimulator.start(parsedInterval)) {
+				setDefaultDisablerValues();
+			}
+			setDisablerValuesStartPressed();
+		}
+
+		$scope.pause = function() {
+			if(!geoSparqlSimulator.pause()) {
+				setDefaultDisablerValues();
+			}
+			setDisablerValuesPausedPressed();
+		}
+
+		$scope.reset = function() {
+			if(!geoSparqlSimulator.reset()) {
+				setDefaultDisablerValues();
+			}
+			setDisablerValuesResetPressed();
+		}
+
+		$scope.stop = function() {
+			if(!geoSparqlSimulator.stop()) {
+				setDefaultDisablerValues();
+			}
+			setDisablerValuesStopPressed();
+		}
+
 		//
 		// setup default interval
 		$scope.intervals=['1 [sec]', '5 [sec]', '10 [sec]', '15 [sec]', '30 [sec]', '60 [sec]'];
-		//$scope.interval=$scope.intervals[1];
+		$scope.interval=$scope.intervals[2];
 
 		$scope.geomap = geomapManipulation.getMapInstance(51.505, -0.09, 13);
 		geomapManipulation.importGeojson();

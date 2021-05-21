@@ -5,7 +5,7 @@
 	* create snorql directives
 	*/
 
-	angular.module('snorql.ui',[])
+	angular.module('snorql.ui', [])
 		.directive("menuToggle",menuToggle)
 		.directive("sparqlFormatter",sparqlFormatter)
 		.filter("containsTag",containsTag)
