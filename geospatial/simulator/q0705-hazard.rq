@@ -1,3 +1,10 @@
+#title:hazard
+#comment:
+
+#tags:hazard,polygons,wkt,coordinates
+#color:ex-green
+#img:
+
 prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
@@ -13,3 +20,8 @@ prefix ex: <http://example.org/>
 prefix my: <http://example.org/ApplicationSchema#> 
 prefix cim: <http://iec.ch/TC57/CIM-generic#> 
 prefix xdmp: <http://marklogic.com/xdmp#> 
+
+select DISTINCT ?g_storm
+where {
+  BIND("POLYGON ((44.998806 19.807534, 45.000495 19.821806, 44.992597 19.818600, 44.993894 19.814818, 44.998806 19.807534))"^^geo:wktLiteral as ?g_storm).
+}

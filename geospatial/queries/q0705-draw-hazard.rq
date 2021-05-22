@@ -1,0 +1,11 @@
+#title:draw-hazard
+#comment:
+
+#tags:hazard,polygons,wkt,coordinates
+#color:ex-green
+#img:
+
+select DISTINCT ?g_storm
+where {
+  BIND("POLYGON ((44.998806 19.807534, 45.000495 19.821806, 44.992597 19.818600, 44.993894 19.814818, 44.998806 19.807534))"^^geo:wktLiteral as ?g_storm).
+}

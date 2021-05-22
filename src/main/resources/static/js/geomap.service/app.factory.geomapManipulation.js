@@ -17,7 +17,9 @@
 				this.geomap = {};
 				this.markerGroup = {};
 				this.lineGroup = {};
-				this.polygonGroup = {};
+				this.healtyPolygonGroup = {};
+				this.affectedPolygonGroup = {};
+				this.hazardPolygonGroup = {};
 
 				this.mapViewZoom = {};
 				this.mapViewLatitude = {};
@@ -35,7 +37,9 @@
 				//this.markerGroup = L.markerClusterGroup().addTo(this.geomap);
 				this.markerGroup = L.layerGroup().addTo(this.geomap);
 				this.lineGroup = L.layerGroup().addTo(this.geomap);
-				this.polygonGroup = L.layerGroup().addTo(this.geomap);
+				this.healtyPolygonGroup = L.layerGroup().addTo(this.geomap);
+				this.affectedPolygonGroup = L.layerGroup().addTo(this.geomap);
+				this.hazardPolygonGroup = L.layerGroup().addTo(this.geomap);
 
 				this.mapViewZoom = zoom;
 				this.mapViewLatitude = latitude;
@@ -84,8 +88,24 @@
 				element.addTo(this.lineGroup);
 			}
 
-			addSinglePolygonToGeomap(element) {
-				element.addTo(this.polygonGroup);
+			addSinglePolygonToGeomap(element, polygonType) {
+				if(typeof polygonType == 'undefined') {
+					polygonType = "HEALTY";
+				}
+
+				switch(polygonType) {
+					case "HEALTY":
+						element.addTo(this.healtyPolygonGroup);
+						break;
+					case "AFFECTED":
+						element.addTo(this.affectedPolygonGroup);
+						break;
+					case "HAZARD":
+						element.addTo(this.hazardPolygonGroup);
+						break;
+					default:
+						break;
+				}
 			}
 
 			addMultipleMarkersToGeomap(elementArray) {
@@ -96,15 +116,33 @@
 				L.featureGroup(elementArray).addTo(this.lineGroup);
 			}
 
-			addMultiplePolygonsToGeomap(elementArray) {
-				L.featureGroup(elementArray).addTo(this.polygonGroup);
+			addMultiplePolygonsToGeomap(elementArray, polygonType) {
+				if(typeof polygonType == 'undefined') {
+					polygonType = "HEALTY";
+				}
+
+				switch(polygonType) {
+					case "HEALTY":
+						L.featureGroup(elementArray).addTo(this.healtyPolygonGroup);
+						break;
+					case "AFFECTED":
+						L.featureGroup(elementArray).addTo(this.affectedPolygonGroup);
+						break;
+					case "HAZARD":
+						L.featureGroup(elementArray).addTo(this.hazardPolygonGroup);
+						break;
+					default:
+						break;
+				}
 			}
 			//#endregion
 
 			clearDrawnItems() {
 				this.markerGroup.clearLayers();
 				this.lineGroup.clearLayers();
-				this.polygonGroup.clearLayers();
+				this.healtyPolygonGroup.clearLayers();
+				this.affectedPolygonGroup.clearLayers();
+				this.hazardPolygonGroup.clearLayers();
 			}
 
 			//#region Export/Import
@@ -118,17 +156,29 @@
 				]];
 
 				let exportMap = new Map();
+				//
+				//POINTS
 				let markerCollection = this.markerGroup.toGeoJSON();
 				markerCollection.bbox = bbox;
 				exportMap.set('POINT', markerCollection);
-
+				//
+				//LINES
 				let lineCollection = this.lineGroup.toGeoJSON();
 				lineCollection.bbox = bbox;
 				exportMap.set('LINESTRING', lineCollection);
-
-				let polygonCollection = this.polygonGroup.toGeoJSON();
-				polygonCollection.bbox = bbox;
-				exportMap.set('POLYGON', polygonCollection);
+				//
+				//POLYGONS
+				let polygoneMap = new Map();
+				let healtyPolygonCollection = this.healtyPolygonGroup.toGeoJSON();
+				healtyPolygonCollection.bbox = bbox;
+				polygoneMap.set("HEALTY", healtyPolygonCollection);
+				let affectedPolygonCollection = this.affectedPolygonGroup.toGeoJSON();
+				affectedPolygonCollection.bbox = bbox;
+				polygoneMap.set("AFFECTED", affectedPolygonCollection);
+				let hazardPolygonCollection = this.hazardPolygonGroup.toGeoJSON();
+				hazardPolygonCollection.bbox = bbox;
+				polygoneMap.set("HAZARD", hazardPolygonCollection);
+				exportMap.set('POLYGON', polygoneMap);
 
 				exportMap.set("VIEW", [this.mapViewLatitude, this.mapViewLongitude, this.mapViewZoom]);
 
@@ -148,6 +198,8 @@
 				let self = this;
 				return $http.get(this.importURL)
 				.then(function (response) {
+					let lineColor = { color: 'green' };
+
 					let geojsonMap = JSON.parse(JSON.stringify(response.data), reviver);
 					if(geojsonMap.length == 0) {
 						return;
@@ -160,25 +212,15 @@
 							case "POINT":
 								L.geoJSON(elements).addTo(self.markerGroup);
 								break;
-
 							case "LINESTRING":
 								L.geoJSON(elements).addTo(self.lineGroup);
 								self.lineGroup.eachLayer(layer => {
-									layer.setStyle({
-										color: 'green'
-									});
+									layer.setStyle(lineColor);
 								});
 								break;
-
 							case "POLYGON":
-								L.geoJSON(elements).addTo(self.polygonGroup);
-								self.polygonGroup.eachLayer(layer => {
-									layer.setStyle({
-										color: 'blue'
-									});
-								});
+								renderPolygons(elements, self);
 								break;
-
 							case "VIEW":
 								self.mapViewLatitude = elements[0];
 								self.mapViewLongitude = elements[1];
@@ -231,6 +273,39 @@
 			  	}
 			}
 			return value;
+		}
+
+		function renderPolygons(polygonCollections, self) {
+			let healtyPolygoneColor = { color: 'blue' };
+			let affectedPolygoneColor = { color: 'red' };
+			let hazardPolygoneColor = { color: 'orange' };
+
+			for(const key of polygonCollections.keys()) {
+				let polygonCollection = polygonCollections.get(key);
+
+				switch(key) {
+					case "HEALTY":
+						L.geoJSON(polygonCollection).addTo(self.healtyPolygonGroup);
+						self.healtyPolygonGroup.eachLayer(layer => {
+							layer.setStyle(healtyPolygoneColor);
+						});
+						break;
+					case "AFFECTED":
+						L.geoJSON(polygonCollection).addTo(self.affectedPolygonGroup);
+						self.affectedPolygonGroup.eachLayer(layer => {
+							layer.setStyle(affectedPolygoneColor);
+						});
+						break;
+					case "HAZARD":
+						L.geoJSON(polygonCollection).addTo(self.hazardPolygonGroup);
+						self.hazardPolygonGroup.eachLayer(layer => {
+							layer.setStyle(hazardPolygoneColor);
+						});
+						break;
+					default:
+						break;
+				}
+			}
 		}
 
 		return new GeomapManipulation();

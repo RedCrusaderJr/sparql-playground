@@ -53,13 +53,13 @@ public class SparqlQueryController {
 				throw e;
 
 			} finally {
-				finalize(queryStr, queryResult, output, request, response);
+				finalize(queryResult, output, response);
 			}
 		}
 	}
 
-	private void finalize(String queryStr, TupleQueryResult queryResult, String output, HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
+	private void finalize(TupleQueryResult queryResult, String output, HttpServletResponse response)
+			throws IOException {
 		TupleQueryResultWriterFactory factory;
 
 		if (queryResult == null) {
@@ -85,11 +85,11 @@ public class SparqlQueryController {
 			response.setContentType(MimeTypeUtils.APPLICATION_JSON_VALUE);
 		}
 
-		renderInternal(factory, queryResult, request, response);
+		renderInternal(factory, queryResult, response);
 	}
 
 	private void renderInternal(TupleQueryResultWriterFactory factory, TupleQueryResult tupleQueryResult,
-			HttpServletRequest request, HttpServletResponse response) throws IOException {
+			HttpServletResponse response) throws IOException {
 		response.setStatus(200);
 		ServletOutputStream out = response.getOutputStream();
 

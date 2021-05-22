@@ -14,7 +14,7 @@
 	function shapeRendererFactory(geomapManipulation) {
 		class ShapeRenderer {
 			constructor() {
-				this.bulkRenderGroupKeys = ["POINT", "LINESTRING", "POLYGON"]
+				this.bulkRenderGroupKeys = ["POINT", "LINESTRING", "POLYGON"]//-HEALTY", "POLYGON-AFFECTED", "POLYGON-HAZARD"]
 				this.bulkRenderMap = new Map();
 			}
 
@@ -25,17 +25,27 @@
 				}
 			}
 
-			addElementToBulkRender(element, column) {
+			addElementToBulkRender(element, column, lineColor, polygoneColor) {
 				let parsedElement = parseElement(element, column);
+				this.addParsedElementToBulkRender(parsedElement, lineColor, polygoneColor)
+			}
 
+			//todo: get rid of it
+			addParsedElementToBulkRender(parsedElement, lineColor, polygoneColor, elementType) {
 				if(!this.bulkRenderMap.has(parsedElement.Name)) {
-					console.log("KEY: '" + parsedElement.Name + "' not present in 'bulkRenderMap'.");
+					console.error("KEY: '" + parsedElement.Name + "' not present in 'bulkRenderMap'.");
+					return;
 				}
 
+				if(typeof lineColor == 'undefined') {
+					lineColor = { color: 'green' };
+				}
+				if(typeof polygoneColor == 'undefined') {
+					polygoneColor = { color: 'blue' };
+				}
 				//
 				//get group from map
 				let	bulkRenderGroup = this.bulkRenderMap.get(parsedElement.Name);
-
 				//
 				//change group
 				switch(parsedElement.Name) {
@@ -43,21 +53,27 @@
 						let point = geomapManipulation.createPoint(extractPointCoordinates(parsedElement));
 						bulkRenderGroup.push(point);
 						break;
-
 					case "LINESTRING":
-						let line = geomapManipulation.createLine(extractLineCoordinates(parsedElement), { color: 'green' });
+						let line = geomapManipulation.createLine(extractLineCoordinates(parsedElement), lineColor);
 						bulkRenderGroup.push(line);
 						break;
-
 					case "POLYGON":
-						let polygon = geomapManipulation.createPolygon(extractPolygonCoordinates(parsedElement), { color: 'blue' })
+						let polygon = geomapManipulation.createPolygon(extractPolygonCoordinates(parsedElement), polygoneColor)
 						bulkRenderGroup.push(polygon);
 						break;
 
+						// case "POLYGON":
+						// let polygon = geomapManipulation.createPolygon(extractPolygonCoordinates(parsedElement), polygoneColor)
+						// bulkRenderGroup.push(polygon);
+						// break;
+
+						// case "POLYGON":
+						// let polygon = geomapManipulation.createPolygon(extractPolygonCoordinates(parsedElement), polygoneColor)
+						// bulkRenderGroup.push(polygon);
+						// break;
 					default:
 						break;
 				}
-
 				//
 				//set group back to map
 				this.bulkRenderMap.set(parsedElement.Name, bulkRenderGroup);
@@ -69,10 +85,12 @@
 					addMultipleElementsToGeomap(groupKey, bulkRenderGroup);
 				}
 
-				geomapManipulation.exportGeojson();
+				//geomapManipulation.exportGeojson();
 				this.bulkRenderMap.clear();
 			}
 
+			//
+			//depreciated
 			renderSingleElement(element, column) {
 				let parsedElement = parseElement(element, column);
 				addSingleElementToGeomap(parsedElement);
@@ -82,11 +100,11 @@
 		//
 		//HELPER FUNCTIONS
 		function parseElement(element, column) {
-			let parsedElement = new Object;
 			let splittedElement = element[column].value.substring(0, element[column].value.length - 1).split(" (");
+
+			let parsedElement = new Object;
 			parsedElement.Name = splittedElement[0].trim();
 			parsedElement.Coordinates = parseCoordinates(splittedElement[1]);
-
 			return parsedElement;
 		};
 
@@ -96,13 +114,13 @@
 			if(unparsedCoordinates.charAt(0) ==='('){
 				let splittedByComma = unparsedCoordinates.split("), (");
 				if(splittedByComma.length > 1){
-				splittedByComma.forEach(shape => {
-					shape = removeParentheses(shape);
-					coordinates.Shapes.push(parseShape(shape));
-				});
+					splittedByComma.forEach(shape => {
+						shape = removeParentheses(shape);
+						coordinates.Shapes.push(parseShape(shape));
+					});
 				}
 				else{
-				coordinates.Shapes.push(parseShape(unparsedCoordinates));
+					coordinates.Shapes.push(parseShape(unparsedCoordinates));
 				}
 			}
 			else {
@@ -186,17 +204,15 @@
 		function addMultipleElementsToGeomap(groupKey, bulkRenderGroup) {
 			switch(groupKey) {
 				case "POINT":
-					//let point = geomapManipulation.createPoint(extractPointCoordinates(parsedElement));
 					geomapManipulation.addMultipleMarkersToGeomap(bulkRenderGroup);
 					break;
 
 				case "LINESTRING":
-					//let line = geomapManipulation.createLine(extractLineCoordinates(parsedElement), { color: 'green' });
 					geomapManipulation.addMultipleLinesToGeomap(bulkRenderGroup);
 					break;
 
 				case "POLYGON":
-					//let polygon = geomapManipulation.createPolygon(extractPolygonCoordinates(parsedElement), { color: 'blue' })
+					//geomapManipulation.addMultiplePolygonsToGeomap(bulkRenderGroup, polygonType);
 					geomapManipulation.addMultiplePolygonsToGeomap(bulkRenderGroup);
 					break;
 

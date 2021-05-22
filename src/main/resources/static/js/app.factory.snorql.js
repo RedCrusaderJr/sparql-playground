@@ -265,24 +265,7 @@
 						console.log(self.result);
 
 						//drawing on map if geospatial data in query
-						geomapManipulation.clearDrawnItems();
-						var geoSpatialColumnHeaders = self.result.head.vars.filter(function (item) {
-							var finder = 'g_';
-							return eval('/' + finder + '/').test(item);
-						});
-
-						if (geoSpatialColumnHeaders.length > 0) {
-							var elements = self.result.results.bindings;
-							shapeRenderer.startBulkRender();
-							geoSpatialColumnHeaders.forEach(column => {
-								elements.forEach(element => {
-									shapeRenderer.addElementToBulkRender(element, column);
-									//shapeRenderer.renderSingleElement(element, column);
-								});
-							});
-							shapeRenderer.finishBulkRender();
-							geomapManipulation.setCurrentView();
-						}
+						renderGeospatialData(self);
 					});
 
 				}
@@ -534,6 +517,27 @@
 		}
 
 		return new Snorql()
+
+		function renderGeospatialData(self) {
+			geomapManipulation.clearDrawnItems();
+			var geoSpatialColumnHeaders = self.result.head.vars.filter(function (item) {
+				var finder = 'g_';
+				return eval('/' + finder + '/').test(item);
+			});
+
+			if (geoSpatialColumnHeaders.length > 0) {
+				var elements = self.result.results.bindings;
+				shapeRenderer.startBulkRender();
+				geoSpatialColumnHeaders.forEach(column => {
+					elements.forEach(element => {
+						shapeRenderer.addElementToBulkRender(element, column);
+					});
+				});
+				shapeRenderer.finishBulkRender();
+				geomapManipulation.setCurrentView();
+				geomapManipulation.exportGeojson();
+			}
+		}
 	};
 
 })(angular);

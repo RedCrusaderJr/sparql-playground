@@ -1,11 +1,27 @@
-#title:draw-intersection
+#title:affected
 #comment:
 
-#tags:intersection,connected-points,wkt,coordinates
+#tags:affected,intersection,connected-points,wkt,coordinates
 #color:ex-green
 #img:
 
-select DISTINCT ?g_intersection ?g_wktLine
+prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+prefix dbpedia: <http://dbpedia.org/resource/> 
+prefix dbo: <http://dbpedia.org/ontology/> 
+prefix dbp: <http://dbpedia.org/property/> 
+prefix tto: <http://example.org/tuto/ontology#> 
+prefix ttr: <http://example.org/tuto/resource#> 
+prefix geo: <http://www.opengis.net/ont/geosparql#> 
+prefix geof: <http://www.opengis.net/def/function/geosparql/> 
+prefix uom: <http://www.opengis.net/def/uom/OGC/1.0/> 
+prefix ex: <http://example.org/> 
+prefix my: <http://example.org/ApplicationSchema#> 
+prefix cim: <http://iec.ch/TC57/CIM-generic#> 
+prefix xdmp: <http://marklogic.com/xdmp#> 
+
+select DISTINCT ?g_wktPolygon ?g_wktLine
 where {
   
   #terminals
