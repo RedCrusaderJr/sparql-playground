@@ -31,4 +31,18 @@
       <cims:stereotype rdf:resource="http://langdale.com.au/2005/UML#concrete"/>
       <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
     </rdf:Description>
+       <rdf:Description rdf:about="http://www.custom.org/Thunder">
+      <rdfs:subClassOf rdf:resource="http://www.custom.org/Hazard"/>
+      <rdfs:comment>One concretization of Hazard hierarchy</rdfs:comment>
+      <rdfs:label>Thunder</rdfs:label>
+      <cims:stereotype rdf:resource="http://langdale.com.au/2005/UML#concrete"/>
+      <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    </rdf:Description>
+       <rdf:Description rdf:about="http://www.custom.org/Fire">
+      <rdfs:subClassOf rdf:resource="http://www.custom.org/Hazard"/>
+      <rdfs:comment>One concretization of Hazard hierarchy</rdfs:comment>
+      <rdfs:label>Fire</rdfs:label>
+      <cims:stereotype rdf:resource="http://langdale.com.au/2005/UML#concrete"/>
+      <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    </rdf:Description>
   </rdf:RDF>
