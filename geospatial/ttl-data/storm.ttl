@@ -2,5 +2,5 @@
 @prefix geo: <http://www.opengis.net/ont/geosparql#> .
 @prefix custom: <http://www.custom.org/> .
 
-custom:Storm rdf:ID "_4a91e70e-1b84-40c8-8a2e-ada18a8773df";
-             custom:Hazard.DangerZone "POLYGON ((44.998806 19.807534, 45.000495 19.821806, 44.992597 19.818600, 44.993894 19.814818, 44.998806 19.807534))"^^geo:wktLiteral.
+<http://iec.ch/TC57/2010/CIM-schema-cim17#_4a91e70e-1b84-40c8-8a2e-ada18a8773df> rdf:type custom:Storm;
+    custom:Hazard.DangerZone "POLYGON ((44.998806 19.807534, 45.000495 19.821806, 44.992597 19.818600, 44.993894 19.814818, 44.998806 19.807534))"^^geo:wktLiteral.

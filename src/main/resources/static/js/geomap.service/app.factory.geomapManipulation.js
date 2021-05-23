@@ -116,12 +116,12 @@
 				L.featureGroup(elementArray).addTo(this.lineGroup);
 			}
 
-			addMultiplePolygonsToGeomap(elementArray, polygonType) {
-				if(typeof polygonType == 'undefined') {
-					polygonType = "HEALTY";
+			addMultiplePolygonsToGeomap(elementArray, polygonOrigin) {
+				if(typeof polygonOrigin == 'undefined') {
+					polygonOrigin = "HEALTY";
 				}
 
-				switch(polygonType) {
+				switch(polygonOrigin) {
 					case "HEALTY":
 						L.featureGroup(elementArray).addTo(this.healtyPolygonGroup);
 						break;
