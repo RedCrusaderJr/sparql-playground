@@ -220,6 +220,14 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 		return connection.isEmpty();
 	}
 
+	public RepositoryResult<Statement> getStatements(Resource subj, IRI pred, Value obj) {
+		return connection.getStatements(subj, pred, obj);
+	}
+
+	public boolean hasStatement(Statement s) {
+		return connection.hasStatement(s, true);
+	}
+
 	public void clearData() {
 		try {
 			RepositoryResult<Statement> statements = repository.getConnection().getStatements(null, null, null, true);

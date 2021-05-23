@@ -1,0 +1,6 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix geo:     <http://www.opengis.net/ont/geosparql#> .
+@prefix custom: <http://www.custom.org/> .
+
+<http://iec.ch/TC57/2010/CIM-schema-cim17#_4a91e70e-1b84-40c8-8a2e-ada18a8773df> 
+    custom:Hazard.DangerZone "POLYGON ((45.003106 19.807534, 45.003795 19.821806, 44.995897 19.818600, 44.997194 19.814818, 45.003106 19.807534))"^^geo:wktLiteral.

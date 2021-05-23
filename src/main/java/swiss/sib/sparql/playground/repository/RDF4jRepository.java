@@ -1,13 +1,15 @@
 package swiss.sib.sparql.playground.repository;
 
-import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Map;
 
+import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.query.Query;
-import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.repository.RepositoryResult;
 
 /**
 *	TODO: for discussion - if we were to merge our code with the original project,
@@ -37,9 +39,11 @@ public interface RDF4jRepository {
 
 	long countTriplets();
 
-	void addStatements(Iterable<? extends Statement> statements, Resource... contexts);
+	void addStatements(List<Statement> statements);
 
-	void removeStatements(Iterable<? extends Statement> statements, Resource... contexts);
+	void removeStatements(List<Statement> statements);
 
-	boolean isEmpty();
+	RepositoryResult<Statement> getStatements(Resource subj, IRI pred, Value obj);
+
+	boolean hasStatement(Statement st);
 }
