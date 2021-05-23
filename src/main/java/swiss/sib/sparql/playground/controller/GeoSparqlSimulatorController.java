@@ -102,28 +102,4 @@ public class GeoSparqlSimulatorController {
 		// todo: clean up
 		return true;
 	}
-
-	private void sendResponse(TupleQueryResult result, HttpServletResponse response) throws IOException {
-		TupleQueryResultWriterFactory factory = new SPARQLResultsJSONWriterFactory();
-		response.setContentType(MimeTypeUtils.APPLICATION_JSON_VALUE);
-		response.setStatus(200);
-		ServletOutputStream out = response.getOutputStream();
-
-		try {
-			TupleQueryResultWriter qrWriter = factory.getWriter(out);
-			QueryResults.report(result, qrWriter);
-
-		} catch (QueryInterruptedException e) {
-			logger.error("Query interrupted", e);
-			response.sendError(503, "Query evaluation took too long");
-		} catch (QueryEvaluationException e) {
-			logger.error("Query evaluation error", e);
-			response.sendError(500, "Query evaluation error: " + e.getMessage());
-		} catch (TupleQueryResultHandlerException e) {
-			logger.error("Serialization error", e);
-			response.sendError(500, "Serialization error: " + e.getMessage());
-		} finally {
-			out.close();
-		}
-	}
 }

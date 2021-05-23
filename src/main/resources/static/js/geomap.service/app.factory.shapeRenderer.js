@@ -21,17 +21,23 @@
 			startBulkRender() {
 				this.bulkRenderMap.clear();
 				for(const key of this.bulkRenderGroupKeys) {
-					this.bulkRenderMap.set(key, []);
+
+					if(key === "POLYGON") {
+						this.bulkRenderMap.set(key, new Map());
+					}
+					else {
+						this.bulkRenderMap.set(key, []);
+					}
 				}
 			}
 
-			addElementToBulkRender(element, column, lineColor, polygoneColor) {
+			addElementToBulkRender(element, column, lineColor, polygoneColor, elementOrigin) {
 				let parsedElement = parseElement(element, column);
-				this.addParsedElementToBulkRender(parsedElement, lineColor, polygoneColor)
+				this.addParsedElementToBulkRender(parsedElement, lineColor, polygoneColor, elementOrigin)
 			}
 
 			//todo: get rid of it
-			addParsedElementToBulkRender(parsedElement, lineColor, polygoneColor, elementType) {
+			addParsedElementToBulkRender(parsedElement, lineColor, polygoneColor, elementOrigin) {
 				if(!this.bulkRenderMap.has(parsedElement.Name)) {
 					console.error("KEY: '" + parsedElement.Name + "' not present in 'bulkRenderMap'.");
 					return;
@@ -52,25 +58,25 @@
 					case "POINT":
 						let point = geomapManipulation.createPoint(extractPointCoordinates(parsedElement));
 						bulkRenderGroup.push(point);
+						//TODO: think about elementOrigin sub-group
 						break;
+
 					case "LINESTRING":
 						let line = geomapManipulation.createLine(extractLineCoordinates(parsedElement), lineColor);
 						bulkRenderGroup.push(line);
+						//TODO: think about elementOrigin sub-group
 						break;
+
 					case "POLYGON":
-						let polygon = geomapManipulation.createPolygon(extractPolygonCoordinates(parsedElement), polygoneColor)
-						bulkRenderGroup.push(polygon);
+						let polygon = geomapManipulation.createPolygon(extractPolygonCoordinates(parsedElement), polygoneColor);
+						if(bulkRenderGroup.has(elementOrigin) == false) {
+							bulkRenderGroup.set(elementOrigin, []);
+						}
+						let subGroup = bulkRenderGroup.get(elementOrigin);
+						subGroup.push(polygon);
+						bulkRenderGroup.set(elementOrigin, subGroup);
 						break;
 
-						// case "POLYGON":
-						// let polygon = geomapManipulation.createPolygon(extractPolygonCoordinates(parsedElement), polygoneColor)
-						// bulkRenderGroup.push(polygon);
-						// break;
-
-						// case "POLYGON":
-						// let polygon = geomapManipulation.createPolygon(extractPolygonCoordinates(parsedElement), polygoneColor)
-						// bulkRenderGroup.push(polygon);
-						// break;
 					default:
 						break;
 				}
@@ -84,8 +90,6 @@
 					let	bulkRenderGroup = this.bulkRenderMap.get(groupKey);
 					addMultipleElementsToGeomap(groupKey, bulkRenderGroup);
 				}
-
-				//geomapManipulation.exportGeojson();
 				this.bulkRenderMap.clear();
 			}
 
@@ -212,8 +216,9 @@
 					break;
 
 				case "POLYGON":
-					//geomapManipulation.addMultiplePolygonsToGeomap(bulkRenderGroup, polygonType);
-					geomapManipulation.addMultiplePolygonsToGeomap(bulkRenderGroup);
+					bulkRenderGroup.forEach(function(subGroup, polygonOrigin) {
+						geomapManipulation.addMultiplePolygonsToGeomap(subGroup, polygonOrigin);
+					});
 					break;
 
 				default:

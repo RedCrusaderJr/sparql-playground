@@ -234,7 +234,7 @@
 			geomapManipulation.exportGeojson();
 		}
 
-		function prepareBulkRender(queryResult, lineColor, polygonColor, elementType) {
+		function prepareBulkRender(queryResult, lineColor, polygonColor, elementOrigin) {
 			var geoSpatialColumnHeaders = queryResult.names.filter(function (name) {
 				var finder = 'g_';
 				return eval('/' + finder + '/').test(name);
@@ -246,16 +246,13 @@
 
 			var bindings = queryResult.bindings;
 
-			//shapeRenderer.startBulkRender();
 			geoSpatialColumnHeaders.forEach(columnName => {
 				let columnNameVar = columnName;
 				bindings.forEach(binding => {
 					let parsedElement = parseElement(binding[columnNameVar]);
-					shapeRenderer.addParsedElementToBulkRender(parsedElement, lineColor, polygonColor, elementType);
+					shapeRenderer.addParsedElementToBulkRender(parsedElement, lineColor, polygonColor, elementOrigin);
 				});
 			});
-			//shapeRenderer.finishBulkRender();
-			//geomapManipulation.setCurrentView();
 		}
 
 		function parseElement(element) {
