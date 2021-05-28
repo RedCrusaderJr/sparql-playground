@@ -16,39 +16,39 @@
 			constructor() {
 				//
 				//URLs
-				this.weatherStartNew = config.sparql.weatherStartNew;
-				this.weatherNext = config.sparql.weatherNext;
-				this.weatherReset = config.sparql.weatherReset;
-				this.weatherStop = config.sparql.weatherStop;
+				this.weatherStartNewUrl = config.sparql.weatherStartNew;
+				this.weatherNextUrl = config.sparql.weatherNext;
+				this.weatherResetUrl = config.sparql.weatherReset;
+				this.weatherStopUrl = config.sparql.weatherStop;
 
-				this.simulatorStart = config.sparql.simulatorStart;
-				this.simulatorEvaluate = config.sparql.simulatorEvaluate;
-				this.simulatorStop = config.sparql.simulatorStop;
+				this.simulatorStartUrl = config.sparql.simulatorStart;
+				this.simulatorEvaluateUrl = config.sparql.simulatorEvaluate;
+				this.simulatorStopUrl = config.sparql.simulatorStop;
 			}
 
-			//#region Getters
-			getWeatherStartNew() {
-				return this.weatherStartNew;
+			//#region URL Getters
+			getWeatherStartNewUrl() {
+				return this.weatherStartNewUrl;
 			}
 
-			getWeatherNext() {
-				return this.weatherNext;
+			getWeatherNextUrl() {
+				return this.weatherNextUrl;
 			}
 
-			getWeatherStop() {
-				return this.weatherStop;
+			getWeatherStopUrl() {
+				return this.weatherStopUrl;
 			}
 
-			getSimulatorStart() {
-				return this.simulatorStart;
+			getSimulatorStartUrl() {
+				return this.simulatorStartUrl;
 			}
 
-			getSimulatorEvaluate() {
-				return this.simulatorEvaluate;
+			getSimulatorEvaluateUrl() {
+				return this.simulatorEvaluateUrl;
 			}
 
-			getSimulatorStop() {
-				return this.simulatorStop;
+			getSimulatorStopUrl() {
+				return this.simulatorStopUrl;
 			}
 			//#endregion
 
@@ -56,7 +56,8 @@
 				console.log("'Start' button pressed.");
 
 				let self = this;
-				return $http.get(self.weatherStartNew).then(function(response) {
+				geomapManipulation.enableViewSetting();
+				return $http.get(self.weatherStartNewUrl).then(function(response) {
 					if(response.data == false) {
 						console.error("WeatherService: START NEW simulation FAILED.");
 						stopwatch.stop();
@@ -64,7 +65,7 @@
 					}
 
 					console.log("WeatherService: START NEW simulation SUCCESSFUL.");
-					$http.get(self.simulatorStart).then(function(response) {
+					return $http.get(self.simulatorStartUrl).then(function(response) {
 						if(response.data == false) {
 							console.error("GeoSparqlSimulator: START simulation FAILED.");
 							stopwatch.stop();
@@ -72,8 +73,11 @@
 						}
 
 						console.log("GeoSparqlSimulator: START simulation SUCCESSFUL.");
-						stopwatch.start(elapseInterval, elapsedCallback);
-						return true;
+						return callSimulatorEvaluate(self.getSimulatorEvaluateUrl()).then(function() {
+							geomapManipulation.disableViewSetting();
+							stopwatch.start(elapseInterval, elapsedCallback);
+							return true;
+						});
 
 					}, function (error) {
 						console.error("simulatorStart => error: " + error.data.responseText);
@@ -98,10 +102,10 @@
 			reset() {
 				console.log("'Reset' button pressed.");
 
-				stopwatch.pause();
-
 				let self = this;
-				return $http.get(self.weatherReset).then(function(response) {
+				stopwatch.pause();
+				geomapManipulation.enableViewSetting();
+				return $http.get(self.weatherResetUrl).then(function(response) {
 					if(response.data == false) {
 						console.error("WeatherService: RESET simulation FAILED.");
 						stopwatch.stop();
@@ -109,21 +113,10 @@
 					}
 
 					console.log("WeatherService: RESET simulation SUCCESSFUL.");
-					$http.get(self.simulatorEvaluate).then(function(response) {
-						if(response.data == false) {
-							console.error("GeoSparqlSimulator: EVALUATE simulation FAILED.");
-							stopwatch.stop();
-							return false;
-						}
-
-						console.log("GeoSparqlSimulator: START simulation SUCCESSFUL.");
+					return callSimulatorEvaluate(self.simulatorEvaluateUrl).then(function() {
+						geomapManipulation.disableViewSetting();
 						stopwatch.reset();
 						return true;
-
-					}, function (error) {
-						console.error("simulatorEvaluate => error: " + error.data.responseText);
-						stopwatch.stop();
-						return false;
 					});
 
 				}, function (error) {
@@ -136,24 +129,26 @@
 			stop() {
 				console.log("'Stop' button pressed.");
 
-				stopwatch.stop();
-
 				let self = this;
-				return $http.get(self.weatherStop).then(function(response) {
+				stopwatch.stop();
+				//geomapManipulation.enableViewSetting();
+				return $http.get(self.weatherStopUrl).then(function(response) {
 					if(response.data == false) {
 						console.error("WeatherService: STOP simulation FAILED.");
 						return false;
 					}
 
 					console.log("WeatherService: STOP simulation SUCCESSFUL.");
-					$http.get(self.simulatorStop).then(function(response) {
+					return $http.get(self.simulatorStopUrl).then(function(response) {
 						if(response.data == false) {
 							console.error("GeoSparqlSimulator: STOP simulation FAILED.");
 							return false;
 						}
 
 						console.log("GeoSparqlSimulator: STOP simulation SUCCESSFUL.");
-						return true;
+
+						//FOR CLEANUP
+						return callSimulatorEvaluate(self.simulatorEvaluateUrl);
 
 					}, function (error) {
 						console.error("simulatorStop => error: " + error.data.responseText);
@@ -165,6 +160,11 @@
 					return false;
 				});
 			}
+
+			routeChangeStart() {
+				this.stop();
+				return true;
+			}
 		}
 
 		var instance = new Simulator();
@@ -172,7 +172,7 @@
 
 		function elapsedCallback() {
 			console.log("elapsedCallback called");
-			return $http.get(instance.getWeatherNext()).then(function(response) {
+			return $http.get(instance.getWeatherNextUrl()).then(function(response) {
 				if(response.data == false) {
 					console.error("WeatherService: NEXT iteration FAILED.");
 					return;
@@ -185,26 +185,31 @@
 				evaluationInProcess = true;
 
 				console.log("WeatherService: NEXT iteration SUCCESSFUL.");
-				$http.get(instance.getSimulatorEvaluate()).then(function(response) {
-					if(typeof response.data == 'undefined') {
-						console.error("GeoSparqlSimulator: EVALUATE current iteration FAILED.");
-						return;
-					}
-
-					console.log("GeoSparqlSimulator: EVALUATE current iteration SUCCESSFUL.");
-					evaluationInProcess = false;
-
-					processEvaluationData(response.data);
-
-				}, function (error) {
-					evaluationInProcess = false;
-					console.error("simulatorEvaluate => error: " + error.data.responseText);
-				});
+				return callSimulatorEvaluate(instance.getSimulatorEvaluateUrl());
 
 			}, function (error) {
 				evaluationInProcess = false;
 				console.error("weatherNext => error: " + error.data.responseText);
 			});
+		}
+
+		function callSimulatorEvaluate(simulatorEvaluateUrl) {
+			return $http.get(simulatorEvaluateUrl).then(function(response) {
+				if(typeof response.data == 'undefined') {
+					console.error("GeoSparqlSimulator: EVALUATE current iteration FAILED.");
+					return;
+				}
+
+				console.log("GeoSparqlSimulator: EVALUATE current iteration SUCCESSFUL.");
+				evaluationInProcess = false;
+
+				processEvaluationData(response.data);
+
+			}, function (error) {
+				evaluationInProcess = false;
+				console.error("simulatorEvaluate => error: " + error.data.responseText);
+			});
+
 		}
 
 		function processEvaluationData(dataMap) {

@@ -29,9 +29,9 @@ public class WeatherServiceController {
 
 	@Autowired
 	private RDF4jRepository rdf4j;
-	Map<Integer, Model> collection = new HashMap<Integer, Model>();
-	int iterator = 0;
-	int numOfFiles = 0;
+	private Map<Integer, Model> modelCollection = new HashMap<Integer, Model>();
+	private int currentIterator = 0;
+	private int numOfFiles = 0;
 
 	// @RequestMapping(value = "/sparql") // trebace mi ovako za moj controller, i
 	// onda start, next pozivamo sa front-a
@@ -62,7 +62,7 @@ public class WeatherServiceController {
 				java.net.URL documentUrl = file.toURI().toURL();
 				try (InputStream inputStream = documentUrl.openStream()) {
 					Model results = Rio.parse(inputStream, documentUrl.toString(), RDFFormat.TURTLE);
-					collection.put(id, results);
+					this.modelCollection.put(id, results);
 				}
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
@@ -77,52 +77,91 @@ public class WeatherServiceController {
 
 	@RequestMapping(value = "weather-service/next", method = RequestMethod.GET)
 	public @ResponseBody Boolean nextIteration() {
-		List<Statement> oldStatements = new ArrayList<Statement>();
-		List<Statement> newStatements = new ArrayList<Statement>();
-		Model oldModel;
-		Model newModel;
+		if (removeOldStatements() == false) {
+			return false;
+		}
 
-		if (iterator == 0) {
-			int iteratorOld = numOfFiles - 1;
-			oldModel = collection.get(iteratorOld);
+		// INCREMENT
+		// this.currentIterator = this.currentIterator++ % numOfFiles;
+		if (this.currentIterator == numOfFiles - 1) {
+			this.currentIterator = 0;
 		} else {
-			oldModel = collection.get(iterator - 1);
+			this.currentIterator++;
 		}
 
-		for (Statement statement : oldModel) {
-			if (rdf4j.hasStatement(statement)) {
-				oldStatements.add(statement);
-			}
-		}
-		if (!oldStatements.isEmpty()) {
-			rdf4j.removeStatements(oldStatements);
-		}
-
-		newModel = collection.get(iterator);
-		for (Statement statement : newModel) {
-			newStatements.add(statement);
-		}
-
-		rdf4j.addStatements(newStatements);
-
-		if (iterator == numOfFiles - 1) {
-			iterator = 0;
-		} else {
-			iterator++;
-		}
-
-		return true;
+		return addNewStatements();
 	}
 
 	@RequestMapping(value = "weather-service/reset", method = RequestMethod.GET)
 	public @ResponseBody Boolean resetSimulation() {
-		iterator = 0;
+		// REMOVE OLD STATEMENTS
+		removeOldStatements();
+
+		// default iterator value
+		this.currentIterator = 0;
+
+		// ADD NEW STATEMENTS
+		addNewStatements();
 		return true;
 	}
 
 	@RequestMapping(value = "weather-service/stop", method = RequestMethod.GET)
 	public @ResponseBody Boolean stopSimulation() {
-		collection.clear();
+		// REMOVE OLD STATEMENTS
+		removeOldStatements();
+
+		// CLEAN UP
+		this.modelCollection.clear();
+		this.currentIterator = 0;
+		this.numOfFiles = 0;
+		return true;
+	}
+
+	private Boolean removeOldStatements() {
+		// GET OLD MODEL
+		Model oldModel = this.modelCollection.get(this.currentIterator);
+		if (oldModel == null) {
+			logger.warn("nextIteration => oldModel is null");
+			return false;
+		}
+
+		// GET STATEMENTS
+		List<Statement> oldStatements = new ArrayList<Statement>();
+		for (Statement statement : oldModel) {
+			if (rdf4j.hasStatement(statement)) {
+				oldStatements.add(statement);
+			}
+		}
+
+		// REMOVE STATEMENTS
+		if (!oldStatements.isEmpty()) {
+			rdf4j.removeStatements(oldStatements);
+		}
+
+		return true;
+	}
+
+	private Boolean addNewStatements() {
+		// GET NEW MODEL
+		Model newModel = this.modelCollection.get(this.currentIterator);
+		if (newModel == null) {
+			logger.warn("nextIteration => newModel is null");
+			return false;
+		}
+
+		// GET STATEMENTS
+		List<Statement> newStatements = new ArrayList<Statement>();
+		for (Statement statement : newModel) {
+			if (!rdf4j.hasStatement(statement)) {
+				newStatements.add(statement);
+			}
+		}
+
+		// ADD STATEMENTS
+		if (!newStatements.isEmpty()) {
+			rdf4j.addStatements(newStatements);
+		}
+
 		return true;
 	}
 }

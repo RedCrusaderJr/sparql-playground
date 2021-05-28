@@ -1,12 +1,9 @@
-#title:hazard
+#title:optimized-draw-hazard
 #comment:
 
-#tags:
-#color:
+#tags:otimized,buffer,wkt,coordinates
+#color:ex-blue
 #img:
-
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-PREFIX custom: <http://www.custom.org/> 
 
 SELECT DISTINCT ?g_wktHazardZone
 WHERE {

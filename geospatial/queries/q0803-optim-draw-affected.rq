@@ -1,17 +1,9 @@
-#title:affected
+#title:optimized-draw-affected
 #comment:
 
-#tags:
-#color:
+#tags:otimized,buffer,wkt,coordinates
+#color:ex-blue
 #img:
-
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-PREFIX geo: <http://www.opengis.net/ont/geosparql#> 
-PREFIX geof: <http://www.opengis.net/def/function/geosparql/> 
-PREFIX cim: <http://iec.ch/TC57/CIM-generic#> 
-PREFIX xdmp: <http://marklogic.com/xdmp#> 
-PREFIX custom: <http://www.custom.org/> 
 
 SELECT DISTINCT ?g_wktPolygon ?g_wktLine
 WHERE {

@@ -5,9 +5,8 @@
 #color:ex-green
 #img:
 
-select DISTINCT ?g_wktPolygon ?g_wktLine
-where {
-  
+SELECT DISTINCT ?g_wktPolygon ?g_wktLine
+WHERE {
   #terminals
   ?tmId rdf:type cim:Terminal.
   ?tmId cim:IdentifiedObject.name ?tmName.

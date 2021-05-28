@@ -186,10 +186,10 @@
 
 	//
 	// implement controller SimulatorCtrl
-	SimulatorCtrl.$inject=['$scope', 'geoSparqlSimulator', 'geomapManipulation']
-	function SimulatorCtrl($scope, geoSparqlSimulator, geomapManipulation) {
+	SimulatorCtrl.$inject=['$scope', 'geoSparqlSimulator', 'geomapManipulation', 'shapeRenderer', 'stopwatch']
+	function SimulatorCtrl($scope, geoSparqlSimulator, geomapManipulation, shapeRenderer, stopwatch) {
 		//
-		//HELPER FUNCTIONS
+		//#region HELPER FUNCTIONS
 		function setDefaultDisablerValues() {
 			$scope.isStartDisabled = false;
 			$scope.isPauseDisabled = true;
@@ -224,13 +224,14 @@
 			$scope.isResetDisabled = true;
 			$scope.isStopDisabled = true;
 		}
+		//#endregion
 
 		//
 		// disablers
 		setDefaultDisablerValues();
 
 		//
-		// button implementation
+		//#region button implementation
 		$scope.start = function() {
 			let parsedInterval = Number.parseInt($scope.interval.split(" ")[0]);
 			if(!geoSparqlSimulator.start(parsedInterval)) {
@@ -259,14 +260,22 @@
 			}
 			setDisablerValuesStopPressed();
 		}
+		//#endregion
 
 		//
 		// setup default interval
-		$scope.intervals=['1 [sec]', '5 [sec]', '10 [sec]', '15 [sec]', '30 [sec]', '60 [sec]'];
-		$scope.interval=$scope.intervals[2];
+		$scope.intervals=['2 [sec]', '5 [sec]', '10 [sec]', '15 [sec]', '20 [sec]', '30 [sec]', '60 [sec]'];
+		$scope.interval='10 [sec]';
 
-		$scope.geomap = geomapManipulation.getMapInstance(51.505, -0.09, 13);
+		$scope.geomap = geomapManipulation.getMapInstance(51.505, -0.09, 14);
 		geomapManipulation.importGeojson();
+
+		$scope.$on('$routeChangeStart', function() {
+			geoSparqlSimulator.routeChangeStart();
+			shapeRenderer.routeChangeStart();
+			geomapManipulation.routeChangeStart();
+			stopwatch.routeChangeStart();
+		});
 	};
 
 	/**

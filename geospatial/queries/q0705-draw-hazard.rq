@@ -5,8 +5,8 @@
 #color:ex-green
 #img:
 
-select DISTINCT *
-where { 
+SELECT DISTINCT *
+WHERE { 
   #hazard zones
   ?hazardType rdfs:subClassOf+ custom:Hazard. 
   ?stormId rdf:type ?hazardType.
