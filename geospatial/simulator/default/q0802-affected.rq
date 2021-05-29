@@ -1,13 +1,20 @@
-#title:optimized-draw-buffer
+#title:affected
 #comment:
 
-#tags:otimized,buffer,wkt,coordinates
-#color:ex-blue
+#tags:
+#color:
 #img:
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX geo: <http://www.opengis.net/ont/geosparql#> 
+PREFIX geof: <http://www.opengis.net/def/function/geosparql/> 
+PREFIX cim: <http://iec.ch/TC57/CIM-generic#> 
+PREFIX xdmp: <http://marklogic.com/xdmp#> 
+PREFIX custom: <http://www.custom.org/> 
 
 SELECT DISTINCT ?g_wktPolygon ?g_wktLine
 WHERE {
-    
     #connectivity nodes with a terminal
     ?tmId cim:Terminal.ConnectivityNode ?cNodeId;
         #conducting equipment of that terminal
@@ -30,10 +37,18 @@ WHERE {
         cim:PositionPoint.yPosition ?y2.
     FILTER(?x1 != ?x2 || ?y1 != ?y2)
 
+    #hazard zones
+    ?hazardType rdfs:subClassOf+ custom:Hazard. 
+    ?hazardId a ?hazardType;
+        custom:Hazard.DangerZone ?g_wktHazardZone.
+    
     #construct WKTs (draw geometry)
     BIND(concat("LINESTRING (", str(?x1), " ", str(?y1), ", ", str(?x2), " ", str(?y2), ")") as ?lineStr).
     BIND(strdt(?lineStr, geo:wktLiteral) as ?g_wktLine).
 
     BIND(<http://example.org/custom-function/buffer>(?lineStr, 50) as ?polygonStr).
     BIND(strdt(?polygonStr, geo:wktLiteral) as ?g_wktPolygon).
+
+    BIND(geof:intersection(?g_wktPolygon, ?g_wktHazardZone) as ?intersection).
+    FILTER(str(?intersection) != "POINT EMPTY")
 }

@@ -32,8 +32,8 @@ WHERE {
     
 	 	#hazard zones
   	    ?hazardType rdfs:subClassOf+ custom:Hazard. 
-  	    ?stormId a ?hazardType;
-  	             custom:Hazard.DangerZone ?g_wktStorm.
+  	    ?hazardId a ?hazardType;
+  	        custom:Hazard.DangerZone ?g_wktHazardZone.
 	  
         #construct WKTs (draw geometry)
         BIND(concat("LINESTRING (", str(?x1), " ", str(?y1), ", ", str(?x2), " ", str(?y2), ")") as ?lineStr).
@@ -42,7 +42,7 @@ WHERE {
         BIND(<http://example.org/custom-function/buffer>(?lineStr, 50) as ?polygonStr).
         BIND(strdt(?polygonStr, geo:wktLiteral) as ?g_wktPolygon).
     
-        BIND(geof:intersection(?g_wktPolygon, ?g_wktStorm) as ?g_intersection).
-  	    FILTER(str(?g_intersection) != "POINT EMPTY")
+        BIND(geof:intersection(?g_wktPolygon, ?g_wktHazardZone) as ?intersection).
+  	    FILTER(str(?intersection) != "POINT EMPTY")
 	}
 }

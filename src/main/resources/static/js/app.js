@@ -283,12 +283,10 @@
 	 */
 	appConfig.$inject=['$routeProvider','$locationProvider','$httpProvider']
 	function appConfig($routeProvider, $locationProvider, $httpProvider) {
-
-
+		//
 		// intercept errors
 		$httpProvider.interceptors.push('errorInterceptor')
-
-
+		//
 		// List of routes of the application
 		$routeProvider
 			// Home page
@@ -306,8 +304,7 @@
 			.when('/help/doc/:article',{title: 'help for snorql', templateUrl: '/partials/doc.html'})
 			// RDF ENTITIES
 			.when('/help/entity/:entity',{title: 'help for snorql', templateUrl: '/partials/help.html'})
-
-
+		//
 		// Without serve side support html5 must be disabled.
 		$locationProvider.html5Mode(true);
 		//$locationProvider.hashPrefix = '!';
@@ -327,16 +324,16 @@
 			},
 			responseError: function (response) {
 				if (response && response.status === 0) {
-				$rootScope.error="The API is not accessible";
+					$rootScope.error="The API is not accessible";
 				}
 				if (response && response.status === 401) {
-				$rootScope.error="You are not authorized to access the resource. Please login or review your privileges.";
+					$rootScope.error="You are not authorized to access the resource. Please login or review your privileges.";
 				}
 				if (response && response.status === 404) {
-				$rootScope.error="URL not found";
+					$rootScope.error="URL not found";
 				}
 				if (response && response.status >= 500) {
-				$rootScope.error="Request Failed";
+					$rootScope.error="Request Failed";
 				}
 				return $q.reject(response);
 			}

@@ -362,6 +362,10 @@ public class MarklogicSupport {
 			builder.handleSolution(new ListBindingSet(bindingNames, values));
 		}
 
+		if (!bindingNamesInitialized) {
+			builder.startQueryResult(new ArrayList<String>());
+		}
+
 		builder.endQueryResult();
 		return builder.getQueryResult();
 	}
