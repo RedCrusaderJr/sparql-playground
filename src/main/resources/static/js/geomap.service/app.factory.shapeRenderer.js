@@ -99,6 +99,10 @@
 				let parsedElement = parseElement(element, column);
 				addSingleElementToGeomap(parsedElement);
 			}
+
+			routeChangeStart() {
+				return true;
+			}
 		}
 
 		//

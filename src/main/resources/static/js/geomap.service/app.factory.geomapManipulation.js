@@ -24,6 +24,7 @@
 				this.mapViewZoom = {};
 				this.mapViewLatitude = {};
 				this.mapViewLongitude = {};
+				this.isViewSetDisabled = false;
 
 				//
 				//URLs
@@ -56,8 +57,18 @@
 				this.mapViewLongitude = value;
 			}
 
+			disableViewSetting() {
+				this.isViewSetDisabled = true;
+			}
+
+			enableViewSetting() {
+				this.isViewSetDisabled = false;
+			}
+
 			setCurrentView() {
-				this.geomap.setView([this.mapViewLatitude, this.mapViewLongitude], this.mapViewZoom);
+				if(this.isViewSetDisabled == false) {
+					this.geomap.setView([this.mapViewLatitude, this.mapViewLongitude], this.mapViewZoom);
+				}
 			}
 
 			setView(latitude, longitude, zoom) {
@@ -238,6 +249,11 @@
 				});
 			}
 			//#endregion
+
+			routeChangeStart() {
+				this.enableViewSetting();
+				return true;
+			}
 		}
 
 		//

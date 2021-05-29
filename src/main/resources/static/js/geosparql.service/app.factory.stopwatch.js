@@ -20,6 +20,7 @@
 				this.isStopwatchActive = false;
 			}
 
+			//#region GETTERS
 			getCounter() {
 				return this.counter;
 			}
@@ -35,8 +36,10 @@
 			getElapseInterval() {
 				return this.elapseInterval;
 			}
+			//#endregion
 
 			start(elapseInterval, elapsedCallback) {
+				console.log("Stopwatch: START called.");
 				this.isStopwatchActive = true;
 
 				if(!this.interval) {
@@ -48,19 +51,30 @@
 			}
 
 			pause() {
+				console.log("Stopwatch: PAUSE called.");
 				this.isStopwatchActive = false;
 			}
 
 			reset() {
+				console.log("Stopwatch: RESET called.");
 				this.counter = 0;
 				this.isStopwatchActive = true;
 			}
 
 			stop() {
+				console.log("Stopwatch: STOP called.");
+
+				this.counter = 0;
+				this.isStopwatchActive = false;
 				if(this.interval) {
 					clearInterval(this.interval);
 					this.interval = null;
 				}
+			}
+
+			routeChangeStart() {
+				this.stop();
+				return true;
 			}
 		}
 
