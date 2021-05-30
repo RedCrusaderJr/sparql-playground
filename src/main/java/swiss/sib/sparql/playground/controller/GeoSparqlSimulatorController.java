@@ -58,7 +58,6 @@ public class GeoSparqlSimulatorController implements InitializingBean {
 	@RequestMapping(value = "simulator/evaluate", method = RequestMethod.GET)
 	public @ResponseBody String evaluate() throws NameNotFoundException {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-
 		if (this.queryMap.containsKey(DEFAULT_FOLDER_NAME) == false
 				|| this.queryMap.containsKey(ASK_FOLDER_NAME) == false
 				|| this.queryMap.containsKey(ALTERNATIVE_FOLDER_NAME) == false) {
@@ -76,6 +75,10 @@ public class GeoSparqlSimulatorController implements InitializingBean {
 
 				if (evaluateAskQuery(askQuery) == false) {
 					// ASK query evaluated FALSE
+					if (this.queryMap.get(ALTERNATIVE_FOLDER_NAME).containsKey(queryTitle) == false) {
+						// ALTERNATIVE query not present -> skip evaluation
+						continue;
+					}
 					SparqlQuery alternativeSelectQuery = this.queryMap.get(ALTERNATIVE_FOLDER_NAME).get(queryTitle);
 					TupleQueryResult result = evaluateSelectQuery(alternativeSelectQuery);
 					putToResultMap(resultMap, queryTitle, result);
@@ -85,7 +88,6 @@ public class GeoSparqlSimulatorController implements InitializingBean {
 			// ASK query does not exist or evaluated TRUE
 			TupleQueryResult result = evaluateSelectQuery(defaultSelectQuery);
 			putToResultMap(resultMap, queryTitle, result);
-			continue;
 		}
 		logger.info("GeoSparql Simulator Evaluation finished in " + (System.currentTimeMillis() - start) + " ms");
 		return new JSONObject(resultMap).toString();
