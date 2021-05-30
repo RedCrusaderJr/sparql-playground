@@ -32,7 +32,11 @@
 			}
 
 			addElementToBulkRender(element, column, lineColor, polygoneColor, elementOrigin) {
-				let parsedElement = parseElement(element, column);
+				let unparsedElement = element[column].value;
+				if(unparsedElement == "POINT EMPTY") {
+					return
+				}
+				let parsedElement = parseElement(unparsedElement);
 				this.addParsedElementToBulkRender(parsedElement, lineColor, polygoneColor, elementOrigin)
 			}
 
@@ -96,7 +100,11 @@
 			//
 			//depreciated
 			renderSingleElement(element, column) {
-				let parsedElement = parseElement(element, column);
+				let unparsedElement = element[column].value;
+				if(unparsedElement == "POINT EMPTY") {
+					return
+				}
+				let parsedElement = parseElement(unparsedElement);
 				addSingleElementToGeomap(parsedElement);
 			}
 
@@ -107,10 +115,9 @@
 
 		//
 		//HELPER FUNCTIONS
-		function parseElement(element, column) {
-			let splittedElement = element[column].value.substring(0, element[column].value.length - 1).split(" (");
-
+		function parseElement(unparsedElement) {
 			let parsedElement = new Object;
+			let splittedElement = unparsedElement.substring(0, unparsedElement.length - 1).split(" (");
 			parsedElement.Name = splittedElement[0].trim();
 			parsedElement.Coordinates = parseCoordinates(splittedElement[1]);
 			return parsedElement;
