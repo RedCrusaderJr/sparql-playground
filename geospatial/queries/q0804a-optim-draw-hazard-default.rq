@@ -1,0 +1,14 @@
+#title:default-optimized-draw-hazard
+#comment:
+
+#tags:default,otimized,buffer,wkt,coordinates
+#color:ex-blue
+#img:
+
+SELECT DISTINCT ?g_wktHazardZone
+WHERE {
+	#hazard zones
+	?hazardType rdfs:subClassOf+ custom:Hazard. 
+	?hazardId a ?hazardType;
+		custom:Hazard.DangerZone ?g_wktHazardZone.
+}

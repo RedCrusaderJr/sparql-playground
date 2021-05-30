@@ -1,7 +1,7 @@
-#title:optimized-draw-buffer
+#title:alternative-optimized-draw-healty
 #comment:
 
-#tags:otimized,buffer,wkt,coordinates
+#tags:alternative,otimized,buffer,wkt,coordinates
 #color:ex-blue
 #img:
 
@@ -28,7 +28,7 @@ WHERE {
         cim:PositionPoint.xPosition ?x2;
         cim:PositionPoint.yPosition ?y2.
     FILTER(?x1 != ?x2 || ?y1 != ?y2)
-
+    
     #construct WKTs (draw geometry)
     BIND(concat("LINESTRING (", str(?x1), " ", str(?y1), ", ", str(?x2), " ", str(?y2), ")") as ?lineStr).
     BIND(strdt(?lineStr, geo:wktLiteral) as ?g_wktLine).

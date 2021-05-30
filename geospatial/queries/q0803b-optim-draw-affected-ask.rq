@@ -1,12 +1,11 @@
-#title:optimized-draw-healty-default
+#title:ask-optimized-draw-affected
 #comment:
 
-#tags:otimized,buffer,wkt,coordinates
+#tags:ask,otimized,buffer,wkt,coordinates
 #color:ex-blue
 #img:
 
-SELECT DISTINCT ?g_wktPolygon ?g_wktLine
-WHERE {
+ASK {
     #connectivity nodes with a terminal
     ?tmId cim:Terminal.ConnectivityNode ?cNodeId;
         #conducting equipment of that terminal
@@ -33,7 +32,7 @@ WHERE {
     ?hazardType rdfs:subClassOf+ custom:Hazard. 
     ?hazardId a ?hazardType;
         custom:Hazard.DangerZone ?g_wktHazardZone.
-
+    
     #construct WKTs (draw geometry)
     BIND(concat("LINESTRING (", str(?x1), " ", str(?y1), ", ", str(?x2), " ", str(?y2), ")") as ?lineStr).
     BIND(strdt(?lineStr, geo:wktLiteral) as ?g_wktLine).
@@ -42,5 +41,5 @@ WHERE {
     BIND(strdt(?polygonStr, geo:wktLiteral) as ?g_wktPolygon).
 
     BIND(geof:intersection(?g_wktPolygon, ?g_wktHazardZone) as ?intersection).
-    FILTER(str(?intersection) = "POINT EMPTY")
+    FILTER(str(?intersection) != "POINT EMPTY")
 }
