@@ -264,7 +264,7 @@
 
 		//
 		// setup default interval
-		$scope.intervals=['2 [sec]', '5 [sec]', '10 [sec]', '15 [sec]', '20 [sec]', '30 [sec]', '60 [sec]'];
+		$scope.intervals=['10 [sec]', '15 [sec]', '20 [sec]', '30 [sec]', '60 [sec]'];
 		$scope.interval='10 [sec]';
 
 		$scope.geomap = geomapManipulation.getMapInstance(51.505, -0.09, 14);
