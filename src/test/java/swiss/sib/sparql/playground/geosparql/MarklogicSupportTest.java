@@ -1,5 +1,6 @@
 package swiss.sib.sparql.playground.geosparql;
 
+import org.junit.Ignore;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -7,6 +8,10 @@ import org.junit.jupiter.api.Test;
 
 import swiss.sib.sparql.playground.Application;
 import swiss.sib.sparql.playground.domain.SparqlQueryType;
+import swiss.sib.sparql.playground.geosparql.marklogic.SparqlEvaluator;
+import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.JavaClientEvaluator;
+import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.NodeJsClientEvaluator;
+import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.RestClientEvaluator;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,7 +37,6 @@ import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
 import org.eclipse.rdf4j.sail.memory.MemoryStore;
-import org.json.JSONException;
 
 public class MarklogicSupportTest {
 	private static final Log logger = LogFactory.getLog(MarklogicSupportTest.class);
@@ -84,14 +88,17 @@ public class MarklogicSupportTest {
 		sb.append("}").append(System.lineSeparator());
 		sb.append("LIMIT 10");
 
-		MarklogicSupport ms = MarklogicSupport.getInstance();
-		TupleQueryResult result = ms.evaluateQuery(sb.toString());
+		SparqlEvaluator ms = SparqlEvaluator.getInstance();
+		Object result = ms.evaluateQuery(sb.toString());
+		Assertions.assertEquals(true, result instanceof TupleQueryResult);
+		TupleQueryResult tupleQueryResult = (TupleQueryResult) result;
 
-		int count = 0;
-		while (result.hasNext()) {
+		int count = 1;
+		while (tupleQueryResult.hasNext()) {
 			count++;
-			result.next();
+			tupleQueryResult.next();
 		}
+		tupleQueryResult.close();
 
 		Assertions.assertEquals(10, count);
 	}
@@ -138,14 +145,15 @@ public class MarklogicSupportTest {
 	@Test
 	public void evaluateGeospatialOnMarklogicRepoTest() throws Exception {
 		logger.debug(String.format("Test: evaluateGeospatialMarklogicRepoTest"));
-		MarklogicSupport ms = MarklogicSupport.getInstance();
+		SparqlEvaluator ms = SparqlEvaluator.getInstance();
 
 		for (String functionUri : supportedFunctions) {
 			String sparqlQuery = geosparqlTestQueries.get(functionUri);
 			logger.debug(String.format("Sparql query:%s%s", System.lineSeparator(), sparqlQuery));
 
-			TupleQueryResult query = ms.evaluateQuery(sparqlQuery);
-			printoutTupleQueryResult(query);
+			Object result = ms.evaluateQuery(sparqlQuery);
+			Assertions.assertEquals(true, result instanceof TupleQueryResult);
+			printoutTupleQueryResult((TupleQueryResult) result);
 		}
 		logger.debug(String.format("END of Test: evaluateGeospatialMarklogicRepoTest" + System.lineSeparator()));
 	}
@@ -167,31 +175,49 @@ public class MarklogicSupportTest {
 	@Test
 	public void evaluateJsGeospatialOnMarklogicRestApiTest() throws IOException {
 		logger.debug(String.format("Test: evaluateJsGeospatialMarklogicRestApiTest"));
-		MarklogicSupport ms = MarklogicSupport.getInstance();
+		RestClientEvaluator restApi = new RestClientEvaluator();
 
 		for (String functionUri : supportedFunctions) {
 			String jsQuery = marklogicTestQueries.get(functionUri);
 			logger.debug(String.format("JS query:%s%s", System.lineSeparator(), jsQuery));
 
-			TupleQueryResult result = ms.evaluateOnRestApi(jsQuery);
+			TupleQueryResult result = restApi.evaluate(jsQuery);
 			printoutTupleQueryResult(result);
 		}
 		logger.debug(String.format("END of Test: evaluateJsGeospatialMarklogicRestApiTest" + System.lineSeparator()));
 	}
 
 	@Test
-	public void evaluateJsGeospatialOnMarklogicJavaApi() throws JSONException {
+	public void evaluateJsGeospatialOnMarklogicJavaApi() throws Exception {
 		logger.debug(String.format("Test: evaluateJsGeospatialOnMarklogicJavaApi"));
-		MarklogicSupport ms = MarklogicSupport.getInstance();
+		JavaClientEvaluator javaApi = new JavaClientEvaluator();
 
 		for (String functionUri : supportedFunctions) {
 			String jsQuery = marklogicTestQueries.get(functionUri);
 			logger.debug(String.format("JS query:%s%s", System.lineSeparator(), jsQuery));
 
-			TupleQueryResult result = ms.evaluateOnJavaApi(jsQuery);
-			printoutTupleQueryResult(result);
+			Object result = javaApi.evaluate(jsQuery);
+			Assertions.assertEquals(true, result instanceof TupleQueryResult);
+			printoutTupleQueryResult((TupleQueryResult) result);
 		}
 		logger.debug(String.format("END of Test: evaluateJsGeospatialOnMarklogicJavaApi" + System.lineSeparator()));
+	}
+
+	@Test
+	@Ignore
+	public void evaluateJsGeospatialOnMarklogicNodeJsApi() throws Exception {
+		logger.debug(String.format("Test: evaluateJsGeospatialOnMarklogicNodeJsApi"));
+		NodeJsClientEvaluator nodeJsApi = new NodeJsClientEvaluator();
+
+		for (String functionUri : supportedFunctions) {
+			String jsQuery = marklogicTestQueries.get(functionUri);
+			logger.debug(String.format("JS query:%s%s", System.lineSeparator(), jsQuery));
+
+			Object result = nodeJsApi.evaluate(jsQuery);
+			Assertions.assertEquals(true, result instanceof TupleQueryResult);
+			printoutTupleQueryResult((TupleQueryResult) result);
+		}
+		logger.debug(String.format("END of Test: evaluateJsGeospatialOnMarklogicNodeJsApi" + System.lineSeparator()));
 	}
 
 	@Test
@@ -223,18 +249,24 @@ public class MarklogicSupportTest {
 		logger.debug(String.format("END of Test: evaluateJsGeospatialMarklogic3rdPartyTest" + System.lineSeparator()));
 	}
 
-	private static String createQueryWithGeosparqlUnaryFunctionCall(String function) {
-		String bindStr = String.format("  BIND(<%s>(?wktPoint1) as ?functionResult)", function);
+	// MAYBE one day
+	// private static String createQueryWithGeosparqlUnaryFunctionCall(String
+	// function) {
+	// String bindStr = String.format(" BIND(<%s>(?wktPoint1) as ?functionResult)",
+	// function);
 
-		StringBuilder sb = new StringBuilder();
-		sb.append("PREFIX geo:<http://www.opengis.net/ont/geosparql#>").append(System.lineSeparator());
-		sb.append("SELECT ?wktPoint1 ?functionResult").append(System.lineSeparator());
-		sb.append("WHERE {").append(System.lineSeparator());
-		sb.append("  BIND(\"POINT (1 1)\"^^geo:wktLiteral as ?wktPoint1)").append(System.lineSeparator());
-		sb.append(bindStr).append(System.lineSeparator());
-		sb.append("}").append(System.lineSeparator());
-		return sb.toString();
-	}
+	// StringBuilder sb = new StringBuilder();
+	// sb.append("PREFIX
+	// geo:<http://www.opengis.net/ont/geosparql#>").append(System.lineSeparator());
+	// sb.append("SELECT ?wktPoint1
+	// ?functionResult").append(System.lineSeparator());
+	// sb.append("WHERE {").append(System.lineSeparator());
+	// sb.append(" BIND(\"POINT (1 1)\"^^geo:wktLiteral as
+	// ?wktPoint1)").append(System.lineSeparator());
+	// sb.append(bindStr).append(System.lineSeparator());
+	// sb.append("}").append(System.lineSeparator());
+	// return sb.toString();
+	// }
 
 	private static String createQueryWithGeosparqlBinaryFunctionCall(String function) {
 		String bindStr = String.format("  BIND(<%s>(?wktPoint1, ?wktPoint2) as ?functionResult)", function);
@@ -250,35 +282,47 @@ public class MarklogicSupportTest {
 		return sb.toString();
 	}
 
-	private static String createJSQueryWithUnaryFunctionCall(String functionUri) {
-		Set<String> supportedFunctions = FunctionMapper.getInstance().getAllSupportedFunctionByUri();
-		if (!supportedFunctions.contains(functionUri)) {
-			throw new IllegalArgumentException();
-		}
+	// MAYBE one day
+	// private static String createJSQueryWithUnaryFunctionCall(String functionUri)
+	// {
+	// Set<String> supportedFunctions =
+	// FunctionMapper.getInstance().getAllSupportedFunctionByUri();
+	// if (!supportedFunctions.contains(functionUri)) {
+	// throw new IllegalArgumentException();
+	// }
 
-		FunctionDescription function = FunctionMapper.getInstance().getFunctionByUri(functionUri);
-		String functionAbbrv = function.abbreviation;
-		String marklogicFunction = function.marklogicFunction;
-		String functionCallStr = String.format("  BIND(xdmp:apply(?%s, ?wktPoint1) as ?functionResult).",
-				functionAbbrv);
-		String paramsStr = String.format("var params = {%s: %s}", functionAbbrv, marklogicFunction);
+	// FunctionDescription function =
+	// FunctionMapper.getInstance().getFunctionByUri(functionUri);
+	// String functionAbbrv = function.abbreviation;
+	// String marklogicFunction = function.marklogicFunction;
+	// String functionCallStr = String.format(" BIND(xdmp:apply(?%s, ?wktPoint1) as
+	// ?functionResult).",
+	// functionAbbrv);
+	// String paramsStr = String.format("var params = {%s: %s}", functionAbbrv,
+	// marklogicFunction);
 
-		StringBuilder sb = new StringBuilder();
-		sb.append("declareUpdate();").append(System.lineSeparator());
-		sb.append("var sem = require('/MarkLogic/semantics.xqy');").append(System.lineSeparator());
-		sb.append("var query = `").append(System.lineSeparator());
-		sb.append("PREFIX geo:<http://www.opengis.net/ont/geosparql#>").append(System.lineSeparator());
-		sb.append("PREFIX xdmp:<http://marklogic.com/xdmp#>").append(System.lineSeparator());
-		sb.append("SELECT DISTINCT ?wktPoint1 ?functionResult").append(System.lineSeparator());
-		sb.append("WHERE {").append(System.lineSeparator());
-		sb.append("  BIND(\"POINT (1 1)\"^^geo:wktLiteral as ?wktPoint1)").append(System.lineSeparator());
-		sb.append(functionCallStr).append(System.lineSeparator());
-		sb.append("}`").append(System.lineSeparator());
-		sb.append(paramsStr).append(System.lineSeparator());
-		sb.append("var results = sem.sparql(query,params);").append(System.lineSeparator());
-		sb.append("results").append(System.lineSeparator());
-		return sb.toString();
-	}
+	// StringBuilder sb = new StringBuilder();
+	// sb.append("declareUpdate();").append(System.lineSeparator());
+	// sb.append("var sem =
+	// require('/MarkLogic/semantics.xqy');").append(System.lineSeparator());
+	// sb.append("var query = `").append(System.lineSeparator());
+	// sb.append("PREFIX
+	// geo:<http://www.opengis.net/ont/geosparql#>").append(System.lineSeparator());
+	// sb.append("PREFIX
+	// xdmp:<http://marklogic.com/xdmp#>").append(System.lineSeparator());
+	// sb.append("SELECT DISTINCT ?wktPoint1
+	// ?functionResult").append(System.lineSeparator());
+	// sb.append("WHERE {").append(System.lineSeparator());
+	// sb.append(" BIND(\"POINT (1 1)\"^^geo:wktLiteral as
+	// ?wktPoint1)").append(System.lineSeparator());
+	// sb.append(functionCallStr).append(System.lineSeparator());
+	// sb.append("}`").append(System.lineSeparator());
+	// sb.append(paramsStr).append(System.lineSeparator());
+	// sb.append("var results =
+	// sem.sparql(query,params);").append(System.lineSeparator());
+	// sb.append("results").append(System.lineSeparator());
+	// return sb.toString();
+	// }
 
 	private static String createJSQueryWithBinaryFunctionCall(String functionUri) {
 		Set<String> supportedFunctions = FunctionMapper.getInstance().getAllSupportedFunctionByUri();

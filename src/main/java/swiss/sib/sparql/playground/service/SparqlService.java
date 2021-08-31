@@ -16,7 +16,7 @@ import swiss.sib.sparql.playground.Application;
 import swiss.sib.sparql.playground.controller.SparqlController;
 import swiss.sib.sparql.playground.domain.SparqlQueryType;
 import swiss.sib.sparql.playground.exception.SparqlTutorialException;
-import swiss.sib.sparql.playground.geosparql.MarklogicSupport;
+import swiss.sib.sparql.playground.geosparql.marklogic.SparqlEvaluator;
 import swiss.sib.sparql.playground.repository.RDF4jRepository;
 import swiss.sib.sparql.playground.repository.impl.RepositoryType;
 import swiss.sib.sparql.playground.utils.IOUtils;
@@ -34,13 +34,13 @@ public class SparqlService implements InitializingBean {
 	@Autowired
 	private RDF4jRepository repository;
 	// TODO: autowire
-	private MarklogicSupport marklogicSupport;
+	private SparqlEvaluator marklogicSupport;
 
 	private Map<String, String> prefixes = null;
 	private String prefixesString;
 
 	public SparqlService() {
-		marklogicSupport = MarklogicSupport.getInstance();
+		marklogicSupport = SparqlEvaluator.getInstance();
 	}
 
 	public Query getQuery(String queryStr) throws SparqlTutorialException {
@@ -158,7 +158,7 @@ public class SparqlService implements InitializingBean {
 	public long loadData(String data) {
 		if (isDataLoadAllowed()) {
 			repository.testLoadTurtleData(data); // check if data is ok first (returns exception if not)
-			repository.clearData();
+			repository.removeAllStatements();
 			repository.loadTurtleData(data);
 			return repository.countTriplets();
 

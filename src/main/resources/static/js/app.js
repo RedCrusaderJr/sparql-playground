@@ -270,11 +270,13 @@
 		$scope.geomap = geomapManipulation.getMapInstance(51.505, -0.09, 14);
 		geomapManipulation.importGeojson();
 
-		$scope.$on('$routeChangeStart', function() {
-			geoSparqlSimulator.routeChangeStart();
-			shapeRenderer.routeChangeStart();
-			geomapManipulation.routeChangeStart();
-			stopwatch.routeChangeStart();
+		$scope.$on('$routeChangeStart', function(event, next, prev) {
+			if (prev !== undefined && 'loadedTemplateUrl' in prev && prev.loadedTemplateUrl === '/partials/simulator.html') {
+				geoSparqlSimulator.routeChangeStart();
+				shapeRenderer.routeChangeStart();
+				geomapManipulation.routeChangeStart();
+				stopwatch.routeChangeStart();
+			}
 		});
 	};
 

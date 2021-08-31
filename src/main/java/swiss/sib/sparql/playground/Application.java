@@ -8,6 +8,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 
+import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.JavaScriptEvaluatorType;
 import swiss.sib.sparql.playground.repository.impl.RepositoryType;
 
 import java.io.File;
@@ -24,14 +25,20 @@ public class Application {
 	private static final Log logger = LogFactory.getLog(Application.class);
 
 	// argument with index 0
-	private static String FOLDER = "default"; // e.g. nextprot or uniprot
+	private static String FOLDER = "default"; // e.g. nextprot, uniprot, geospatial
 	// argument with index 1
-	private static RepositoryType REPOSITORY_TYPE = RepositoryType.DEFAULT;
+	private static RepositoryType REPOSITORY_TYPE = RepositoryType.parseType(""); // get default value
 	// argument with index 2
-	private static String MARKLOGIC_HOST = "localhost";
+	private static Boolean INFERENCING_ENABLED = false;
 	// argument with index 3
-	private static int MARKLOGIC_PORT = 8111;
+	private static JavaScriptEvaluatorType MARKLOGIC_JS_EVALUATOR_TYPE = JavaScriptEvaluatorType.parseType(""); // get
+																												// default
+																												// value
 	// argument with index 4
+	private static String MARKLOGIC_HOST = "localhost";
+	// argument with index 5
+	private static int MARKLOGIC_PORT = 8111;
+	// argument with index 6
 	private static String MARKLOGIC_DB_NAME = "sparql-playground";
 
 	public static String getFolder() {
@@ -40,6 +47,10 @@ public class Application {
 
 	public static RepositoryType getRepositoryType() {
 		return REPOSITORY_TYPE;
+	}
+
+	public static Boolean getInferencingEnabled() {
+		return INFERENCING_ENABLED;
 	}
 
 	public static String getMarklogicHost() {
@@ -54,12 +65,17 @@ public class Application {
 		return MARKLOGIC_DB_NAME;
 	}
 
+	public static JavaScriptEvaluatorType getMarklogicJsEvaluatorType() {
+		return MARKLOGIC_JS_EVALUATOR_TYPE;
+	}
+
 	public static void main(String[] args) {
 		logger.info("SPARQL Playground\n");
 
 		try {
 			setFolder(args);
 			setRepositoryType(args);
+			setInferencingEnabled(args);
 			setMarkLogicSettings(args);
 
 			SpringApplication.run(Application.class, args);
@@ -100,23 +116,42 @@ public class Application {
 			repositoryTypeStr = System.getProperty("repository.type");
 		}
 
-		REPOSITORY_TYPE = RepositoryType.getRepositoryType(repositoryTypeStr);
+		REPOSITORY_TYPE = RepositoryType.parseType(repositoryTypeStr);
 		logger.debug("REPOSITORY_TYPE: " + REPOSITORY_TYPE);
 	}
 
-	// arguments with index 2 and 3
+	// argument with index 2
+	private static void setInferencingEnabled(String[] args) {
+		String inferencingEnabledStr = "";
+		if (args.length >= 3 && args[2] != "") {
+			inferencingEnabledStr = args[2];
+		}
+
+		// if format is wrong then it would be left on the default value: false
+		if (inferencingEnabledStr.equals("true")) {
+			INFERENCING_ENABLED = true;
+		}
+
+		logger.debug("INFERENCING_ENABLED: " + INFERENCING_ENABLED);
+	}
+
+	// arguments with index 3, 4 and 5 (and optional 6)
 	private static void setMarkLogicSettings(String[] args) {
 		// HOST AND ADDRESS MUST BE SET IN PAIR
-		if (args.length < 4) {
+		if (args.length < 6) {
 			return;
 		}
 
-		if (args[2] != "") {
-			MARKLOGIC_HOST = args[2];
+		if (args[3] != "") {
+			MARKLOGIC_JS_EVALUATOR_TYPE = JavaScriptEvaluatorType.parseType(args[3]);
 		}
 
-		if (args[3] != "") {
-			String portString = args[3];
+		if (args[4] != "") {
+			MARKLOGIC_HOST = args[4];
+		}
+
+		if (args[5] != "") {
+			String portString = args[5];
 
 			try {
 				MARKLOGIC_PORT = Integer.parseInt(portString);
@@ -126,10 +161,11 @@ public class Application {
 		}
 
 		// OPTIONAL
-		if (args.length > 4 && args[4] != "") {
-			MARKLOGIC_DB_NAME = args[4];
+		if (args.length > 6 && args[6] != "") {
+			MARKLOGIC_DB_NAME = args[6];
 		}
 
+		logger.debug("MARKLOGIC_JS_EVALUATOR_TYPE: " + MARKLOGIC_JS_EVALUATOR_TYPE);
 		logger.debug("MARKLOGIC_ADDRESS: " + MARKLOGIC_HOST);
 		logger.debug("MARKLOGIC_PORT: " + MARKLOGIC_PORT);
 		logger.debug("MARKLOGIC_DB_NAME: " + MARKLOGIC_DB_NAME);

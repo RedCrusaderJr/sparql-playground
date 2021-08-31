@@ -24,26 +24,25 @@ import org.eclipse.rdf4j.repository.RepositoryResult;
  *
  */
 public interface RDF4jRepository {
-
-	void testLoadTurtleData(String data);
-
-	void loadTurtleData(String data);
-
-	boolean isDataLoadAllowed();
-
-	void clearData();
-
-	void writeTriplesAsTurtle(OutputStream out, Map<String, String> prefixes);
-
 	Query prepareQuery(String sparqlQuery);
 
-	long countTriplets();
+	boolean hasStatement(Statement st);
+
+	RepositoryResult<Statement> getStatements(Resource subj, IRI pred, Value obj, boolean includeInferred);
 
 	void addStatements(List<Statement> statements);
 
 	void removeStatements(List<Statement> statements);
 
-	RepositoryResult<Statement> getStatements(Resource subj, IRI pred, Value obj);
+	void removeAllStatements();
 
-	boolean hasStatement(Statement st);
+	long countTriplets();
+
+	boolean isDataLoadAllowed();
+
+	void loadTurtleData(String data);
+
+	void writeTriplesAsTurtle(OutputStream out, Map<String, String> prefixes);
+
+	void testLoadTurtleData(String data);
 }

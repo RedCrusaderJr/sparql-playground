@@ -4,7 +4,7 @@ public enum RepositoryType {
 
 	DEFAULT, NATIVE, MARK_LOGIC;
 
-	public static RepositoryType getRepositoryType(String repositoryType) {
+	public static RepositoryType parseType(String repositoryType) {
 
 		if (repositoryType.equals("default")) {
 			return RepositoryType.DEFAULT;

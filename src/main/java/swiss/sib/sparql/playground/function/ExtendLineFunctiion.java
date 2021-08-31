@@ -90,7 +90,7 @@ public class ExtendLineFunctiion implements Function {
 		BigDecimal slope = y2.subtract(y1, context).divide(x2.subtract(x1, context), context); // x2 and x1 will not be
 																								// equal
 
-		// angle of line to x-axis [rad]: pAngle = arcus tangent(pSlope)
+		// angle of line to x-axis [rad]: angle = arcus tangent(slope)
 		BigDecimal angle = BigDecimal.valueOf(Math.atan(slope.doubleValue())).setScale(prec, mode);
 		if (angle.doubleValue() == 0 || ((Double) angle.doubleValue()).isNaN()) {
 			throw new ValueExprEvaluationException("perpendicular angle: " + angle.doubleValue());
@@ -100,7 +100,7 @@ public class ExtendLineFunctiion implements Function {
 		// distanceY = distanceTotal * sin(angle)
 		BigDecimal angleSin = BigDecimal.valueOf(Math.sin(angle.doubleValue())).setScale(prec, mode);
 		BigDecimal distanceY = distanceTotal.multiply(angleSin, context);
-		// distanceX = distanceY / pSlope
+		// distanceX = distanceY / slope
 		BigDecimal distanceX = distanceY.divide(slope, context); // slope will not be zero if latitudes are not equal
 
 		// latitude change [deg]
@@ -108,26 +108,29 @@ public class ExtendLineFunctiion implements Function {
 		// longitude change [deg]
 		BigDecimal lonDeg = distanceY.divide(lonUnit, context); // lonUnit will never be zero
 
-		BigDecimal lX1, lY1, lX2, lY2, lX3, lY3, lX4, lY4;
+		// p as in polygonX1, polygonY1, ...
+		// extended line is represented as polygon, without width
+		BigDecimal pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4;
 		// x1 = x1 - latDeg
 		// y1 = y1 - lonDeg
-		lX1 = x1.subtract(latDeg, context);
-		lY1 = y1.subtract(lonDeg, context);
+		pX1 = x1.subtract(latDeg, context);
+		pY1 = y1.subtract(lonDeg, context);
 
-		lX2 = x1.add(latDeg, context);
-		lY2 = y1.add(lonDeg, context);
+		pX2 = x1.add(latDeg, context);
+		pY2 = y1.add(lonDeg, context);
 
 		// x3 = x2 + latDeg
 		// y3 = y2 + lonDeg
-		lX3 = x2.add(latDeg, context);
-		lY3 = y2.add(lonDeg, context);
+		pX3 = x2.add(latDeg, context);
+		pY3 = y2.add(lonDeg, context);
 
-		lX4 = x2.subtract(latDeg, context);
-		lY4 = y2.subtract(lonDeg, context);
+		pX4 = x2.subtract(latDeg, context);
+		pY4 = y2.subtract(lonDeg, context);
 
-		return formatPolygonStr(lX1, lY1, lX2, lY2, lX3, lY3, lX4, lY4);
+		return formatPolygonStr(pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4);
 	}
 
+	// p as in polygonX1, polygonY1, ...
 	private String formatPolygonStr(BigDecimal pX1, BigDecimal pY1, BigDecimal pX2, BigDecimal pY2, BigDecimal pX3,
 			BigDecimal pY3, BigDecimal pX4, BigDecimal pY4) {
 

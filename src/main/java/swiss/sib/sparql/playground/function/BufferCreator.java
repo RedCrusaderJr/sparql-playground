@@ -62,6 +62,7 @@ public class BufferCreator {
 
 	// CASE x1 = x2
 	private String equalLatitudesSpecialCase() {
+		// correcting the order
 		if (y2.doubleValue() < y1.doubleValue()) {
 			BigDecimal temp = y2;
 			y2 = y1;
@@ -101,6 +102,7 @@ public class BufferCreator {
 
 	// CASE y1 = y2
 	private String equalLongitudesSpecialCase() {
+		// correcting the order
 		if (x2.doubleValue() < x1.doubleValue()) {
 			BigDecimal temp = x2;
 			x2 = x1;
@@ -180,7 +182,7 @@ public class BufferCreator {
 
 	// extends the line for distanceTotal at each end
 	private void extendLine(BigDecimal slope) {
-		// angle of line to x-axis [rad]: pAngle = arcus tangent(pSlope)
+		// angle of line to x-axis [rad]: angle = arcus tangent(slope)
 		BigDecimal angle = BigDecimal.valueOf(Math.atan(slope.doubleValue())).setScale(prec, mode);
 		if (angle.doubleValue() == 0 || ((Double) angle.doubleValue()).isNaN()) {
 			throw new ValueExprEvaluationException("perpendicular angle: " + angle.doubleValue());
@@ -222,7 +224,7 @@ public class BufferCreator {
 		}
 
 		// X and Y components of total distance [m]:
-		// distanceY = distanceTotal * sin(angle)
+		// distanceY = distanceTotal * sin(pAngle)
 		BigDecimal angleSin = BigDecimal.valueOf(Math.sin(pAngle.doubleValue())).setScale(prec, mode);
 		BigDecimal distanceY = distanceTotal.multiply(angleSin, context);
 		// distanceX = distanceY / pSlope
