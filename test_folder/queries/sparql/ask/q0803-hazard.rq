@@ -1,0 +1,16 @@
+#title:hazard
+#comment:
+
+#tags:
+#color:
+#img:
+
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX custom: <http://www.custom.org/> 
+
+ASK {
+	#hazard zones
+	?hazardType rdfs:subClassOf+ custom:Hazard. 
+	?hazardId a ?hazardType;
+		custom:Hazard.DangerZone ?g_wktHazardZone.
+}

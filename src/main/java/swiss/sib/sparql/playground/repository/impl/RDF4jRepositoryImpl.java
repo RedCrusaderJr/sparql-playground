@@ -17,12 +17,26 @@ import com.marklogic.semantics.rdf4j.MarkLogicRepository;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.rdf4j.common.iteration.Iterations;
-import org.eclipse.rdf4j.model.*;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Model;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.impl.LinkedHashModel;
-import org.eclipse.rdf4j.query.*;
-import org.eclipse.rdf4j.repository.*;
+import org.eclipse.rdf4j.query.Query;
+import org.eclipse.rdf4j.query.QueryEvaluationException;
+import org.eclipse.rdf4j.query.QueryLanguage;
+import org.eclipse.rdf4j.query.TupleQuery;
+import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.repository.Repository;
+import org.eclipse.rdf4j.repository.RepositoryConnection;
+import org.eclipse.rdf4j.repository.RepositoryException;
+import org.eclipse.rdf4j.repository.RepositoryResult;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
-import org.eclipse.rdf4j.rio.*;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.eclipse.rdf4j.rio.RDFParseException;
+import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.sail.inferencer.fc.SchemaCachingRDFSInferencer;
 import org.eclipse.rdf4j.sail.memory.MemoryStore;
 import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
@@ -109,6 +123,7 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 	private Boolean initializeNativeRepository() throws RDFParseException, RepositoryException, IOException {
 		File rdf4jDataFolder = new File(Application.getFolder() + "/rdf4j-db");
 		File rdf4jDataValueFile = new File(rdf4jDataFolder.getPath() + "/values.dat");
+		Boolean loadDataFlag = !rdf4jDataValueFile.exists();
 
 		logger.info("Initializing native repository in " + rdf4jDataFolder);
 		if (Application.getInferencingEnabled()) {
@@ -119,22 +134,21 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 		this.repository.init();
 		this.connection = repository.getConnection();
 
-		Boolean loadDataFlag = !rdf4jDataValueFile.exists();
-		// do not load data, as file already exists...
-		if (loadDataFlag) {
-			logger.info("RDF4j repository already found in " + rdf4jDataValueFile);
-			logger.info("Skipping to load turtle files. Remove " + rdf4jDataFolder
-					+ " folder if you want to reload turtle files");
-		}
 		// load data if there if file does not exist
-		else {
+		if (loadDataFlag) {
 			logger.info("No previous RDF4J repository found in " + rdf4jDataValueFile + "Loading triples...");
+		}
+		// do not load data, as file already exists...
+		else {
+			logger.info("RDF4j repository already found in " + rdf4jDataValueFile);
+			logger.info("Skipping to loading data. Remove " + rdf4jDataFolder
+					+ " folder if you want to reload turtle files");
 		}
 
 		return loadDataFlag;
 	}
 
-	// ml connection
+	// marklogic connection
 	private Boolean initializeMarklogicRepository() throws RDFParseException, RepositoryException, IOException {
 		String host = Application.getMarklogicHost();
 		Integer port = Application.getMarklogicPort();
@@ -142,11 +156,12 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 
 		logger.info("Initializing MarkLogic repository");
 
-		if (Application.getInferencingEnabled()) {
+		// if (Application.getInferencingEnabled()) {
 
-		} else {
+		// } else {
 
-		}
+		// }
+
 		this.repository = new MarkLogicRepository(host, port, securityContext);
 		this.repository.init();
 		this.connection = repository.getConnection();

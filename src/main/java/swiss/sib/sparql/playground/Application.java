@@ -8,7 +8,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 
-import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.JavaScriptEvaluatorType;
+import swiss.sib.sparql.playground.geosparql.marklogic.query.evaluator.EvaluatorType;
 import swiss.sib.sparql.playground.repository.impl.RepositoryType;
 
 import java.io.File;
@@ -31,9 +31,9 @@ public class Application {
 	// argument with index 2
 	private static Boolean INFERENCING_ENABLED = false;
 	// argument with index 3
-	private static JavaScriptEvaluatorType MARKLOGIC_JS_EVALUATOR_TYPE = JavaScriptEvaluatorType.parseType(""); // get
-																												// default
-																												// value
+	private static EvaluatorType MARKLOGIC_EVALUATOR_TYPE = EvaluatorType.parseType(""); // get
+																							// default
+																							// value
 	// argument with index 4
 	private static String MARKLOGIC_HOST = "localhost";
 	// argument with index 5
@@ -65,8 +65,8 @@ public class Application {
 		return MARKLOGIC_DB_NAME;
 	}
 
-	public static JavaScriptEvaluatorType getMarklogicJsEvaluatorType() {
-		return MARKLOGIC_JS_EVALUATOR_TYPE;
+	public static EvaluatorType getMarklogicEvaluatorType() {
+		return MARKLOGIC_EVALUATOR_TYPE;
 	}
 
 	public static void main(String[] args) {
@@ -143,7 +143,7 @@ public class Application {
 		}
 
 		if (args[3] != "") {
-			MARKLOGIC_JS_EVALUATOR_TYPE = JavaScriptEvaluatorType.parseType(args[3]);
+			MARKLOGIC_EVALUATOR_TYPE = EvaluatorType.parseType(args[3]);
 		}
 
 		if (args[4] != "") {
@@ -165,7 +165,7 @@ public class Application {
 			MARKLOGIC_DB_NAME = args[6];
 		}
 
-		logger.debug("MARKLOGIC_JS_EVALUATOR_TYPE: " + MARKLOGIC_JS_EVALUATOR_TYPE);
+		logger.debug("MARKLOGIC_EVALUATOR_TYPE: " + MARKLOGIC_EVALUATOR_TYPE);
 		logger.debug("MARKLOGIC_ADDRESS: " + MARKLOGIC_HOST);
 		logger.debug("MARKLOGIC_PORT: " + MARKLOGIC_PORT);
 		logger.debug("MARKLOGIC_DB_NAME: " + MARKLOGIC_DB_NAME);

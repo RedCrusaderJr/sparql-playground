@@ -17,11 +17,11 @@ import swiss.sib.sparql.playground.geosparql.CustomFunction;
 import swiss.sib.sparql.playground.geosparql.FunctionDescription;
 import swiss.sib.sparql.playground.geosparql.FunctionMapper;
 import swiss.sib.sparql.playground.geosparql.GeosparqlQueryModelVisitor;
-import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.JavaClientEvaluator;
-import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.JavaScriptEvaluatorType;
-import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.JavaScriptQueryEvaluator;
-import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.NodeJsClientEvaluator;
-import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.RestClientEvaluator;
+import swiss.sib.sparql.playground.geosparql.marklogic.query.evaluator.JavaClientEvaluator;
+import swiss.sib.sparql.playground.geosparql.marklogic.query.evaluator.EvaluatorType;
+import swiss.sib.sparql.playground.geosparql.marklogic.query.evaluator.JavaScriptQueryEvaluator;
+import swiss.sib.sparql.playground.geosparql.marklogic.query.evaluator.NodeJsClientEvaluator;
+import swiss.sib.sparql.playground.geosparql.marklogic.query.evaluator.RestClientEvaluator;
 
 public class SparqlEvaluator {
 	private static final Log logger = LogFactory.getLog(SparqlEvaluator.class);
@@ -41,13 +41,13 @@ public class SparqlEvaluator {
 	}
 
 	private SparqlEvaluator() {
-		if (Application.getMarklogicJsEvaluatorType() == JavaScriptEvaluatorType.JAVA_API) {
+		if (Application.getMarklogicEvaluatorType() == EvaluatorType.JAVA_API) {
 			this.queryEvaluator = new JavaClientEvaluator();
 
-		} else if (Application.getMarklogicJsEvaluatorType() == JavaScriptEvaluatorType.REST_API) {
+		} else if (Application.getMarklogicEvaluatorType() == EvaluatorType.REST_API) {
 			this.queryEvaluator = new RestClientEvaluator();
 
-		} else if (Application.getMarklogicJsEvaluatorType() == JavaScriptEvaluatorType.NODE_JS_API) {
+		} else if (Application.getMarklogicEvaluatorType() == EvaluatorType.NODE_JS_API) {
 			this.queryEvaluator = new NodeJsClientEvaluator();
 		}
 	}
@@ -63,8 +63,8 @@ public class SparqlEvaluator {
 			String importFunctionsStr = createImportFunctionsStr(abbreviations);
 			String params = createXdmpApplyParams(abbreviations);
 
-			String jsQuery = createJSQuery(alternatedSparqlQuery, importFunctionsStr, params);
-			return this.queryEvaluator.evaluate(jsQuery);
+			String jsQuery = createJavaScriptQuery(alternatedSparqlQuery, importFunctionsStr, params);
+			return this.queryEvaluator.evaluateJavaScript(jsQuery);
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -170,7 +170,7 @@ public class SparqlEvaluator {
 		return sb.toString();
 	}
 
-	private String createJSQuery(String sparqlQuery, String importFunctionsStr, String params) {
+	private String createJavaScriptQuery(String sparqlQuery, String importFunctionsStr, String params) {
 		StringBuilder sb = new StringBuilder();
 		String newLine = System.getProperty("line.separator");
 

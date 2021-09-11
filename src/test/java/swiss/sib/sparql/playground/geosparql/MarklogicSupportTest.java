@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test;
 import swiss.sib.sparql.playground.Application;
 import swiss.sib.sparql.playground.domain.SparqlQueryType;
 import swiss.sib.sparql.playground.geosparql.marklogic.SparqlEvaluator;
-import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.JavaClientEvaluator;
-import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.NodeJsClientEvaluator;
-import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.RestClientEvaluator;
+import swiss.sib.sparql.playground.geosparql.marklogic.query.evaluator.JavaClientEvaluator;
+import swiss.sib.sparql.playground.geosparql.marklogic.query.evaluator.NodeJsClientEvaluator;
+import swiss.sib.sparql.playground.geosparql.marklogic.query.evaluator.RestClientEvaluator;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -181,7 +181,7 @@ public class MarklogicSupportTest {
 			String jsQuery = marklogicTestQueries.get(functionUri);
 			logger.debug(String.format("JS query:%s%s", System.lineSeparator(), jsQuery));
 
-			TupleQueryResult result = restApi.evaluate(jsQuery);
+			TupleQueryResult result = restApi.evaluateJavaScript(jsQuery);
 			printoutTupleQueryResult(result);
 		}
 		logger.debug(String.format("END of Test: evaluateJsGeospatialMarklogicRestApiTest" + System.lineSeparator()));
@@ -196,7 +196,7 @@ public class MarklogicSupportTest {
 			String jsQuery = marklogicTestQueries.get(functionUri);
 			logger.debug(String.format("JS query:%s%s", System.lineSeparator(), jsQuery));
 
-			Object result = javaApi.evaluate(jsQuery);
+			Object result = javaApi.evaluateJavaScript(jsQuery);
 			Assertions.assertEquals(true, result instanceof TupleQueryResult);
 			printoutTupleQueryResult((TupleQueryResult) result);
 		}
@@ -213,7 +213,7 @@ public class MarklogicSupportTest {
 			String jsQuery = marklogicTestQueries.get(functionUri);
 			logger.debug(String.format("JS query:%s%s", System.lineSeparator(), jsQuery));
 
-			Object result = nodeJsApi.evaluate(jsQuery);
+			Object result = nodeJsApi.evaluateJavaScript(jsQuery);
 			Assertions.assertEquals(true, result instanceof TupleQueryResult);
 			printoutTupleQueryResult((TupleQueryResult) result);
 		}

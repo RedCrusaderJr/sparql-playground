@@ -66,7 +66,7 @@ public class SparqlService implements InitializingBean {
 			RepositoryType repositoryType = Application.getRepositoryType();
 
 			if (e.getMessage().contains("Server Message: XDMP-UNDFUN") && repositoryType == RepositoryType.MARK_LOGIC) {
-				return evaluateQueryWithMarklogic(queryStr);
+				return evaluateOnMarklogicSemantics(queryStr);
 
 			} else {
 				logger.info("Query evaluation error", e);
@@ -98,7 +98,7 @@ public class SparqlService implements InitializingBean {
 		}
 	}
 
-	private Object evaluateQueryWithMarklogic(String queryStr) {
+	private Object evaluateOnMarklogicSemantics(String queryStr) {
 		try {
 			return marklogicSupport.evaluateQuery(queryStr);
 
