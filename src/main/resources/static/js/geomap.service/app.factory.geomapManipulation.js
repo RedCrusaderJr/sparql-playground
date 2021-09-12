@@ -43,8 +43,8 @@
 				this.hazardPolygonGroup = L.layerGroup().addTo(this.geomap);
 
 				this.mapViewZoom = zoom;
-				this.mapViewLatitude = latitude;
 				this.mapViewLongitude = longitude;
+				this.mapViewLatitude = latitude;
 
 				return this.geomap;
 			}
@@ -191,7 +191,7 @@
 				polygoneMap.set("HAZARD", hazardPolygonCollection);
 				exportMap.set('POLYGON', polygoneMap);
 
-				exportMap.set("VIEW", [this.mapViewLatitude, this.mapViewLongitude, this.mapViewZoom]);
+				exportMap.set("VIEW", [this.mapViewLatitud, this.mapViewLongitudee, this.mapViewZoom]);
 
 				console.log(exportMap);
 				console.log(this.exportURL);
@@ -233,8 +233,8 @@
 								renderPolygons(elements, self);
 								break;
 							case "VIEW":
-								self.mapViewLatitude = elements[0];
-								self.mapViewLongitude = elements[1];
+								self.mapViewLongitude = elements[0];
+								self.mapViewLatitude = elements[1];
 								self.mapViewZoom = elements[2];
 								self.setCurrentView();
 								break;

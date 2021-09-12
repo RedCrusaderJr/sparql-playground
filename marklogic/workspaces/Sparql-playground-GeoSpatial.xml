@@ -162,7 +162,7 @@ class BufferFunction {
           // latitude change [deg]: latDeg = distanceTotal / latUnit
           let latDeg = this.distanceTotal.dividedBy(this.latUnit); // latUnit will never be zero
   
-          // longitude change [deg]: lonDeg = distanceTotal / lonUnit
+          //  change [deg]: lonDeg = distanceTotal / lonUnit
           let lonDeg = this.distanceTotal.dividedBy(this.lonUnit); // lonUnit will never be zero
   
           // POLYGONE POINTS

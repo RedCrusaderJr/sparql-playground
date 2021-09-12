@@ -2,8 +2,10 @@ const BigNumber = require('/bignumber.js');
 
 export class BufferCreator {
     constructor(x1, y1, x2, y2, distanceTotal) {
-		this.latUnit = new BigNumber(111200.0);
-		this.lonUnit = new BigNumber(78630.0);
+		// [m / deg]
+		this.latUnit = new BigNumber(111200.0); // consistant
+		// [m / deg]
+		this.lonUnit = new BigNumber(87620.0); // California zone
 
 		this.x1 = new BigNumber(x1);
 		this.y1 = new BigNumber(y1);

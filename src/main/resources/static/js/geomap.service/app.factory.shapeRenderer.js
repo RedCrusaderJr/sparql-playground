@@ -151,7 +151,7 @@
 			let splittedCoordinates = coordinates.split(', ');
 			splittedCoordinates.forEach(pointPair => {
 				let splittedPointPair = pointPair.trim().split(' ');
-				shape.push({ x: splittedPointPair[0].trim(), y: splittedPointPair[1].trim() });
+				shape.push({ x: splittedPointPair[1].trim(), y: splittedPointPair[0].trim() });
 			});
 			return shape;
 		};

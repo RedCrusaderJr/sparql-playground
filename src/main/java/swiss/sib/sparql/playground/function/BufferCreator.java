@@ -5,17 +5,23 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Locale;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.rdf4j.query.algebra.evaluation.ValueExprEvaluationException;
 
+import ch.qos.logback.classic.Logger;
+
 public class BufferCreator {
+	private static final Log logger = LogFactory.getLog(BufferCreator.class);
+
 	private final int prec = 20;
 	private final RoundingMode mode = RoundingMode.HALF_EVEN;
 	private final MathContext context = new MathContext(prec, mode);
 
 	// [m / deg]
-	private final BigDecimal latUnit = BigDecimal.valueOf(111200.0).setScale(prec, mode);
+	private final BigDecimal latUnit = BigDecimal.valueOf(111200.0).setScale(prec, mode); // consistant
 	// [m / deg]
-	private final BigDecimal lonUnit = BigDecimal.valueOf(78630.0).setScale(prec, mode);
+	private final BigDecimal lonUnit = BigDecimal.valueOf(87620.0).setScale(prec, mode); // California zone
 
 	private BigDecimal x1;
 	private BigDecimal y1;
@@ -38,16 +44,21 @@ public class BufferCreator {
 	}
 
 	public String create() {
-		String strResult;
+		String strResult = "POINT EMPTY";
 
-		if (x2.compareTo(x1) == 0) {
-			strResult = equalLongitudesSpecialCase();
+		try {
+			if (x2.compareTo(x1) == 0) {
+				strResult = equalLongitudesSpecialCase();
 
-		} else if (y2.compareTo(y1) == 0) {
-			strResult = equalLatitudesSpecialCase();
+			} else if (y2.compareTo(y1) == 0) {
+				strResult = equalLatitudesSpecialCase();
 
-		} else {
-			strResult = basicCase();
+			} else {
+				strResult = basicCase();
+			}
+
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		}
 
 		return strResult;
@@ -141,7 +152,7 @@ public class BufferCreator {
 	}
 
 	// CASE x1 != x2 && y1 != y2
-	private String basicCase() {
+	private String basicCase() throws Exception {
 		// slope of acline segment: slope = (y2 - y1) / (x2 - x1)
 		BigDecimal slope = y2.subtract(y1, context).divide(x2.subtract(x1, context), context); // x2 and x1 will not be
 																								// equal
@@ -149,9 +160,9 @@ public class BufferCreator {
 		// puts coordinates in right order
 		correctCoordOrder(isSharp);
 		// extends line for distanceTotal length at each end
-		extendLine(slope);
+		// extendLine(slope, isSharp);
 
-		return createPolygonStr(slope);
+		return createPolygonStr(slope, isSharp);
 	}
 
 	private void correctCoordOrder(Boolean isSharp) {
@@ -181,7 +192,7 @@ public class BufferCreator {
 	}
 
 	// extends the line for distanceTotal at each end
-	private void extendLine(BigDecimal slope) {
+	private void extendLine(BigDecimal slope, Boolean isSharp) {
 		// angle of line to x-axis [rad]: angle = arcus tangent(slope)
 		BigDecimal angle = BigDecimal.valueOf(Math.atan(slope.doubleValue())).setScale(prec, mode);
 		if (angle.doubleValue() == 0 || ((Double) angle.doubleValue()).isNaN()) {
@@ -201,18 +212,41 @@ public class BufferCreator {
 		// longitude change [deg]
 		BigDecimal lonDeg = distanceY.divide(lonUnit, context); // lonUnit will never be zero
 
-		// x1 = x1 - lonDeg
-		// y1 = y1 - latDeg
-		x1 = x1.subtract(lonDeg, context);
-		y1 = y1.subtract(latDeg, context);
+		if (latDeg.compareTo(BigDecimal.valueOf(0).setScale(prec, mode)) < 0) {
+			// latDeg < 0
+			latDeg = latDeg.multiply(BigDecimal.valueOf(-1).setScale(prec, mode));
+		}
 
-		// x2 = x2 + lonDeg
-		// y2 = y2 + latDeg
-		x2 = x2.add(lonDeg, context);
-		y2 = y2.add(latDeg, context);
+		if (lonDeg.compareTo(BigDecimal.valueOf(0).setScale(prec, mode)) < 0) {
+			// lonDeg < 0
+			lonDeg = lonDeg.multiply(BigDecimal.valueOf(-1).setScale(prec, mode));
+		}
+
+		if (isSharp) {
+			// x1 = x1 - lonDeg
+			// y1 = y1 - latDeg
+			x1 = x1.subtract(lonDeg, context);
+			y1 = y1.subtract(latDeg, context);
+
+			// x2 = x2 + lonDeg
+			// y2 = y2 + latDeg
+			x2 = x2.add(lonDeg, context);
+			y2 = y2.add(latDeg, context);
+
+		} else {
+			// x1 = x1 - lonDeg
+			// y1 = y1 + latDeg
+			x1 = x1.subtract(lonDeg, context);
+			y1 = y1.add(latDeg, context);
+
+			// x2 = x2 + lonDeg
+			// y2 = y2 - latDeg
+			x2 = x2.add(lonDeg, context);
+			y2 = y2.subtract(latDeg, context);
+		}
 	}
 
-	private String createPolygonStr(BigDecimal slope) {
+	private String createPolygonStr(BigDecimal slope, Boolean isSharp) throws Exception {
 		// slope of perpendicular line: pSlope = - 1 / Slope
 		BigDecimal pSlope = BigDecimal.valueOf(-1).setScale(prec, mode).divide(slope, context); // slope will not be
 																								// zero if longitudes
@@ -233,32 +267,66 @@ public class BufferCreator {
 
 		// TODO: UMT conversion
 		// latitude change [deg]
-		BigDecimal latDeg = distanceX.divide(latUnit, context); // latUnit will never be zero
+		BigDecimal latDeg = distanceY.divide(latUnit, context); // latUnit will never be zero
 		// longitude change [deg]
-		BigDecimal lonDeg = distanceY.divide(lonUnit, context); // lonUnit will never be zero
+		BigDecimal lonDeg = distanceX.divide(lonUnit, context); // lonUnit will never be zero
+
+		if (latDeg.compareTo(BigDecimal.valueOf(0).setScale(prec, mode)) < 0) {
+			// latDeg < 0
+			latDeg = latDeg.multiply(BigDecimal.valueOf(-1).setScale(prec, mode));
+		}
+
+		if (lonDeg.compareTo(BigDecimal.valueOf(0).setScale(prec, mode)) < 0) {
+			// lonDeg < 0
+			lonDeg = lonDeg.multiply(BigDecimal.valueOf(-1).setScale(prec, mode));
+		}
 
 		// POLYGONE POINTS
+		BigDecimal pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4;
 
-		// pX1 = x1 - lonDeg
-		// pY1 = y1 - latDeg
-		BigDecimal pX1 = x1.subtract(lonDeg, context);
-		BigDecimal pY1 = y1.subtract(latDeg, context);
+		if (isSharp) {
+			// pX1 = x1 - lonDeg
+			// pY1 = y1 + latDeg
+			pX1 = x1.subtract(lonDeg, context);
+			pY1 = y1.add(latDeg, context);
 
-		// pX2 = x1 + lonDeg
-		// pY2 = y1 + latDeg
-		BigDecimal pX2 = x1.add(lonDeg, context);
-		BigDecimal pY2 = y1.add(latDeg, context);
+			// pX2 = x1 + lonDeg
+			// pY2 = y1 - latDeg
+			pX2 = x1.add(lonDeg, context);
+			pY2 = y1.subtract(latDeg, context);
 
-		// pX3 = x2 + lonDeg
-		// pY3 = y2 + latDeg
-		BigDecimal pX3 = x2.add(lonDeg, context);
-		BigDecimal pY3 = y2.add(latDeg, context);
+			// pX3 = x2 + lonDeg
+			// pY3 = y2 - latDeg
+			pX3 = x2.add(lonDeg, context);
+			pY3 = y2.subtract(latDeg, context);
 
-		// pX4 = x2 - lonDeg
-		// pY4 = y2 - latDeg
-		BigDecimal pX4 = x2.subtract(lonDeg, context);
-		BigDecimal pY4 = y2.subtract(latDeg, context);
+			// pX4 = x2 - lonDeg
+			// pY4 = y2 + latDeg
+			pX4 = x2.subtract(lonDeg, context);
+			pY4 = y2.add(latDeg, context);
+			return formatPolygonStr(pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4);
 
-		return formatPolygonStr(pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4);
+		} else {
+			// pX1 = x1 - lonDeg
+			// pY1 = y1 - latDeg
+			pX1 = x1.subtract(lonDeg, context);
+			pY1 = y1.subtract(latDeg, context);
+
+			// pX1 = x1 + lonDeg
+			// pY1 = y1 + latDeg
+			pX2 = x1.add(lonDeg, context);
+			pY2 = y1.add(latDeg, context);
+
+			// pX1 = x2 + lonDeg
+			// pY1 = y2 + latDeg
+			pX3 = x2.add(lonDeg, context);
+			pY3 = y2.add(latDeg, context);
+
+			// pX1 = x2 - lonDeg
+			// pY1 = y2 - latDeg
+			pX4 = x2.subtract(lonDeg, context);
+			pY4 = y2.subtract(latDeg, context);
+			return formatPolygonStr(pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4);
+		}
 	}
 }
