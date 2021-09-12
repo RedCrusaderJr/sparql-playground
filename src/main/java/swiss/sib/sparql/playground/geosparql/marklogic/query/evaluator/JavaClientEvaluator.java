@@ -46,12 +46,18 @@ public class JavaClientEvaluator implements JavaScriptQueryEvaluator {
 	private Object handleEvalResult(EvalResultIterator iterator) throws Exception {
 		Object result;
 
+		long booleanStart = System.currentTimeMillis();
 		result = tryHandleAsBooleanResult(iterator);
+		double booleanDuration = ((double) (System.currentTimeMillis() - booleanStart)) / (double) 1000;
+		logger.info("handleEvalResult -> handling boolean query result lasted " + booleanDuration + " sec");
 		if (result != null) {
 			return result;
 		}
 
+		long tupleStart = System.currentTimeMillis();
 		result = tryHandleAsTupleQueryResult(iterator);
+		double tupleDuration = ((double) (System.currentTimeMillis() - tupleStart)) / (double) 1000;
+		logger.info("handleEvalResult -> handling tuple query result lasted " + tupleDuration + " sec");
 		if (result != null) {
 			return result;
 		}

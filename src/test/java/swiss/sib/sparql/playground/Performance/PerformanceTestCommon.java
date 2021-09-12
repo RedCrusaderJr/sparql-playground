@@ -5,26 +5,36 @@ import org.eclipse.rdf4j.query.QueryEvaluationException;
 import org.eclipse.rdf4j.query.QueryLanguage;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.client.DatabaseClientFactory.SecurityContext;
+import com.marklogic.client.eval.EvalResultIterator;
 import com.marklogic.semantics.rdf4j.MarkLogicRepository;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.impl.ValidatingValueFactory;
 import org.eclipse.rdf4j.query.BooleanQuery;
 import org.eclipse.rdf4j.query.GraphQuery;
 import org.eclipse.rdf4j.query.TupleQuery;
 import org.eclipse.rdf4j.query.TupleQueryResult;
+import org.eclipse.rdf4j.query.impl.ListBindingSet;
+import org.eclipse.rdf4j.query.impl.TupleQueryResultBuilder;
 import org.eclipse.rdf4j.repository.Repository;
 import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.sail.memory.MemoryStore;
 import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import swiss.sib.sparql.playground.domain.SparqlQuery;
 import swiss.sib.sparql.playground.domain.SparqlQueryType;
@@ -38,7 +48,7 @@ public class PerformanceTestCommon {
 	private static final String TEST_FOLDER = "test_folder";
 	private static final String MARKLOGIC_HOST = "localhost";
 	private static final int MARKLOGIC_PORT = 8111;
-	// private static final String MARKLOGIC_DB_NAME = "sparql-playground";
+	private static final String MARKLOGIC_DB_NAME = "sparql-playground";
 
 	private Repository repository;
 	private RepositoryConnection connection;
@@ -60,8 +70,20 @@ public class PerformanceTestCommon {
 	}
 
 	public void afterEach() {
-		this.connection.close();
-		this.repository.shutDown();
+		if (this.connection != null) {
+			this.connection.close();
+		}
+		this.connection = null;
+
+		if (this.repository != null) {
+			this.repository.shutDown();
+		}
+		this.repository = null;
+	}
+
+	public void deleteAll() {
+		this.deleteAllNative();
+		this.deleteAllMarkLogic();
 	}
 
 	public void defaultRepositoryTest(String name) throws Exception {
@@ -130,7 +152,18 @@ public class PerformanceTestCommon {
 		this.metricTracer.appendCounters(NEW_LINE);
 	}
 
-	public void markLogicRepositoryTest(String name) throws Exception {
+	public void markLogicRepositoryTest(String name, String approach) throws Exception {
+
+		if (approach.equals("approach1")) {
+			marklogicApproach1(name);
+		} else if (approach.equals("approach2")) {
+			marklogicApproach2(name);
+		} else {
+			marklogicApproach1(name);
+		}
+	}
+
+	private void marklogicApproach1(String name) {
 		// init
 		long initStart = System.currentTimeMillis();
 		initializeMarkLogicRepository();
@@ -185,6 +218,67 @@ public class PerformanceTestCommon {
 		}
 	}
 
+	private void marklogicApproach2(String name) throws Exception {
+		// init
+		long initStart = System.currentTimeMillis();
+		initializeMarkLogicRepository();
+		double initDuration = ((double) (System.currentTimeMillis() - initStart)) / (double) 1000;
+		this.metricTracer
+				.appendInit("markLogicRepository [" + name + "] initialization lasted " + initDuration + " sec");
+		this.metricTracer.appendInit(NEW_LINE);
+
+		// load data
+		long tripletCounter = countTriplets();
+		if (tripletCounter == 0) {
+			long loadStart = System.currentTimeMillis();
+			loadDataFromFiles();
+			Double loadDuration = ((double) (System.currentTimeMillis() - loadStart)) / (double) 1000;
+			this.metricTracer
+					.appendLoad("markLogicRepository [" + name + "] Loading data lasted " + loadDuration + " sec");
+			this.metricTracer.appendLoad(NEW_LINE);
+		}
+
+		// evaluate query
+		String sparqlQueryStr = getTestQueryString(name);
+		long evalStart = System.currentTimeMillis();
+
+		Object result = evaluateJavascriptQuery(queryStr);
+		double evalDuration = ((double) (System.currentTimeMillis() - evalStart)) / (double) 1000;
+		this.metricTracer
+				.appendEval("markLogicRepository [" + name + "] evaluating query lasted " + evalDuration + " sec");
+		this.metricTracer.appendEval(NEW_LINE);
+
+		long counter = countTQRBindingSets((TupleQueryResult) result);
+		this.metricTracer
+				.appendCounters("markLogicRepository [" + name + "] Number of binding sets in result: " + counter);
+		this.metricTracer.appendCounters(NEW_LINE);
+	}
+
+	private void deleteAllNative() {
+		File folder = new File(TEST_FOLDER + "/rdf4j-db");
+		deleteDirectory(folder);
+	}
+
+	boolean deleteDirectory(File directoryToBeDeleted) {
+		File[] allContents = directoryToBeDeleted.listFiles();
+		if (allContents != null) {
+			for (File file : allContents) {
+				deleteDirectory(file);
+			}
+		}
+		return directoryToBeDeleted.delete();
+	}
+
+	private void deleteAllMarkLogic() {
+		SecurityContext securityContext = new DatabaseClientFactory.DigestAuthContext("admin", "admin");
+		DatabaseClient client = DatabaseClientFactory.newClient(MARKLOGIC_HOST, MARKLOGIC_PORT, MARKLOGIC_DB_NAME,
+				securityContext);
+
+		String deleteQuery = "for $doc in doc() return xdmp:document-delete(xdmp:node-uri($doc))";
+		client.newServerEval().xquery(deleteQuery).eval();
+		client.release();
+	}
+
 	private Object evaluateQuery(Query query) throws Exception {
 		switch (SparqlQueryType.getQueryType(query)) {
 		case TUPLE_QUERY:
@@ -211,6 +305,125 @@ public class PerformanceTestCommon {
 
 		return result;
 	}
+
+	private Object evaluateJavascriptQuery(String queryStr) throws Exception {
+		long start = System.currentTimeMillis();
+
+		DatabaseClient client = createDbClient();
+		EvalResultIterator iterator = client.newServerEval().javascript(queryStr).eval();
+		client.release();
+		double durationWithoutHandle = ((double) (System.currentTimeMillis() - start)) / (double) 1000;
+		this.metricTracer.appendMarkLogic(
+				"evaluateJavascriptQuery -> evaluating query without handle lasted " + durationWithoutHandle + " sec");
+
+		Object result = handleEvalResult(iterator);
+
+		double durationWithHandle = ((double) (System.currentTimeMillis() - start)) / (double) 1000;
+		this.metricTracer.appendMarkLogic(
+				"evaluateJavascriptQuery -> evaluating query with handle lasted " + durationWithHandle + " sec");
+		this.metricTracer.appendMarkLogic(NEW_LINE);
+
+		return result;
+	}
+
+	// #region JAVA API helpers
+	private DatabaseClient createDbClient() {
+		SecurityContext securityContext = new DatabaseClientFactory.DigestAuthContext("admin", "admin");
+		return DatabaseClientFactory.newClient(MARKLOGIC_HOST, MARKLOGIC_PORT, MARKLOGIC_DB_NAME, securityContext);
+	}
+
+	// ponovo razmotriti da li je ovo prepakivanje neophodno - Moze li se do fronta
+	// proslediti json... tj premeriti pazljivo koliko sta traje
+	private Object handleEvalResult(EvalResultIterator iterator) throws Exception {
+		Object result;
+
+		long booleanStart = System.currentTimeMillis();
+		result = tryHandleAsBooleanResult(iterator);
+		double booleanDuration = ((double) (System.currentTimeMillis() - booleanStart)) / (double) 1000;
+		this.metricTracer.appendMarkLogic(
+				"handleEvalResult -> handling boolean query result lasted " + booleanDuration + " sec");
+		if (result != null) {
+			return result;
+		}
+
+		long tupleStart = System.currentTimeMillis();
+		result = tryHandleAsTupleQueryResult(iterator);
+		double tupleDuration = ((double) (System.currentTimeMillis() - tupleStart)) / (double) 1000;
+		this.metricTracer
+				.appendMarkLogic("handleEvalResult -> handling tuple query result lasted " + tupleDuration + " sec");
+		if (result != null) {
+			return result;
+		}
+
+		throw new Exception("Unknown result type.");
+	}
+
+	private Boolean tryHandleAsBooleanResult(EvalResultIterator iterator) {
+		if (iterator.hasNext()) {
+			String resultStr = iterator.next().getAs(String.class);
+
+			if ("true".equals(resultStr)) {
+				return true;
+			}
+
+			if ("false".equals(resultStr)) {
+				return false;
+			}
+		}
+		return null;
+	}
+
+	private TupleQueryResult tryHandleAsTupleQueryResult(EvalResultIterator iterator) throws JSONException {
+		Boolean bindingNamesInitialized = false;
+		List<String> bindingNames = new ArrayList<String>();
+		ValidatingValueFactory valueFactory = new ValidatingValueFactory();
+		TupleQueryResultBuilder builder = new TupleQueryResultBuilder();
+
+		while (iterator.hasNext()) {
+			String jsonStr = iterator.next().getAs(String.class);
+			JSONObject jsonObj;
+			try {
+				jsonObj = new JSONObject(jsonStr);
+
+			} catch (JSONException ex) {
+				// try {// new JSONArray(jsonStr);// } catch (JSONException ex)...
+				logger.error("Not valid JSON string in tuple query result.", ex);
+				return null;
+			}
+
+			String[] names = JSONObject.getNames(jsonObj);
+			List<Value> values = new ArrayList<Value>();
+
+			for (String name : names) {
+				String valueStr = jsonObj.getString(name);
+				try {
+					values.add(valueFactory.createIRI(valueStr));
+
+				} catch (IllegalArgumentException e) {
+					// maybe check if value str is a valid IRI?
+					values.add(valueFactory.createLiteral(valueStr));
+				}
+
+				if (!bindingNamesInitialized) {
+					bindingNames.add(name);
+				}
+			}
+
+			if (!bindingNamesInitialized) {
+				bindingNamesInitialized = true;
+				builder.startQueryResult(bindingNames);
+			}
+			builder.handleSolution(new ListBindingSet(bindingNames, values));
+		}
+
+		// handling the empty result...
+		if (!bindingNamesInitialized) {
+			builder.startQueryResult(new ArrayList<String>());
+		}
+		builder.endQueryResult();
+		return builder.getQueryResult();
+	}
+	// #endregion JAVA API helpers
 
 	// #region SET UP
 	private void initializeDefaultRepository() {

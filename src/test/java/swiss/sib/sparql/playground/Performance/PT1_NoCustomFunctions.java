@@ -15,6 +15,7 @@ public class PT1_NoCustomFunctions {
 	private static final Log logger = LogFactory.getLog(PT1_NoCustomFunctions.class);
 	private static final String NEW_LINE = System.lineSeparator();
 	private static final String SUBFOLDER = "noCustomFunctions";
+	private static final String MARKLOGIC_APPROACH = "Approach";
 
 	private MetricTracer metricTracer;
 	private PerformanceTestCommon ptc;
@@ -23,11 +24,13 @@ public class PT1_NoCustomFunctions {
 	public void beforeAll() {
 		this.metricTracer = new MetricTracer();
 		this.ptc = new PerformanceTestCommon(metricTracer, SUBFOLDER);
+		this.ptc.deleteAll();
 	}
 
 	@AfterEach
 	public void afterEach() {
 		this.ptc.afterEach();
+		this.ptc.deleteAll();
 	}
 
 	@AfterAll
@@ -46,7 +49,7 @@ public class PT1_NoCustomFunctions {
 			afterEach();
 			this.ptc.nativeRepositoryTest("test0");
 			afterEach();
-			this.ptc.markLogicRepositoryTest("test0");
+			this.ptc.markLogicRepositoryTest("test0", MARKLOGIC_APPROACH);
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -61,7 +64,7 @@ public class PT1_NoCustomFunctions {
 			afterEach();
 			this.ptc.nativeRepositoryTest("test1");
 			afterEach();
-			this.ptc.markLogicRepositoryTest("test1");
+			this.ptc.markLogicRepositoryTest("test1", MARKLOGIC_APPROACH);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			Assertions.assertEquals(true, false);

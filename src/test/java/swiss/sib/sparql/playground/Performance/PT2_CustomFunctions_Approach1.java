@@ -12,9 +12,10 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 @TestInstance(Lifecycle.PER_CLASS)
 public class PT2_CustomFunctions_Approach1 {
-	private static final Log logger = LogFactory.getLog(PT1_NoCustomFunctions.class);
+	private static final Log logger = LogFactory.getLog(PT2_CustomFunctions_Approach1.class);
 	private static final String NEW_LINE = System.lineSeparator();
 	private static final String SUBFOLDER = "customFunctions";
+	private static final String MARKLOGIC_APPROACH = "Approach1";
 
 	private MetricTracer metricTracer;
 	private PerformanceTestCommon ptc;
@@ -46,7 +47,7 @@ public class PT2_CustomFunctions_Approach1 {
 			afterEach();
 			this.ptc.nativeRepositoryTest("test2");
 			afterEach();
-			this.ptc.markLogicRepositoryTest("test2");
+			this.ptc.markLogicRepositoryTest("test2", MARKLOGIC_APPROACH);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			Assertions.assertEquals(true, false);
@@ -60,7 +61,7 @@ public class PT2_CustomFunctions_Approach1 {
 			afterEach();
 			this.ptc.nativeRepositoryTest("test3");
 			afterEach();
-			this.ptc.markLogicRepositoryTest("test3");
+			this.ptc.markLogicRepositoryTest("test3", MARKLOGIC_APPROACH);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			Assertions.assertEquals(true, false);
