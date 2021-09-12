@@ -103,6 +103,7 @@ public class ExtendLineFunctiion implements Function {
 		// distanceX = distanceY / slope
 		BigDecimal distanceX = distanceY.divide(slope, context); // slope will not be zero if latitudes are not equal
 
+		// TODO: UMT conversion
 		// latitude change [deg]
 		BigDecimal latDeg = distanceX.divide(latUnit, context); // latUnit will never be zero
 		// longitude change [deg]
@@ -111,21 +112,21 @@ public class ExtendLineFunctiion implements Function {
 		// p as in polygonX1, polygonY1, ...
 		// extended line is represented as polygon, without width
 		BigDecimal pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4;
-		// x1 = x1 - latDeg
-		// y1 = y1 - lonDeg
-		pX1 = x1.subtract(latDeg, context);
-		pY1 = y1.subtract(lonDeg, context);
+		// x1 = x1 - lonDeg
+		// y1 = y1 - latDeg
+		pX1 = x1.subtract(lonDeg, context);
+		pY1 = y1.subtract(latDeg, context);
 
-		pX2 = x1.add(latDeg, context);
-		pY2 = y1.add(lonDeg, context);
+		pX2 = x1.add(lonDeg, context);
+		pY2 = y1.add(latDeg, context);
 
-		// x3 = x2 + latDeg
-		// y3 = y2 + lonDeg
-		pX3 = x2.add(latDeg, context);
-		pY3 = y2.add(lonDeg, context);
+		// x3 = x2 + lonDeg
+		// y3 = y2 + latDeg
+		pX3 = x2.add(lonDeg, context);
+		pY3 = y2.add(latDeg, context);
 
-		pX4 = x2.subtract(latDeg, context);
-		pY4 = y2.subtract(lonDeg, context);
+		pX4 = x2.subtract(lonDeg, context);
+		pY4 = y2.subtract(latDeg, context);
 
 		return formatPolygonStr(pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4);
 	}

@@ -35,33 +35,33 @@ export class BufferCreator {
 			this.y1 = temp;
 		}
 
+		// TODO: UMT conversion
 		// latitude change [deg]: latDeg = distanceTotal / latUnit
 		let latDeg = this.distanceTotal.dividedBy(this.latUnit); // latUnit will never be zero
-
 		// longitude change [deg]: lonDeg = distanceTotal / lonUnit
 		let lonDeg = this.distanceTotal.dividedBy(this.lonUnit); // lonUnit will never be zero
 
 		// POLYGONE POINTS
 
-		// pX1 = x1 - latDeg
-		// pY1 = y1 - lonDeg
-		let pX1 = this.x1.minus(latDeg);
-		let pY1 = this.y1.minus(lonDeg);
+		// pX1 = x1 - lonDeg
+		// pY1 = y1 - latDeg
+		let pX1 = this.x1.minus(lonDeg);
+		let pY1 = this.y1.minus(latDeg);
 
-		// pX2 = x1 + latDeg
-		// pY2 = y1 - lonDeg
-		let pX2 = this.x1.plus(latDeg);
-		let pY2 = this.y1.minus(lonDeg);
+		// pX2 = x1 + lonDeg
+		// pY2 = y1 - latDeg
+		let pX2 = this.x1.plus(lonDeg);
+		let pY2 = this.y1.minus(latDeg);
 
-		// pX3 = x2 + latDeg
-		// pY3 = y2 + lonDeg
-		let pX3 = this.x2.plus(latDeg);
-		let pY3 = this.y2.plus(lonDeg);
+		// pX3 = x2 + lonDeg
+		// pY3 = y2 + latDeg
+		let pX3 = this.x2.plus(lonDeg);
+		let pY3 = this.y2.plus(latDeg);
 
-		// pX4 = x2 - latDeg
-		// pY4 = y2 + lonDeg
-		let pX4 = this.x2.minus(latDeg);
-		let pY4 = this.y2.plus(lonDeg);
+		// pX4 = x2 - lonDeg
+		// pY4 = y2 + latDeg
+		let pX4 = this.x2.minus(lonDeg);
+		let pY4 = this.y2.plus(latDeg);
 
 		return this.formatPolygonStr(pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4);
     }
@@ -74,33 +74,33 @@ export class BufferCreator {
 			this.x1 = temp;
 		}
 
+		// TODO: UMT conversion
 		// latitude change [deg]: latDeg = distanceTotal / latUnit
 		let latDeg = this.distanceTotal.dividedBy(this.latUnit); // latUnit will never be zero
-
 		// longitude change [deg]: lonDeg = distanceTotal / lonUnit
 		let lonDeg = this.distanceTotal.dividedBy(this.lonUnit); // lonUnit will never be zero
 
 		// POLYGONE POINTS
 
-		// pX1 = x1 - latDeg
-		// pY1 = y1 - lonDeg
-		let pX1 = this.x1.minus(latDeg);
-		let pY1 = this.y1.minus(lonDeg);
+		// pX1 = x1 - lonDeg
+		// pY1 = y1 - latDeg
+		let pX1 = this.x1.minus(lonDeg);
+		let pY1 = this.y1.minus(latDeg);
 
-		// pX2 = x1 - latDeg
-		// pY2 = y1 + lonDeg
-		let pX2 = this.x1.minus(latDeg);
-		let pY2 = this.y1.plus(lonDeg);
+		// pX2 = x1 - lonDeg
+		// pY2 = y1 + latDeg
+		let pX2 = this.x1.minus(lonDeg);
+		let pY2 = this.y1.plus(latDeg);
 
-		// pX3 = x2 + latDeg
-		// pY3 = y2 + lonDeg
-		let pX3 = this.x2.plus(latDeg);
-		let pY3 = this.y2.plus(lonDeg);
+		// pX3 = x2 + lonDeg
+		// pY3 = y2 + latDeg
+		let pX3 = this.x2.plus(lonDeg);
+		let pY3 = this.y2.plus(latDeg);
 
-		// pX4 = x2 + latDeg
-		// pY4 = y2 - lonDeg
-		let pX4 = this.x2.plus(latDeg);
-		let pY4 = this.y2.minus(lonDeg);
+		// pX4 = x2 + lonDeg
+		// pY4 = y2 - latDeg
+		let pX4 = this.x2.plus(lonDeg);
+		let pY4 = this.y2.minus(latDeg);
 
 		return this.formatPolygonStr(pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4);
     }
@@ -160,20 +160,21 @@ export class BufferCreator {
 		// distanceX = distanceY / pSlope
 		let distanceX = distanceY.dividedBy(slope); // slope will not be zero if latitudes are not equal
 
+		// TODO: UMT conversion
 		// latitude change [deg]
 		let latDeg = distanceX.dividedBy(this.latUnit); // latUnit will never be zero
 		// longitude change [deg]
 		let lonDeg = distanceY.dividedBy(this.lonUnit); // lonUnit will never be zero
 
-		// x1 = x1 - latDeg
-		// y1 = y1 - lonDeg
-		this.x1 = this.x1.minus(latDeg);
-		this.y1 = this.y1.minus(lonDeg);
+		// x1 = x1 - lonDeg
+		// y1 = y1 - latDeg
+		this.x1 = this.x1.minus(lonDeg);
+		this.y1 = this.y1.minus(latDeg);
 
-		// x2 = x2 + latDeg
-		// y2 = y2 + lonDeg
-		this.x2 = this.x2.plus(latDeg);
-		this.y2 = this.y2.plus(lonDeg);
+		// x2 = x2 + lonDeg
+		// y2 = y2 + latDeg
+		this.x2 = this.x2.plus(lonDeg);
+		this.y2 = this.y2.plus(latDeg);
     }
 
     createPolygonStr(slope) {
@@ -193,30 +194,31 @@ export class BufferCreator {
 		// distanceX = distanceY / pSlope
 		let distanceX = distanceY.dividedBy(pSlope); // slope will not be zero if latitudes are not equal
 
+		// TODO: UMT conversion
 		// latitude change [deg]
 		let latDeg = distanceX.dividedBy(this.latUnit); // latUnit will never be zero
 		// longitude change [deg]
 		let lonDeg = distanceY.dividedBy(this.lonUnit); // lonUnit will never be zero
 
-		// pX1 = x1 - latDeg
-		// pY1 = y1 - lonDeg
-		let pX1 = this.x1.minus(latDeg);
-		let pY1 = this.y1.minus(lonDeg);
+		// pX1 = x1 - lonDeg
+		// pY1 = y1 - latDeg
+		let pX1 = this.x1.minus(lonDeg);
+		let pY1 = this.y1.minus(latDeg);
 
-		// pX2 = x1 + latDeg
-		// pY2 = y1 + lonDeg
-		let pX2 = this.x1.plus(latDeg);
-		let pY2 = this.y1.plus(lonDeg);
+		// pX2 = x1 + lonDeg
+		// pY2 = y1 + latDeg
+		let pX2 = this.x1.plus(lonDeg);
+		let pY2 = this.y1.plus(latDeg);
 
-		// pX3 = x2 + latDeg
-		// pY3 = y2 + lonDeg
-		let pX3 = this.x2.plus(latDeg);
-		let pY3 = this.y2.plus(lonDeg);
+		// pX3 = x2 + lonDeg
+		// pY3 = y2 + latDeg
+		let pX3 = this.x2.plus(lonDeg);
+		let pY3 = this.y2.plus(latDeg);
 
-		// pX4 = x2 - latDeg
-		// pY4 = y2 - lonDeg
-		let	pX4 = this.x2.minus(latDeg);
-		let pY4 = this.y2.minus(lonDeg);
+		// pX4 = x2 - lonDeg
+		// pY4 = y2 - latDeg
+		let	pX4 = this.x2.minus(lonDeg);
+		let pY4 = this.y2.minus(latDeg);
 
 		return this.formatPolygonStr(pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4);
     }

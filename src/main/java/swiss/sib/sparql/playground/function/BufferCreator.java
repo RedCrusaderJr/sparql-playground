@@ -41,10 +41,10 @@ public class BufferCreator {
 		String strResult;
 
 		if (x2.compareTo(x1) == 0) {
-			strResult = equalLatitudesSpecialCase();
+			strResult = equalLongitudesSpecialCase();
 
 		} else if (y2.compareTo(y1) == 0) {
-			strResult = equalLongitudesSpecialCase();
+			strResult = equalLatitudesSpecialCase();
 
 		} else {
 			strResult = basicCase();
@@ -61,7 +61,7 @@ public class BufferCreator {
 	}
 
 	// CASE x1 = x2
-	private String equalLatitudesSpecialCase() {
+	private String equalLongitudesSpecialCase() {
 		// correcting the order
 		if (y2.doubleValue() < y1.doubleValue()) {
 			BigDecimal temp = y2;
@@ -69,39 +69,39 @@ public class BufferCreator {
 			y1 = temp;
 		}
 
+		// TODO: UMT conversion
 		// latitude change [deg]: latDeg = distanceTotal / latUnit
 		BigDecimal latDeg = distanceTotal.divide(latUnit, context); // latUnit will never be zero
-
 		// longitude change [deg]: lonDeg = distanceTotal / lonUnit
 		BigDecimal lonDeg = distanceTotal.divide(lonUnit, context); // lonUnit will never be zero
 
 		// POLYGONE POINTS
 
-		// pX1 = x1 - latDeg
-		// pY1 = y1 - lonDeg
-		BigDecimal pX1 = x1.subtract(latDeg, context);
-		BigDecimal pY1 = y1.subtract(lonDeg, context);
+		// pX1 = x1 - lonDeg
+		// pY1 = y1 - latDeg
+		BigDecimal pX1 = x1.subtract(lonDeg, context);
+		BigDecimal pY1 = y1.subtract(latDeg, context);
 
-		// pX2 = x1 + latDeg
-		// pY2 = y1 - lonDeg
-		BigDecimal pX2 = x1.add(latDeg, context);
-		BigDecimal pY2 = y1.subtract(lonDeg, context);
+		// pX2 = x1 + lonDeg
+		// pY2 = y1 - latDeg
+		BigDecimal pX2 = x1.add(lonDeg, context);
+		BigDecimal pY2 = y1.subtract(latDeg, context);
 
-		// pX3 = x2 + latDeg
-		// pY3 = y2 + lonDeg
-		BigDecimal pX3 = x2.add(latDeg, context);
-		BigDecimal pY3 = y2.add(lonDeg, context);
+		// pX3 = x2 + lonDeg
+		// pY3 = y2 + latDeg
+		BigDecimal pX3 = x2.add(lonDeg, context);
+		BigDecimal pY3 = y2.add(latDeg, context);
 
-		// pX4 = x2 - latDeg
-		// pY4 = y2 + lonDeg
-		BigDecimal pX4 = x2.subtract(latDeg, context);
-		BigDecimal pY4 = y2.add(lonDeg, context);
+		// pX4 = x2 - lonDeg
+		// pY4 = y2 + latDeg
+		BigDecimal pX4 = x2.subtract(lonDeg, context);
+		BigDecimal pY4 = y2.add(latDeg, context);
 
 		return formatPolygonStr(pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4);
 	}
 
 	// CASE y1 = y2
-	private String equalLongitudesSpecialCase() {
+	private String equalLatitudesSpecialCase() {
 		// correcting the order
 		if (x2.doubleValue() < x1.doubleValue()) {
 			BigDecimal temp = x2;
@@ -109,33 +109,33 @@ public class BufferCreator {
 			x1 = temp;
 		}
 
+		// TODO: UMT conversion
 		// latitude change [deg]: latDeg = distanceTotal / latUnit
 		BigDecimal latDeg = distanceTotal.divide(latUnit, context); // latUnit will never be zero
-
 		// longitude change [deg]: lonDeg = distanceTotal / lonUnit
 		BigDecimal lonDeg = distanceTotal.divide(lonUnit, context); // lonUnit will never be zero
 
 		// POLYGONE POINTS
 
-		// pX1 = x1 - latDeg
-		// pY1 = y1 - lonDeg
-		BigDecimal pX1 = x1.subtract(latDeg, context);
-		BigDecimal pY1 = y1.subtract(lonDeg, context);
+		// pX1 = x1 - lonDeg
+		// pY1 = y1 - latDeg
+		BigDecimal pX1 = x1.subtract(lonDeg, context);
+		BigDecimal pY1 = y1.subtract(latDeg, context);
 
-		// pX2 = x1 - latDeg
-		// pY2 = y1 + lonDeg
-		BigDecimal pX2 = x1.subtract(latDeg, context);
-		BigDecimal pY2 = y1.add(lonDeg, context);
+		// pX2 = x1 - lonDeg
+		// pY2 = y1 + latDeg
+		BigDecimal pX2 = x1.subtract(lonDeg, context);
+		BigDecimal pY2 = y1.add(latDeg, context);
 
-		// pX3 = x2 + latDeg
-		// pY3 = y2 + lonDeg
-		BigDecimal pX3 = x2.add(latDeg, context);
-		BigDecimal pY3 = y2.add(lonDeg, context);
+		// pX3 = x2 + lonDeg
+		// pY3 = y2 + latDeg
+		BigDecimal pX3 = x2.add(lonDeg, context);
+		BigDecimal pY3 = y2.add(latDeg, context);
 
-		// pX4 = x2 + latDeg
-		// pY4 = y2 - lonDeg
-		BigDecimal pX4 = x2.add(latDeg, context);
-		BigDecimal pY4 = y2.subtract(lonDeg, context);
+		// pX4 = x2 + lonDeg
+		// pY4 = y2 - latDeg
+		BigDecimal pX4 = x2.add(lonDeg, context);
+		BigDecimal pY4 = y2.subtract(latDeg, context);
 
 		return formatPolygonStr(pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4);
 	}
@@ -195,20 +195,21 @@ public class BufferCreator {
 		// distanceX = distanceY / pSlope
 		BigDecimal distanceX = distanceY.divide(slope, context); // slope will not be zero if latitudes are not equal
 
+		// TODO: UMT conversion
 		// latitude change [deg]
 		BigDecimal latDeg = distanceX.divide(latUnit, context); // latUnit will never be zero
 		// longitude change [deg]
 		BigDecimal lonDeg = distanceY.divide(lonUnit, context); // lonUnit will never be zero
 
-		// x1 = x1 - latDeg
-		// y1 = y1 - lonDeg
-		x1 = x1.subtract(latDeg, context);
-		y1 = y1.subtract(lonDeg, context);
+		// x1 = x1 - lonDeg
+		// y1 = y1 - latDeg
+		x1 = x1.subtract(lonDeg, context);
+		y1 = y1.subtract(latDeg, context);
 
-		// x2 = x2 + latDeg
-		// y2 = y2 + lonDeg
-		x2 = x2.add(latDeg, context);
-		y2 = y2.add(lonDeg, context);
+		// x2 = x2 + lonDeg
+		// y2 = y2 + latDeg
+		x2 = x2.add(lonDeg, context);
+		y2 = y2.add(latDeg, context);
 	}
 
 	private String createPolygonStr(BigDecimal slope) {
@@ -230,6 +231,7 @@ public class BufferCreator {
 		// distanceX = distanceY / pSlope
 		BigDecimal distanceX = distanceY.divide(pSlope, context); // slope will not be zero if latitudes are not equal
 
+		// TODO: UMT conversion
 		// latitude change [deg]
 		BigDecimal latDeg = distanceX.divide(latUnit, context); // latUnit will never be zero
 		// longitude change [deg]
@@ -237,25 +239,25 @@ public class BufferCreator {
 
 		// POLYGONE POINTS
 
-		// pX1 = x1 - latDeg
-		// pY1 = y1 - lonDeg
-		BigDecimal pX1 = x1.subtract(latDeg, context);
-		BigDecimal pY1 = y1.subtract(lonDeg, context);
+		// pX1 = x1 - lonDeg
+		// pY1 = y1 - latDeg
+		BigDecimal pX1 = x1.subtract(lonDeg, context);
+		BigDecimal pY1 = y1.subtract(latDeg, context);
 
-		// pX2 = x1 + latDeg
-		// pY2 = y1 + lonDeg
-		BigDecimal pX2 = x1.add(latDeg, context);
-		BigDecimal pY2 = y1.add(lonDeg, context);
+		// pX2 = x1 + lonDeg
+		// pY2 = y1 + latDeg
+		BigDecimal pX2 = x1.add(lonDeg, context);
+		BigDecimal pY2 = y1.add(latDeg, context);
 
-		// pX3 = x2 + latDeg
-		// pY3 = y2 + lonDeg
-		BigDecimal pX3 = x2.add(latDeg, context);
-		BigDecimal pY3 = y2.add(lonDeg, context);
+		// pX3 = x2 + lonDeg
+		// pY3 = y2 + latDeg
+		BigDecimal pX3 = x2.add(lonDeg, context);
+		BigDecimal pY3 = y2.add(latDeg, context);
 
-		// pX4 = x2 - latDeg
-		// pY4 = y2 - lonDeg
-		BigDecimal pX4 = x2.subtract(latDeg, context);
-		BigDecimal pY4 = y2.subtract(lonDeg, context);
+		// pX4 = x2 - lonDeg
+		// pY4 = y2 - latDeg
+		BigDecimal pX4 = x2.subtract(lonDeg, context);
+		BigDecimal pY4 = y2.subtract(latDeg, context);
 
 		return formatPolygonStr(pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4);
 	}
