@@ -1,6 +1,6 @@
 package swiss.sib.sparql.playground.geosparql;
 
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -84,7 +84,6 @@ public class MarklogicSupportTest {
 		sb.append("SELECT *").append(System.lineSeparator());
 		sb.append("WHERE {").append(System.lineSeparator());
 		sb.append("  ?s ?p ?o.").append(System.lineSeparator());
-		sb.append("  BIND(?s as ?b).").append(System.lineSeparator());
 		sb.append("}").append(System.lineSeparator());
 		sb.append("LIMIT 10");
 
@@ -204,7 +203,7 @@ public class MarklogicSupportTest {
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void evaluateJsGeospatialOnMarklogicNodeJsApi() throws Exception {
 		logger.debug(String.format("Test: evaluateJsGeospatialOnMarklogicNodeJsApi"));
 		NodeJsClientEvaluator nodeJsApi = new NodeJsClientEvaluator();

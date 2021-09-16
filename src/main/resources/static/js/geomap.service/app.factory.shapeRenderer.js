@@ -14,7 +14,7 @@
 	function shapeRendererFactory(geomapManipulation) {
 		class ShapeRenderer {
 			constructor() {
-				this.bulkRenderGroupKeys = ["POINT", "LINESTRING", "POLYGON"]//-HEALTY", "POLYGON-AFFECTED", "POLYGON-HAZARD"]
+				this.bulkRenderGroupKeys = ["POINT", "LINESTRING", "POLYGON"]//-HEALTHY", "POLYGON-AFFECTED", "POLYGON-HAZARD"]
 				this.bulkRenderMap = new Map();
 			}
 

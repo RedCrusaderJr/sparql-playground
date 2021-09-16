@@ -22,6 +22,7 @@ import swiss.sib.sparql.playground.Application;
 
 public class JavaClientEvaluator implements JavaScriptQueryEvaluator {
 	private static final Log logger = LogFactory.getLog(JavaClientEvaluator.class);
+	private static final String NEW_LINE = System.lineSeparator();
 
 	public Object evaluateJavaScript(String jsQuery) throws Exception {
 		DatabaseClient client = createDbClient();
@@ -49,7 +50,7 @@ public class JavaClientEvaluator implements JavaScriptQueryEvaluator {
 		long booleanStart = System.currentTimeMillis();
 		result = tryHandleAsBooleanResult(iterator);
 		double booleanDuration = ((double) (System.currentTimeMillis() - booleanStart)) / (double) 1000;
-		logger.info("handleEvalResult -> handling boolean query result lasted " + booleanDuration + " sec");
+		logger.info("handleEvalResult -> handling boolean query result lasted " + booleanDuration + " sec" + NEW_LINE);
 		if (result != null) {
 			return result;
 		}
@@ -57,7 +58,7 @@ public class JavaClientEvaluator implements JavaScriptQueryEvaluator {
 		long tupleStart = System.currentTimeMillis();
 		result = tryHandleAsTupleQueryResult(iterator);
 		double tupleDuration = ((double) (System.currentTimeMillis() - tupleStart)) / (double) 1000;
-		logger.info("handleEvalResult -> handling tuple query result lasted " + tupleDuration + " sec");
+		logger.info("handleEvalResult -> handling tuple query result lasted " + tupleDuration + " sec" + NEW_LINE);
 		if (result != null) {
 			return result;
 		}

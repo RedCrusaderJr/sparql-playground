@@ -1,0 +1,44 @@
+#title:drawFeeder
+#comment: draw feeder
+
+#tags:
+#color:
+#img:
+
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+PREFIX geo: <http://www.opengis.net/ont/geosparql#> 
+PREFIX cim: <http://iec.ch/TC57/CIM-generic#> 
+
+SELECT DISTINCT ?g_wktLine ?g_wktPoint
+WHERE {
+  #terminals
+  ?tmId rdf:type cim:Terminal.
+  ?tmId cim:IdentifiedObject.name ?tmName.
+   
+  #connectivity nodes of terminal
+  ?tmId cim:Terminal.ConnectivityNode ?cNodeId.
+  ?cNodeId cim:IdentifiedObject.name ?cNodeName.
+  
+  #conducting equipment of terminal
+  ?tmId cim:Terminal.ConductingEquipment ?condEqId.
+  ?condEqId cim:IdentifiedObject.name ?condEqName.
+  
+  #locations
+  ?condEqId cim:PowerSystemResource.Location ?locationId.
+  ?postionPointId1 rdf:type cim:PositionPoint.
+  ?postionPointId2 rdf:type cim:PositionPoint.
+  ?postionPointId1 cim:PositionPoint.Location ?locationId.
+  ?postionPointId2 cim:PositionPoint.Location ?locationId.
+  
+  #coordinates
+  ?postionPointId1 cim:PositionPoint.xPosition ?xPosition1.
+  ?postionPointId1 cim:PositionPoint.yPosition ?yPosition1.
+  ?postionPointId2 cim:PositionPoint.xPosition ?xPosition2.
+  ?postionPointId2 cim:PositionPoint.yPosition ?yPosition2.
+
+  #construct WKTs (draw geometry)  
+  BIND(concat("LINESTRING (", str(?xPosition1), " ", str(?yPosition1), ", ", str(?xPosition2), " ", str(?yPosition2), ")") as ?lineStr)
+  BIND(strdt(?lineStr, geo:wktLiteral) as ?g_wktLine)
+
+  FILTER(?xPosition1 != ?xPosition2 || ?yPosition1 != ?yPosition2)
+}

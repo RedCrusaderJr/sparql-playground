@@ -21,6 +21,8 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.impl.ValidatingValueFactory;
+import org.eclipse.rdf4j.query.Binding;
+import org.eclipse.rdf4j.query.BindingSet;
 import org.eclipse.rdf4j.query.BooleanQuery;
 import org.eclipse.rdf4j.query.GraphQuery;
 import org.eclipse.rdf4j.query.TupleQuery;
@@ -36,6 +38,7 @@ import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import swiss.sib.sparql.playground.domain.JavaScriptQuery;
 import swiss.sib.sparql.playground.domain.SparqlQuery;
 import swiss.sib.sparql.playground.domain.SparqlQueryType;
 import swiss.sib.sparql.playground.geosparql.marklogic.SparqlEvaluator;
@@ -53,19 +56,23 @@ public class PerformanceTestCommon {
 	private Repository repository;
 	private RepositoryConnection connection;
 
-	private String testQuerySubfolder;
+	private String cimxmlFolder;
+	private String queryFolder;
+	private QueryDictionary queryDictionary;
+	private Map<String, Map<String, SparqlQuery>> sparqlQueryMap;
+	private Map<String, Map<String, JavaScriptQuery>> javascriptQueryMap;
 	private MetricTracer metricTracer;
 	private SparqlEvaluator sparqlEvaluator;
-	private QueryDictionary queryDictionary;
-	private Map<String, Map<String, SparqlQuery>> queryMap;
 
-	public PerformanceTestCommon(MetricTracer metricTracer, String testQuerySubfolder) {
-		this.testQuerySubfolder = testQuerySubfolder;
+	public PerformanceTestCommon(MetricTracer metricTracer, String queryFolder, String cimxmlFolder) {
+		this.cimxmlFolder = cimxmlFolder;
+		this.queryFolder = queryFolder;
 		this.metricTracer = metricTracer;
 
 		this.sparqlEvaluator = SparqlEvaluator.getInstance();
 		this.queryDictionary = new QueryDictionary();
-		this.queryMap = new HashMap<String, Map<String, SparqlQuery>>();
+		this.sparqlQueryMap = new HashMap<String, Map<String, SparqlQuery>>();
+		this.javascriptQueryMap = new HashMap<String, Map<String, JavaScriptQuery>>();
 		initQueryMap();
 	}
 
@@ -86,12 +93,12 @@ public class PerformanceTestCommon {
 		this.deleteAllMarkLogic();
 	}
 
-	public void defaultRepositoryTest(String name) throws Exception {
+	public long defaultRepositoryTest(String name) throws Exception {
 		// init
 		long initStart = System.currentTimeMillis();
 		initializeDefaultRepository();
 		double initDuration = ((double) (System.currentTimeMillis() - initStart)) / (double) 1000;
-		this.metricTracer.appendInit("defaultRepository [" + name + "] initialization lasted " + initDuration + " ms");
+		this.metricTracer.appendInit("defaultRepository [" + name + "] initialization lasted " + initDuration + " sec");
 		this.metricTracer.appendInit(NEW_LINE);
 
 		// load data
@@ -100,9 +107,10 @@ public class PerformanceTestCommon {
 		double loadDuration = ((double) (System.currentTimeMillis() - loadStart)) / (double) 1000;
 		this.metricTracer.appendLoad("defaultRepository [" + name + "] loading data lasted " + loadDuration + " sec");
 		this.metricTracer.appendLoad(NEW_LINE);
+		metricTracer.appendCommon("Name: " + name + "Repository contains " + countTriplets() + " triplets" + NEW_LINE);
 
 		// evaluate query
-		String sparqlQuery = getTestQueryString(name);
+		String sparqlQuery = getSparqlTestQueryString(name);
 		long evalStart = System.currentTimeMillis();
 		Query query = this.connection.prepareQuery(QueryLanguage.SPARQL, sparqlQuery);
 		Object result = evaluateQuery(query);
@@ -114,9 +122,11 @@ public class PerformanceTestCommon {
 		long counter = countTQRBindingSets((TupleQueryResult) result);
 		this.metricTracer.appendCounters("defaultRepository [" + name + "] Binding sets in result: " + counter);
 		this.metricTracer.appendCounters(NEW_LINE);
+
+		return counter;
 	}
 
-	public void nativeRepositoryTest(String name) throws Exception {
+	public long nativeRepositoryTest(String name) throws Exception {
 		// init
 		long initStart = System.currentTimeMillis();
 		File rdf4jDataFolder = new File(TEST_FOLDER + "/rdf4j-db");
@@ -136,9 +146,10 @@ public class PerformanceTestCommon {
 					.appendLoad("nativeRepository [" + name + "] loading data lasted " + loadDuration + " sec");
 			this.metricTracer.appendLoad(NEW_LINE);
 		}
+		metricTracer.appendCommon("Name: " + name + "Repository contains " + countTriplets() + " triplets" + NEW_LINE);
 
 		// evaluate query
-		String sparqlQuery = getTestQueryString(name);
+		String sparqlQuery = getSparqlTestQueryString(name);
 		long evalStart = System.currentTimeMillis();
 		Query query = this.connection.prepareQuery(QueryLanguage.SPARQL, sparqlQuery);
 		Object result = evaluateQuery(query);
@@ -150,20 +161,25 @@ public class PerformanceTestCommon {
 		long counter = countTQRBindingSets((TupleQueryResult) result);
 		this.metricTracer.appendCounters("nativeRepository [" + name + "] Binding sets in result: " + counter);
 		this.metricTracer.appendCounters(NEW_LINE);
+
+		return counter;
 	}
 
-	public void markLogicRepositoryTest(String name, String approach) throws Exception {
+	public long markLogicRepositoryTest(String name, String approach) throws Exception {
+		long counter = 0;
 
 		if (approach.equals("approach1")) {
-			marklogicApproach1(name);
+			counter = marklogicApproach1(name);
 		} else if (approach.equals("approach2")) {
-			marklogicApproach2(name);
+			counter = marklogicApproach2(name);
 		} else {
-			marklogicApproach1(name);
+			counter = marklogicApproach1(name);
 		}
+
+		return counter;
 	}
 
-	private void marklogicApproach1(String name) {
+	private long marklogicApproach1(String name) throws Exception {
 		// init
 		long initStart = System.currentTimeMillis();
 		initializeMarkLogicRepository();
@@ -182,9 +198,10 @@ public class PerformanceTestCommon {
 					.appendLoad("markLogicRepository [" + name + "] Loading data lasted " + loadDuration + " sec");
 			this.metricTracer.appendLoad(NEW_LINE);
 		}
+		metricTracer.appendCommon("Name: " + name + "Repository contains " + countTriplets() + " triplets" + NEW_LINE);
 
 		// evaluate query
-		String sparqlQueryStr = getTestQueryString(name);
+		String sparqlQueryStr = getSparqlTestQueryString(name);
 		long evalStart = System.currentTimeMillis();
 
 		try {
@@ -199,6 +216,8 @@ public class PerformanceTestCommon {
 			this.metricTracer
 					.appendCounters("markLogicRepository [" + name + "] Number of binding sets in result: " + counter);
 			this.metricTracer.appendCounters(NEW_LINE);
+
+			return counter;
 
 		} catch (QueryEvaluationException e) {
 			if (!e.getMessage().contains("Server Message: XDMP-UNDFUN")) {
@@ -215,10 +234,12 @@ public class PerformanceTestCommon {
 			this.metricTracer
 					.appendCounters("markLogicRepository [" + name + "] Number of binding sets in result: " + counter);
 			this.metricTracer.appendCounters(NEW_LINE);
+
+			return counter;
 		}
 	}
 
-	private void marklogicApproach2(String name) throws Exception {
+	private long marklogicApproach2(String name) throws Exception {
 		// init
 		long initStart = System.currentTimeMillis();
 		initializeMarkLogicRepository();
@@ -239,10 +260,10 @@ public class PerformanceTestCommon {
 		}
 
 		// evaluate query
-		String sparqlQueryStr = getTestQueryString(name);
+		String javascriptQueryStr = getJavascriptTestQueryString(name);
 		long evalStart = System.currentTimeMillis();
 
-		Object result = evaluateJavascriptQuery(queryStr);
+		Object result = evaluateJavascriptQuery(javascriptQueryStr);
 		double evalDuration = ((double) (System.currentTimeMillis() - evalStart)) / (double) 1000;
 		this.metricTracer
 				.appendEval("markLogicRepository [" + name + "] evaluating query lasted " + evalDuration + " sec");
@@ -252,11 +273,14 @@ public class PerformanceTestCommon {
 		this.metricTracer
 				.appendCounters("markLogicRepository [" + name + "] Number of binding sets in result: " + counter);
 		this.metricTracer.appendCounters(NEW_LINE);
+
+		return counter;
 	}
 
 	private void deleteAllNative() {
 		File folder = new File(TEST_FOLDER + "/rdf4j-db");
 		deleteDirectory(folder);
+		logger.info("deleteAllNative finished");
 	}
 
 	boolean deleteDirectory(File directoryToBeDeleted) {
@@ -277,6 +301,7 @@ public class PerformanceTestCommon {
 		String deleteQuery = "for $doc in doc() return xdmp:document-delete(xdmp:node-uri($doc))";
 		client.newServerEval().xquery(deleteQuery).eval();
 		client.release();
+		logger.info("deleteAllMarkLogic finished");
 	}
 
 	private Object evaluateQuery(Query query) throws Exception {
@@ -315,6 +340,7 @@ public class PerformanceTestCommon {
 		double durationWithoutHandle = ((double) (System.currentTimeMillis() - start)) / (double) 1000;
 		this.metricTracer.appendMarkLogic(
 				"evaluateJavascriptQuery -> evaluating query without handle lasted " + durationWithoutHandle + " sec");
+		this.metricTracer.appendMarkLogic(NEW_LINE);
 
 		Object result = handleEvalResult(iterator);
 
@@ -342,6 +368,7 @@ public class PerformanceTestCommon {
 		double booleanDuration = ((double) (System.currentTimeMillis() - booleanStart)) / (double) 1000;
 		this.metricTracer.appendMarkLogic(
 				"handleEvalResult -> handling boolean query result lasted " + booleanDuration + " sec");
+		this.metricTracer.appendMarkLogic(NEW_LINE);
 		if (result != null) {
 			return result;
 		}
@@ -351,6 +378,7 @@ public class PerformanceTestCommon {
 		double tupleDuration = ((double) (System.currentTimeMillis() - tupleStart)) / (double) 1000;
 		this.metricTracer
 				.appendMarkLogic("handleEvalResult -> handling tuple query result lasted " + tupleDuration + " sec");
+		this.metricTracer.appendMarkLogic(NEW_LINE);
 		if (result != null) {
 			return result;
 		}
@@ -402,6 +430,7 @@ public class PerformanceTestCommon {
 				} catch (IllegalArgumentException e) {
 					// maybe check if value str is a valid IRI?
 					values.add(valueFactory.createLiteral(valueStr));
+					// logger.debug("Not a valid IRI but literal.");
 				}
 
 				if (!bindingNamesInitialized) {
@@ -446,6 +475,11 @@ public class PerformanceTestCommon {
 	}
 
 	private void initQueryMap() {
+		initSparqlQueryMap();
+		initJavaScriptQueryMap();
+	}
+
+	private void initSparqlQueryMap() {
 		File sparqlQueriesFolder = new File(TEST_FOLDER + "/queries/sparql");
 		if (sparqlQueriesFolder.exists() == false) {
 			logger.error("Simulator folder not found. Path: " + sparqlQueriesFolder.getPath());
@@ -458,7 +492,24 @@ public class PerformanceTestCommon {
 			for (SparqlQuery query : this.queryDictionary.getQueries(subFolder.getPath())) {
 				queries.put(query.getTitle().trim(), query);
 			}
-			this.queryMap.put(subFolder.getName().trim(), queries);
+			this.sparqlQueryMap.put(subFolder.getName().trim(), queries);
+		}
+	}
+
+	private void initJavaScriptQueryMap() {
+		File sparqlQueriesFolder = new File(TEST_FOLDER + "/queries/javascript");
+		if (sparqlQueriesFolder.exists() == false) {
+			logger.error("Simulator folder not found. Path: " + sparqlQueriesFolder.getPath());
+			return;
+		}
+
+		for (File subFolder : sparqlQueriesFolder.listFiles()) {
+			Map<String, JavaScriptQuery> queries = new HashMap<String, JavaScriptQuery>();
+
+			for (JavaScriptQuery query : this.queryDictionary.getJavascriptQueries(subFolder.getPath())) {
+				queries.put(query.getTitle().trim(), query);
+			}
+			this.javascriptQueryMap.put(subFolder.getName().trim(), queries);
 		}
 	}
 
@@ -490,7 +541,7 @@ public class PerformanceTestCommon {
 	}
 
 	private void loadRDFFiles() throws Exception {
-		File rdfFolder = new File(TEST_FOLDER + "/rdf-data");
+		File rdfFolder = new File(TEST_FOLDER + "/rdf-data/" + this.cimxmlFolder);
 		if (!rdfFolder.exists()) {
 			logger.warn("Folder for RDF data was not found. Path: " + rdfFolder);
 			if (rdfFolder.mkdirs()) {
@@ -513,8 +564,12 @@ public class PerformanceTestCommon {
 	// #endregion SET UP
 
 	// #region Test Queries
-	private String getTestQueryString(String queryName) {
-		return this.queryMap.get(this.testQuerySubfolder).get(queryName).getSparql();
+	private String getSparqlTestQueryString(String queryName) {
+		return this.sparqlQueryMap.get(this.queryFolder).get(queryName).getSparql();
+	}
+
+	private String getJavascriptTestQueryString(String queryName) {
+		return this.javascriptQueryMap.get(this.queryFolder).get(queryName).getJavaScript();
 	}
 	// #endregion Test Queries
 
@@ -533,10 +588,17 @@ public class PerformanceTestCommon {
 		long counter = 0;
 
 		while (result.hasNext()) {
+			BindingSet set = result.next();
+			for (String name : set.getBindingNames()) {
+				Binding binding = set.getBinding(name);
+				Value value = binding.getValue();
+				metricTracer.appendResults("Name: " + name + "| Value: " + value.stringValue() + NEW_LINE);
+			}
+
 			counter++;
-			result.next();
 		}
 
+		metricTracer.appendResults("Total count: " + counter + NEW_LINE + NEW_LINE);
 		return counter;
 	}
 	// #endregion Count Methods

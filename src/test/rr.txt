@@ -1,0 +1,1040 @@
+SLF4J: Class path contains multiple SLF4J bindings.
+SLF4J: Found binding in [jar:file:/C:/Users/DimitrijeMitic/.m2/repository/ch/qos/logback/logback-classic/1.2.3/logback-classic-1.2.3.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: Found binding in [jar:file:/C:/Users/DimitrijeMitic/.m2/repository/org/slf4j/slf4j-jdk14/1.7.13/slf4j-jdk14-1.7.13.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See http://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual binding is of type [ch.qos.logback.classic.util.ContextSelectorStaticBinder]
+18:50:29.387 [main] INFO  s.s.s.p.P.PerformanceTestCommon - deleteAllNative finished
+18:50:30.050 [main] INFO  s.s.s.p.P.PerformanceTestCommon - deleteAllMarkLogic finished
+18:50:30.145 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:50:30.309 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 164 ms
+18:50:30.309 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\1cimxml
+18:50:31.022 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 713 ms
+18:50:32.429 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:50:32.654 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 225 ms
+18:50:32.655 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\1cimxml
+18:50:33.841 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 1186 ms
+18:50:37.926 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:50:38.955 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 1029 ms
+18:50:38.955 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\1cimxml
+18:50:39.873 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 917 ms
+18:50:40.959 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://example.org/custom-function/buffer
+18:50:40.960 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://www.opengis.net/def/function/geosparql/intersection
+18:50:43.302 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling boolean query result lasted 0.01 sec
+
+18:50:43.325 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling tuple query result lasted 0.023 sec
+
+18:50:45.432 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:50:45.441 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 8 ms
+18:50:45.441 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\1cimxml
+18:50:45.719 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 278 ms
+18:50:48.730 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:50:48.738 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 8 ms
+18:50:48.738 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\1cimxml
+18:50:48.950 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 212 ms
+18:50:51.816 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:50:51.823 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 7 ms
+18:50:51.823 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\1cimxml
+18:50:51.939 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 116 ms
+18:50:53.057 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:50:53.068 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 11 ms
+18:50:53.068 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\1cimxml
+18:50:53.254 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 186 ms
+18:50:53.921 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://example.org/custom-function/buffer
+18:50:53.921 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://www.opengis.net/def/function/geosparql/intersection
+18:50:55.934 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling boolean query result lasted 0.0 sec
+
+18:50:55.937 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling tuple query result lasted 0.003 sec
+
+18:50:57.636 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:50:57.645 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 9 ms
+18:50:57.645 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\1cimxml
+18:50:57.746 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 101 ms
+18:50:58.262 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://example.org/custom-function/buffer
+18:50:59.936 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling boolean query result lasted 0.0 sec
+
+18:50:59.947 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling tuple query result lasted 0.011 sec
+
+18:51:01.722 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:51:01.731 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 9 ms
+18:51:01.731 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\1cimxml
+18:51:01.815 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 84 ms
+18:51:02.119 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://example.org/custom-function/buffer
+18:51:02.735 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling boolean query result lasted 0.001 sec
+
+18:51:02.746 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling tuple query result lasted 0.011 sec
+
+18:51:04.386 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:51:04.395 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 9 ms
+18:51:04.396 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\1cimxml
+18:51:04.480 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 84 ms
+18:51:05.965 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:51:05.971 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 5 ms
+18:51:05.971 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\1cimxml
+18:51:06.089 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 118 ms
+18:51:06.569 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://example.org/custom-function/buffer
+18:51:06.569 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://www.opengis.net/def/function/geosparql/intersection
+18:51:09.023 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling boolean query result lasted 0.0 sec
+
+18:51:09.027 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling tuple query result lasted 0.003 sec
+
+18:51:11.516 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:51:11.522 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 6 ms
+18:51:11.523 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\1cimxml
+18:51:11.633 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 110 ms
+18:51:12.153 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://example.org/custom-function/buffer
+18:51:12.153 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://www.opengis.net/def/function/geosparql/intersection
+18:51:13.876 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling boolean query result lasted 0.0 sec
+
+18:51:13.877 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling tuple query result lasted 0.001 sec
+
+18:51:15.585 [main] INFO  s.s.s.p.P.C.Case1NoWarmUp1CIMXML - Init metric:
+defaultRepository [drawHealthyOpt] initialization lasted 0.083 ms
+nativeRepository [drawHealthyOpt] initialization lasted 0.291 sec
+markLogicRepository [ml-drawHealthyOpt] initialization lasted 0.06 sec
+markLogicRepository [drawHealthyOpt] initialization lasted 0.008 sec
+defaultRepository [drawFeederOpt] initialization lasted 0.0 ms
+nativeRepository [drawFeederOpt] initialization lasted 0.392 sec
+markLogicRepository [drawFeederOpt] initialization lasted 0.004 sec
+markLogicRepository [drawFeederOpt] initialization lasted 0.004 sec
+defaultRepository [drawFeeder] initialization lasted 0.0 ms
+nativeRepository [drawFeeder] initialization lasted 0.039 sec
+markLogicRepository [drawFeeder] initialization lasted 0.005 sec
+markLogicRepository [drawFeeder] initialization lasted 0.004 sec
+defaultRepository [drawHazard] initialization lasted 0.0 ms
+nativeRepository [drawHazard] initialization lasted 0.016 sec
+markLogicRepository [drawHazard] initialization lasted 0.008 sec
+markLogicRepository [drawHazard] initialization lasted 0.003 sec
+defaultRepository [drawAffectedOpt] initialization lasted 0.001 ms
+nativeRepository [drawAffectedOpt] initialization lasted 0.032 sec
+markLogicRepository [ml-drawAffectedOpt] initialization lasted 0.007 sec
+markLogicRepository [drawAffectedOpt] initialization lasted 0.002 sec
+defaultRepository [drawBuffer] initialization lasted 0.0 ms
+nativeRepository [drawBuffer] initialization lasted 0.058 sec
+markLogicRepository [drawBuffer] initialization lasted 0.015 sec
+markLogicRepository [drawBuffer] initialization lasted 0.003 sec
+defaultRepository [drawBufferOpt] initialization lasted 0.001 ms
+nativeRepository [drawBufferOpt] initialization lasted 0.023 sec
+markLogicRepository [drawBufferOpt] initialization lasted 0.008 sec
+markLogicRepository [drawBufferOpt] initialization lasted 0.002 sec
+defaultRepository [basic] initialization lasted 0.0 ms
+nativeRepository [basic] initialization lasted 0.019 sec
+markLogicRepository [basic] initialization lasted 0.003 sec
+markLogicRepository [basic] initialization lasted 0.012 sec
+defaultRepository [drawHealthy] initialization lasted 0.0 ms
+nativeRepository [drawHealthy] initialization lasted 0.008 sec
+markLogicRepository [ml-drawHealthy] initialization lasted 0.007 sec
+markLogicRepository [drawHealthy] initialization lasted 0.003 sec
+defaultRepository [drawAffected] initialization lasted 0.0 ms
+nativeRepository [drawAffected] initialization lasted 0.022 sec
+markLogicRepository [ml-drawAffected] initialization lasted 0.003 sec
+markLogicRepository [drawAffected] initialization lasted 0.002 sec
+
+18:51:15.586 [main] INFO  s.s.s.p.P.C.Case1NoWarmUp1CIMXML - Load metric:
+defaultRepository [drawHealthyOpt] loading data lasted 0.878 sec
+nativeRepository [drawHealthyOpt] loading data lasted 1.413 sec
+markLogicRepository [ml-drawHealthyOpt] Loading data lasted 1.947 sec
+defaultRepository [drawFeederOpt] loading data lasted 0.288 sec
+defaultRepository [drawFeeder] loading data lasted 0.221 sec
+defaultRepository [drawHazard] loading data lasted 0.124 sec
+defaultRepository [drawAffectedOpt] loading data lasted 0.197 sec
+defaultRepository [drawBuffer] loading data lasted 0.11 sec
+defaultRepository [drawBufferOpt] loading data lasted 0.094 sec
+defaultRepository [basic] loading data lasted 0.094 sec
+defaultRepository [drawHealthy] loading data lasted 0.126 sec
+defaultRepository [drawAffected] loading data lasted 0.117 sec
+
+18:51:15.586 [main] INFO  s.s.s.p.P.C.Case1NoWarmUp1CIMXML - Eval metric:
+defaultRepository [drawHealthyOpt] evaluating query lasted 0.363 sec
+nativeRepository [drawHealthyOpt] evaluating query lasted 0.031 sec
+markLogicRepository [ml-drawHealthyOpt] evaluating query lasted 3.452 sec
+markLogicRepository [drawHealthyOpt] evaluating query lasted 2.034 sec
+defaultRepository [drawFeederOpt] evaluating query lasted 0.013 sec
+nativeRepository [drawFeederOpt] evaluating query lasted 0.007 sec
+markLogicRepository [drawFeederOpt] evaluating query lasted 1.133 sec
+markLogicRepository [drawFeederOpt] evaluating query lasted 0.984 sec
+defaultRepository [drawFeeder] evaluating query lasted 0.037 sec
+nativeRepository [drawFeeder] evaluating query lasted 0.007 sec
+markLogicRepository [drawFeeder] evaluating query lasted 1.479 sec
+markLogicRepository [drawFeeder] evaluating query lasted 0.83 sec
+defaultRepository [drawHazard] evaluating query lasted 0.002 sec
+nativeRepository [drawHazard] evaluating query lasted 0.005 sec
+markLogicRepository [drawHazard] evaluating query lasted 0.401 sec
+markLogicRepository [drawHazard] evaluating query lasted 0.623 sec
+defaultRepository [drawAffectedOpt] evaluating query lasted 0.067 sec
+nativeRepository [drawAffectedOpt] evaluating query lasted 0.026 sec
+markLogicRepository [ml-drawAffectedOpt] evaluating query lasted 2.04 sec
+markLogicRepository [drawAffectedOpt] evaluating query lasted 1.669 sec
+defaultRepository [drawBuffer] evaluating query lasted 0.006 sec
+nativeRepository [drawBuffer] evaluating query lasted 0.013 sec
+markLogicRepository [drawBuffer] evaluating query lasted 1.715 sec
+markLogicRepository [drawBuffer] evaluating query lasted 1.74 sec
+defaultRepository [drawBufferOpt] evaluating query lasted 0.015 sec
+nativeRepository [drawBufferOpt] evaluating query lasted 0.014 sec
+markLogicRepository [drawBufferOpt] evaluating query lasted 0.65 sec
+markLogicRepository [drawBufferOpt] evaluating query lasted 1.571 sec
+defaultRepository [basic] evaluating query lasted 0.002 sec
+nativeRepository [basic] evaluating query lasted 0.004 sec
+markLogicRepository [basic] evaluating query lasted 0.045 sec
+markLogicRepository [basic] evaluating query lasted 0.602 sec
+defaultRepository [drawHealthy] evaluating query lasted 0.014 sec
+nativeRepository [drawHealthy] evaluating query lasted 0.018 sec
+markLogicRepository [ml-drawHealthy] evaluating query lasted 2.483 sec
+markLogicRepository [drawHealthy] evaluating query lasted 2.447 sec
+defaultRepository [drawAffected] evaluating query lasted 0.034 sec
+nativeRepository [drawAffected] evaluating query lasted 0.011 sec
+markLogicRepository [ml-drawAffected] evaluating query lasted 1.749 sec
+markLogicRepository [drawAffected] evaluating query lasted 1.688 sec
+
+18:51:15.586 [main] INFO  s.s.s.p.P.C.Case1NoWarmUp1CIMXML - Result counters:
+defaultRepository [drawHealthyOpt] Binding sets in result: 19
+nativeRepository [drawHealthyOpt] Binding sets in result: 19
+markLogicRepository [ml-drawHealthyOpt] Number of binding sets in result: 18
+markLogicRepository [drawHealthyOpt] Number of binding sets in result: 18
+defaultRepository [drawFeederOpt] Binding sets in result: 68
+nativeRepository [drawFeederOpt] Binding sets in result: 68
+markLogicRepository [drawFeederOpt] Number of binding sets in result: 68
+markLogicRepository [drawFeederOpt] Number of binding sets in result: 67
+defaultRepository [drawFeeder] Binding sets in result: 68
+nativeRepository [drawFeeder] Binding sets in result: 68
+markLogicRepository [drawFeeder] Number of binding sets in result: 68
+markLogicRepository [drawFeeder] Number of binding sets in result: 67
+defaultRepository [drawHazard] Binding sets in result: 1
+nativeRepository [drawHazard] Binding sets in result: 1
+markLogicRepository [drawHazard] Number of binding sets in result: 1
+markLogicRepository [drawHazard] Number of binding sets in result: 0
+defaultRepository [drawAffectedOpt] Binding sets in result: 15
+nativeRepository [drawAffectedOpt] Binding sets in result: 15
+markLogicRepository [ml-drawAffectedOpt] Number of binding sets in result: 14
+markLogicRepository [drawAffectedOpt] Number of binding sets in result: 14
+defaultRepository [drawBuffer] Binding sets in result: 34
+nativeRepository [drawBuffer] Binding sets in result: 34
+markLogicRepository [drawBuffer] Number of binding sets in result: 33
+markLogicRepository [drawBuffer] Number of binding sets in result: 33
+defaultRepository [drawBufferOpt] Binding sets in result: 34
+nativeRepository [drawBufferOpt] Binding sets in result: 34
+markLogicRepository [drawBufferOpt] Number of binding sets in result: 33
+markLogicRepository [drawBufferOpt] Number of binding sets in result: 33
+defaultRepository [basic] Binding sets in result: 4500
+nativeRepository [basic] Binding sets in result: 4500
+markLogicRepository [basic] Number of binding sets in result: 4500
+markLogicRepository [basic] Number of binding sets in result: 4499
+defaultRepository [drawHealthy] Binding sets in result: 19
+nativeRepository [drawHealthy] Binding sets in result: 19
+markLogicRepository [ml-drawHealthy] Number of binding sets in result: 18
+markLogicRepository [drawHealthy] Number of binding sets in result: 18
+defaultRepository [drawAffected] Binding sets in result: 15
+nativeRepository [drawAffected] Binding sets in result: 15
+markLogicRepository [ml-drawAffected] Number of binding sets in result: 14
+markLogicRepository [drawAffected] Number of binding sets in result: 14
+
+18:51:15.586 [main] INFO  s.s.s.p.P.C.Case1NoWarmUp1CIMXML - MarkLogic metric:
+evaluateOnMarklogicSemanticApi -> evaluating query lasted 2.383 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 2.025 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.009 secevaluateJavascriptQuery -> evaluating query with handle lasted 2.034 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 0.966 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.018 secevaluateJavascriptQuery -> evaluating query with handle lasted 0.984 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 0.814 sec
+handleEvalResult -> handling boolean query result lasted 0.001 sechandleEvalResult -> handling tuple query result lasted 0.015 secevaluateJavascriptQuery -> evaluating query with handle lasted 0.83 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 0.623 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.0 secevaluateJavascriptQuery -> evaluating query with handle lasted 0.623 sec
+evaluateOnMarklogicSemanticApi -> evaluating query lasted 2.02 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 1.665 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.004 secevaluateJavascriptQuery -> evaluating query with handle lasted 1.669 sec
+evaluateOnMarklogicSemanticApi -> evaluating query lasted 1.692 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 1.733 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.007 secevaluateJavascriptQuery -> evaluating query with handle lasted 1.74 sec
+evaluateOnMarklogicSemanticApi -> evaluating query lasted 0.63 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 1.559 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.012 secevaluateJavascriptQuery -> evaluating query with handle lasted 1.571 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 0.153 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.449 secevaluateJavascriptQuery -> evaluating query with handle lasted 0.602 sec
+evaluateOnMarklogicSemanticApi -> evaluating query lasted 2.462 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 2.445 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.002 secevaluateJavascriptQuery -> evaluating query with handle lasted 2.447 sec
+evaluateOnMarklogicSemanticApi -> evaluating query lasted 1.728 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 1.686 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.002 secevaluateJavascriptQuery -> evaluating query with handle lasted 1.688 sec
+
+18:51:15.649 [main] INFO  s.s.s.p.P.PerformanceTestCommon - deleteAllNative finished
+18:51:15.698 [main] INFO  s.s.s.p.P.PerformanceTestCommon - deleteAllMarkLogic finished
+18:51:15.699 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:51:15.707 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 7 ms
+18:51:15.707 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\10cimxml
+18:51:16.248 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 541 ms
+18:51:17.740 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:51:17.979 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 239 ms
+18:51:17.979 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\10cimxml
+18:51:20.979 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 3000 ms
+18:51:22.657 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:51:22.681 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 24 ms
+18:51:22.681 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\10cimxml
+18:51:29.307 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 6626 ms
+18:51:29.325 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://example.org/custom-function/buffer
+18:51:29.326 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://www.opengis.net/def/function/geosparql/intersection
+18:51:37.225 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling boolean query result lasted 0.0 sec
+
+18:51:37.262 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling tuple query result lasted 0.036 sec
+
+18:51:44.035 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:51:44.040 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 5 ms
+18:51:44.041 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\10cimxml
+18:51:44.448 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 407 ms
+18:51:46.785 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:51:46.791 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 6 ms
+18:51:46.791 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\10cimxml
+18:51:47.371 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 580 ms
+18:51:50.290 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:51:50.295 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 5 ms
+18:51:50.295 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\10cimxml
+18:51:50.721 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 426 ms
+18:51:51.287 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:51:51.292 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 5 ms
+18:51:51.292 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\10cimxml
+18:51:51.686 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 394 ms
+18:51:53.445 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://example.org/custom-function/buffer
+18:51:53.445 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://www.opengis.net/def/function/geosparql/intersection
+18:52:01.472 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling boolean query result lasted 0.0 sec
+
+18:52:01.474 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling tuple query result lasted 0.002 sec
+
+18:52:07.940 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:52:07.947 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 7 ms
+18:52:07.947 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\10cimxml
+18:52:08.288 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 341 ms
+18:52:08.893 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://example.org/custom-function/buffer
+18:52:12.689 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling boolean query result lasted 0.0 sec
+
+18:52:12.716 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling tuple query result lasted 0.027 sec
+
+18:52:16.224 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:52:16.234 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 10 ms
+18:52:16.234 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\10cimxml
+18:52:16.589 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 355 ms
+18:52:17.191 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://example.org/custom-function/buffer
+18:52:20.936 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling boolean query result lasted 0.0 sec
+
+18:52:20.972 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling tuple query result lasted 0.035 sec
+
+18:52:24.398 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:52:24.402 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 4 ms
+18:52:24.402 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\10cimxml
+18:52:24.732 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 329 ms
+18:52:27.734 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:52:27.739 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 5 ms
+18:52:27.739 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\10cimxml
+18:52:28.098 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 359 ms
+18:52:30.136 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://example.org/custom-function/buffer
+18:52:30.136 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://www.opengis.net/def/function/geosparql/intersection
+18:52:38.320 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling boolean query result lasted 0.0 sec
+
+18:52:38.340 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling tuple query result lasted 0.02 sec
+
+18:52:45.069 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:52:45.091 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 22 ms
+18:52:45.091 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\10cimxml
+18:52:45.430 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 339 ms
+18:52:46.460 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://example.org/custom-function/buffer
+18:52:46.461 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://www.opengis.net/def/function/geosparql/intersection
+18:52:54.513 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling boolean query result lasted 0.0 sec
+
+18:52:54.515 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling tuple query result lasted 0.001 sec
+
+18:53:04.182 [main] INFO  s.s.s.p.P.C.Case1NoWarmUp10CIMXML - Init metric:
+defaultRepository [drawHealthyOpt] initialization lasted 0.0 ms
+nativeRepository [drawHealthyOpt] initialization lasted 0.105 sec
+markLogicRepository [ml-drawHealthyOpt] initialization lasted 0.003 sec
+markLogicRepository [drawHealthyOpt] initialization lasted 0.003 sec
+defaultRepository [drawFeederOpt] initialization lasted 0.0 ms
+nativeRepository [drawFeederOpt] initialization lasted 0.05 sec
+markLogicRepository [drawFeederOpt] initialization lasted 0.003 sec
+markLogicRepository [drawFeederOpt] initialization lasted 0.003 sec
+defaultRepository [drawFeeder] initialization lasted 0.0 ms
+nativeRepository [drawFeeder] initialization lasted 0.01 sec
+markLogicRepository [drawFeeder] initialization lasted 0.002 sec
+markLogicRepository [drawFeeder] initialization lasted 0.01 sec
+defaultRepository [drawHazard] initialization lasted 0.0 ms
+nativeRepository [drawHazard] initialization lasted 0.104 sec
+markLogicRepository [drawHazard] initialization lasted 0.003 sec
+markLogicRepository [drawHazard] initialization lasted 0.003 sec
+defaultRepository [drawAffectedOpt] initialization lasted 0.0 ms
+nativeRepository [drawAffectedOpt] initialization lasted 0.014 sec
+markLogicRepository [ml-drawAffectedOpt] initialization lasted 0.002 sec
+markLogicRepository [drawAffectedOpt] initialization lasted 0.003 sec
+defaultRepository [drawBuffer] initialization lasted 0.0 ms
+nativeRepository [drawBuffer] initialization lasted 0.008 sec
+markLogicRepository [drawBuffer] initialization lasted 0.002 sec
+markLogicRepository [drawBuffer] initialization lasted 0.003 sec
+defaultRepository [drawBufferOpt] initialization lasted 0.0 ms
+nativeRepository [drawBufferOpt] initialization lasted 0.008 sec
+markLogicRepository [drawBufferOpt] initialization lasted 0.001 sec
+markLogicRepository [drawBufferOpt] initialization lasted 0.007 sec
+defaultRepository [basic] initialization lasted 0.0 ms
+nativeRepository [basic] initialization lasted 0.014 sec
+markLogicRepository [basic] initialization lasted 0.002 sec
+markLogicRepository [basic] initialization lasted 0.002 sec
+defaultRepository [drawHealthy] initialization lasted 0.0 ms
+nativeRepository [drawHealthy] initialization lasted 0.022 sec
+markLogicRepository [ml-drawHealthy] initialization lasted 0.003 sec
+markLogicRepository [drawHealthy] initialization lasted 0.003 sec
+defaultRepository [drawAffected] initialization lasted 0.0 ms
+nativeRepository [drawAffected] initialization lasted 0.008 sec
+markLogicRepository [ml-drawAffected] initialization lasted 0.002 sec
+markLogicRepository [drawAffected] initialization lasted 0.003 sec
+
+18:53:04.182 [main] INFO  s.s.s.p.P.C.Case1NoWarmUp10CIMXML - Load metric:
+defaultRepository [drawHealthyOpt] loading data lasted 0.549 sec
+nativeRepository [drawHealthyOpt] loading data lasted 3.239 sec
+markLogicRepository [ml-drawHealthyOpt] Loading data lasted 6.65 sec
+defaultRepository [drawFeederOpt] loading data lasted 0.413 sec
+defaultRepository [drawFeeder] loading data lasted 0.586 sec
+defaultRepository [drawHazard] loading data lasted 0.431 sec
+defaultRepository [drawAffectedOpt] loading data lasted 0.399 sec
+defaultRepository [drawBuffer] loading data lasted 0.348 sec
+defaultRepository [drawBufferOpt] loading data lasted 0.365 sec
+defaultRepository [basic] loading data lasted 0.334 sec
+defaultRepository [drawHealthy] loading data lasted 0.365 sec
+defaultRepository [drawAffected] loading data lasted 0.361 sec
+
+18:53:04.182 [main] INFO  s.s.s.p.P.C.Case1NoWarmUp10CIMXML - Eval metric:
+defaultRepository [drawHealthyOpt] evaluating query lasted 0.006 sec
+nativeRepository [drawHealthyOpt] evaluating query lasted 0.005 sec
+markLogicRepository [ml-drawHealthyOpt] evaluating query lasted 7.955 sec
+markLogicRepository [drawHealthyOpt] evaluating query lasted 6.664 sec
+defaultRepository [drawFeederOpt] evaluating query lasted 0.006 sec
+nativeRepository [drawFeederOpt] evaluating query lasted 0.003 sec
+markLogicRepository [drawFeederOpt] evaluating query lasted 0.738 sec
+markLogicRepository [drawFeederOpt] evaluating query lasted 0.842 sec
+defaultRepository [drawFeeder] evaluating query lasted 0.002 sec
+nativeRepository [drawFeeder] evaluating query lasted 0.004 sec
+markLogicRepository [drawFeeder] evaluating query lasted 1.382 sec
+markLogicRepository [drawFeeder] evaluating query lasted 0.914 sec
+defaultRepository [drawHazard] evaluating query lasted 0.001 sec
+nativeRepository [drawHazard] evaluating query lasted 0.007 sec
+markLogicRepository [drawHazard] evaluating query lasted 0.023 sec
+markLogicRepository [drawHazard] evaluating query lasted 0.026 sec
+defaultRepository [drawAffectedOpt] evaluating query lasted 0.005 sec
+nativeRepository [drawAffectedOpt] evaluating query lasted 0.011 sec
+markLogicRepository [ml-drawAffectedOpt] evaluating query lasted 8.049 sec
+markLogicRepository [drawAffectedOpt] evaluating query lasted 6.415 sec
+defaultRepository [drawBuffer] evaluating query lasted 0.004 sec
+nativeRepository [drawBuffer] evaluating query lasted 0.01 sec
+markLogicRepository [drawBuffer] evaluating query lasted 3.833 sec
+markLogicRepository [drawBuffer] evaluating query lasted 3.449 sec
+defaultRepository [drawBufferOpt] evaluating query lasted 0.007 sec
+nativeRepository [drawBufferOpt] evaluating query lasted 0.007 sec
+markLogicRepository [drawBufferOpt] evaluating query lasted 3.799 sec
+markLogicRepository [drawBufferOpt] evaluating query lasted 3.362 sec
+defaultRepository [basic] evaluating query lasted 0.002 sec
+nativeRepository [basic] evaluating query lasted 0.001 sec
+markLogicRepository [basic] evaluating query lasted 0.287 sec
+markLogicRepository [basic] evaluating query lasted 1.327 sec
+defaultRepository [drawHealthy] evaluating query lasted 0.004 sec
+nativeRepository [drawHealthy] evaluating query lasted 0.011 sec
+markLogicRepository [ml-drawHealthy] evaluating query lasted 8.222 sec
+markLogicRepository [drawHealthy] evaluating query lasted 6.683 sec
+defaultRepository [drawAffected] evaluating query lasted 0.004 sec
+nativeRepository [drawAffected] evaluating query lasted 0.008 sec
+markLogicRepository [ml-drawAffected] evaluating query lasted 8.073 sec
+markLogicRepository [drawAffected] evaluating query lasted 9.611 sec
+
+18:53:04.182 [main] INFO  s.s.s.p.P.C.Case1NoWarmUp10CIMXML - Result counters:
+defaultRepository [drawHealthyOpt] Binding sets in result: 325
+nativeRepository [drawHealthyOpt] Binding sets in result: 325
+markLogicRepository [ml-drawHealthyOpt] Number of binding sets in result: 324
+markLogicRepository [drawHealthyOpt] Number of binding sets in result: 324
+defaultRepository [drawFeederOpt] Binding sets in result: 680
+nativeRepository [drawFeederOpt] Binding sets in result: 680
+markLogicRepository [drawFeederOpt] Number of binding sets in result: 680
+markLogicRepository [drawFeederOpt] Number of binding sets in result: 679
+defaultRepository [drawFeeder] Binding sets in result: 680
+nativeRepository [drawFeeder] Binding sets in result: 680
+markLogicRepository [drawFeeder] Number of binding sets in result: 680
+markLogicRepository [drawFeeder] Number of binding sets in result: 679
+defaultRepository [drawHazard] Binding sets in result: 1
+nativeRepository [drawHazard] Binding sets in result: 1
+markLogicRepository [drawHazard] Number of binding sets in result: 1
+markLogicRepository [drawHazard] Number of binding sets in result: 0
+defaultRepository [drawAffectedOpt] Binding sets in result: 15
+nativeRepository [drawAffectedOpt] Binding sets in result: 15
+markLogicRepository [ml-drawAffectedOpt] Number of binding sets in result: 14
+markLogicRepository [drawAffectedOpt] Number of binding sets in result: 14
+defaultRepository [drawBuffer] Binding sets in result: 340
+nativeRepository [drawBuffer] Binding sets in result: 340
+markLogicRepository [drawBuffer] Number of binding sets in result: 339
+markLogicRepository [drawBuffer] Number of binding sets in result: 339
+defaultRepository [drawBufferOpt] Binding sets in result: 340
+nativeRepository [drawBufferOpt] Binding sets in result: 340
+markLogicRepository [drawBufferOpt] Number of binding sets in result: 339
+markLogicRepository [drawBufferOpt] Number of binding sets in result: 339
+defaultRepository [basic] Binding sets in result: 25965
+nativeRepository [basic] Binding sets in result: 25965
+markLogicRepository [basic] Number of binding sets in result: 25965
+markLogicRepository [basic] Number of binding sets in result: 25964
+defaultRepository [drawHealthy] Binding sets in result: 325
+nativeRepository [drawHealthy] Binding sets in result: 325
+markLogicRepository [ml-drawHealthy] Number of binding sets in result: 324
+markLogicRepository [drawHealthy] Number of binding sets in result: 324
+defaultRepository [drawAffected] Binding sets in result: 15
+nativeRepository [drawAffected] Binding sets in result: 15
+markLogicRepository [ml-drawAffected] Number of binding sets in result: 14
+markLogicRepository [drawAffected] Number of binding sets in result: 14
+
+18:53:04.182 [main] INFO  s.s.s.p.P.C.Case1NoWarmUp10CIMXML - MarkLogic metric:
+evaluateOnMarklogicSemanticApi -> evaluating query lasted 7.939 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 6.637 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.027 secevaluateJavascriptQuery -> evaluating query with handle lasted 6.664 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 0.808 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.034 secevaluateJavascriptQuery -> evaluating query with handle lasted 0.842 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 0.877 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.037 secevaluateJavascriptQuery -> evaluating query with handle lasted 0.914 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 0.026 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.0 secevaluateJavascriptQuery -> evaluating query with handle lasted 0.026 sec
+evaluateOnMarklogicSemanticApi -> evaluating query lasted 8.032 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 6.414 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.001 secevaluateJavascriptQuery -> evaluating query with handle lasted 6.415 sec
+evaluateOnMarklogicSemanticApi -> evaluating query lasted 3.824 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 3.421 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.028 secevaluateJavascriptQuery -> evaluating query with handle lasted 3.449 sec
+evaluateOnMarklogicSemanticApi -> evaluating query lasted 3.783 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 3.33 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.032 secevaluateJavascriptQuery -> evaluating query with handle lasted 3.362 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 0.328 sec
+handleEvalResult -> handling boolean query result lasted 0.001 sechandleEvalResult -> handling tuple query result lasted 0.998 secevaluateJavascriptQuery -> evaluating query with handle lasted 1.327 sec
+evaluateOnMarklogicSemanticApi -> evaluating query lasted 8.206 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 6.665 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.018 secevaluateJavascriptQuery -> evaluating query with handle lasted 6.683 sec
+evaluateOnMarklogicSemanticApi -> evaluating query lasted 8.058 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 9.61 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.001 secevaluateJavascriptQuery -> evaluating query with handle lasted 9.611 sec
+
+18:53:04.239 [main] INFO  s.s.s.p.P.PerformanceTestCommon - deleteAllNative finished
+18:53:04.342 [main] INFO  s.s.s.p.P.PerformanceTestCommon - deleteAllMarkLogic finished
+18:53:04.343 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:53:04.347 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 4 ms
+18:53:04.347 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\100cimxml
+18:53:06.926 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 2579 ms
+18:53:11.141 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:53:11.396 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 255 ms
+18:53:11.397 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\100cimxml
+18:53:24.389 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 12992 ms
+18:53:29.326 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:53:29.421 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 95 ms
+18:53:29.421 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\100cimxml
+18:54:25.993 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 56572 ms
+18:54:26.013 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://example.org/custom-function/buffer
+18:54:26.014 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://www.opengis.net/def/function/geosparql/intersection
+18:55:28.124 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling boolean query result lasted 0.0 sec
+
+18:55:28.396 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling tuple query result lasted 0.272 sec
+
+18:56:24.417 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:56:24.421 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 3 ms
+18:56:24.421 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\100cimxml
+18:56:26.656 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 2235 ms
+18:56:34.220 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:56:34.228 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 7 ms
+18:56:34.228 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\100cimxml
+18:56:36.517 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 2288 ms
+18:56:43.818 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:56:43.821 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 3 ms
+18:56:43.821 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\100cimxml
+18:56:46.026 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 2205 ms
+18:56:47.044 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:56:47.048 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 4 ms
+18:56:47.048 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\100cimxml
+18:56:49.849 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 2801 ms
+18:57:00.179 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://example.org/custom-function/buffer
+18:57:00.179 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://www.opengis.net/def/function/geosparql/intersection
+18:58:08.384 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling boolean query result lasted 0.0 sec
+
+18:58:08.385 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling tuple query result lasted 0.001 sec
+
+18:59:04.540 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+18:59:04.544 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 4 ms
+18:59:04.544 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\100cimxml
+18:59:07.882 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 3338 ms
+18:59:15.540 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://example.org/custom-function/buffer
+18:59:55.508 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling boolean query result lasted 0.0 sec
+
+18:59:56.215 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling tuple query result lasted 0.707 sec
+
+19:00:29.707 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+19:00:29.714 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 7 ms
+19:00:29.715 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\100cimxml
+19:00:31.913 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 2198 ms
+19:00:38.416 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://example.org/custom-function/buffer
+19:01:08.225 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling boolean query result lasted 0.0 sec
+
+19:01:08.440 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling tuple query result lasted 0.215 sec
+
+19:01:38.279 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+19:01:38.285 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 6 ms
+19:01:38.286 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\100cimxml
+19:01:40.600 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 2314 ms
+19:02:00.370 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+19:02:00.373 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 3 ms
+19:02:00.373 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\100cimxml
+19:02:02.319 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 1946 ms
+19:02:10.403 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://example.org/custom-function/buffer
+19:02:10.403 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://www.opengis.net/def/function/geosparql/intersection
+19:03:36.946 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling boolean query result lasted 0.0 sec
+
+19:03:37.169 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling tuple query result lasted 0.223 sec
+
+19:05:05.950 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+19:05:05.953 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 3 ms
+19:05:05.954 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\100cimxml
+19:05:08.417 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 2463 ms
+19:05:15.057 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://example.org/custom-function/buffer
+19:05:15.057 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://www.opengis.net/def/function/geosparql/intersection
+19:06:21.714 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling boolean query result lasted 0.0 sec
+
+19:06:21.715 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling tuple query result lasted 0.001 sec
+
+19:07:26.408 [main] INFO  s.s.s.p.P.C.Case1NoWarmUp100CIMXML - Init metric:
+defaultRepository [drawHealthyOpt] initialization lasted 0.0 ms
+nativeRepository [drawHealthyOpt] initialization lasted 0.019 sec
+markLogicRepository [ml-drawHealthyOpt] initialization lasted 0.004 sec
+markLogicRepository [drawHealthyOpt] initialization lasted 0.002 sec
+defaultRepository [drawFeederOpt] initialization lasted 0.0 ms
+nativeRepository [drawFeederOpt] initialization lasted 0.063 sec
+markLogicRepository [drawFeederOpt] initialization lasted 0.002 sec
+markLogicRepository [drawFeederOpt] initialization lasted 0.002 sec
+defaultRepository [drawFeeder] initialization lasted 0.0 ms
+nativeRepository [drawFeeder] initialization lasted 0.015 sec
+markLogicRepository [drawFeeder] initialization lasted 0.002 sec
+markLogicRepository [drawFeeder] initialization lasted 0.003 sec
+defaultRepository [drawHazard] initialization lasted 0.0 ms
+nativeRepository [drawHazard] initialization lasted 0.007 sec
+markLogicRepository [drawHazard] initialization lasted 0.003 sec
+markLogicRepository [drawHazard] initialization lasted 0.003 sec
+defaultRepository [drawAffectedOpt] initialization lasted 0.0 ms
+nativeRepository [drawAffectedOpt] initialization lasted 0.009 sec
+markLogicRepository [ml-drawAffectedOpt] initialization lasted 0.002 sec
+markLogicRepository [drawAffectedOpt] initialization lasted 0.002 sec
+defaultRepository [drawBuffer] initialization lasted 0.001 ms
+nativeRepository [drawBuffer] initialization lasted 0.008 sec
+markLogicRepository [drawBuffer] initialization lasted 0.003 sec
+markLogicRepository [drawBuffer] initialization lasted 0.003 sec
+defaultRepository [drawBufferOpt] initialization lasted 0.0 ms
+nativeRepository [drawBufferOpt] initialization lasted 0.009 sec
+markLogicRepository [drawBufferOpt] initialization lasted 0.002 sec
+markLogicRepository [drawBufferOpt] initialization lasted 0.002 sec
+defaultRepository [basic] initialization lasted 0.0 ms
+nativeRepository [basic] initialization lasted 0.61 sec
+markLogicRepository [basic] initialization lasted 0.002 sec
+markLogicRepository [basic] initialization lasted 0.002 sec
+defaultRepository [drawHealthy] initialization lasted 0.0 ms
+nativeRepository [drawHealthy] initialization lasted 0.011 sec
+markLogicRepository [ml-drawHealthy] initialization lasted 0.002 sec
+markLogicRepository [drawHealthy] initialization lasted 0.005 sec
+defaultRepository [drawAffected] initialization lasted 0.0 ms
+nativeRepository [drawAffected] initialization lasted 0.01 sec
+markLogicRepository [ml-drawAffected] initialization lasted 0.003 sec
+markLogicRepository [drawAffected] initialization lasted 0.002 sec
+
+19:07:26.408 [main] INFO  s.s.s.p.P.C.Case1NoWarmUp100CIMXML - Load metric:
+defaultRepository [drawHealthyOpt] loading data lasted 2.583 sec
+nativeRepository [drawHealthyOpt] loading data lasted 13.248 sec
+markLogicRepository [ml-drawHealthyOpt] Loading data lasted 56.668 sec
+defaultRepository [drawFeederOpt] loading data lasted 2.239 sec
+defaultRepository [drawFeeder] loading data lasted 2.297 sec
+defaultRepository [drawHazard] loading data lasted 2.208 sec
+defaultRepository [drawAffectedOpt] loading data lasted 2.807 sec
+defaultRepository [drawBuffer] loading data lasted 3.342 sec
+defaultRepository [drawBufferOpt] loading data lasted 2.206 sec
+defaultRepository [basic] loading data lasted 2.323 sec
+defaultRepository [drawHealthy] loading data lasted 1.949 sec
+defaultRepository [drawAffected] loading data lasted 2.468 sec
+
+19:07:26.408 [main] INFO  s.s.s.p.P.C.Case1NoWarmUp100CIMXML - Eval metric:
+defaultRepository [drawHealthyOpt] evaluating query lasted 0.004 sec
+nativeRepository [drawHealthyOpt] evaluating query lasted 0.006 sec
+markLogicRepository [ml-drawHealthyOpt] evaluating query lasted 62.402 sec
+markLogicRepository [drawHealthyOpt] evaluating query lasted 55.702 sec
+defaultRepository [drawFeederOpt] evaluating query lasted 0.002 sec
+nativeRepository [drawFeederOpt] evaluating query lasted 0.003 sec
+markLogicRepository [drawFeederOpt] evaluating query lasted 1.747 sec
+markLogicRepository [drawFeederOpt] evaluating query lasted 1.089 sec
+defaultRepository [drawFeeder] evaluating query lasted 0.002 sec
+nativeRepository [drawFeeder] evaluating query lasted 0.001 sec
+markLogicRepository [drawFeeder] evaluating query lasted 1.562 sec
+markLogicRepository [drawFeeder] evaluating query lasted 1.498 sec
+defaultRepository [drawHazard] evaluating query lasted 0.002 sec
+nativeRepository [drawHazard] evaluating query lasted 0.001 sec
+markLogicRepository [drawHazard] evaluating query lasted 0.226 sec
+markLogicRepository [drawHazard] evaluating query lasted 0.287 sec
+defaultRepository [drawAffectedOpt] evaluating query lasted 0.003 sec
+nativeRepository [drawAffectedOpt] evaluating query lasted 0.004 sec
+markLogicRepository [ml-drawAffectedOpt] evaluating query lasted 68.223 sec
+markLogicRepository [drawAffectedOpt] evaluating query lasted 55.86 sec
+defaultRepository [drawBuffer] evaluating query lasted 0.002 sec
+nativeRepository [drawBuffer] evaluating query lasted 0.003 sec
+markLogicRepository [drawBuffer] evaluating query lasted 40.685 sec
+markLogicRepository [drawBuffer] evaluating query lasted 33.049 sec
+defaultRepository [drawBufferOpt] evaluating query lasted 0.003 sec
+nativeRepository [drawBufferOpt] evaluating query lasted 0.002 sec
+markLogicRepository [drawBufferOpt] evaluating query lasted 30.037 sec
+markLogicRepository [drawBufferOpt] evaluating query lasted 29.589 sec
+defaultRepository [basic] evaluating query lasted 0.001 sec
+nativeRepository [basic] evaluating query lasted 0.002 sec
+markLogicRepository [basic] evaluating query lasted 2.144 sec
+markLogicRepository [basic] evaluating query lasted 8.517 sec
+defaultRepository [drawHealthy] evaluating query lasted 0.003 sec
+nativeRepository [drawHealthy] evaluating query lasted 0.003 sec
+markLogicRepository [ml-drawHealthy] evaluating query lasted 86.778 sec
+markLogicRepository [drawHealthy] evaluating query lasted 88.53 sec
+defaultRepository [drawAffected] evaluating query lasted 0.002 sec
+nativeRepository [drawAffected] evaluating query lasted 0.004 sec
+markLogicRepository [ml-drawAffected] evaluating query lasted 66.668 sec
+markLogicRepository [drawAffected] evaluating query lasted 64.391 sec
+
+19:07:26.408 [main] INFO  s.s.s.p.P.C.Case1NoWarmUp100CIMXML - Result counters:
+defaultRepository [drawHealthyOpt] Binding sets in result: 3385
+nativeRepository [drawHealthyOpt] Binding sets in result: 3385
+markLogicRepository [ml-drawHealthyOpt] Number of binding sets in result: 3384
+markLogicRepository [drawHealthyOpt] Number of binding sets in result: 3384
+defaultRepository [drawFeederOpt] Binding sets in result: 6800
+nativeRepository [drawFeederOpt] Binding sets in result: 6800
+markLogicRepository [drawFeederOpt] Number of binding sets in result: 6800
+markLogicRepository [drawFeederOpt] Number of binding sets in result: 6799
+defaultRepository [drawFeeder] Binding sets in result: 6800
+nativeRepository [drawFeeder] Binding sets in result: 6800
+markLogicRepository [drawFeeder] Number of binding sets in result: 6800
+markLogicRepository [drawFeeder] Number of binding sets in result: 6799
+defaultRepository [drawHazard] Binding sets in result: 1
+nativeRepository [drawHazard] Binding sets in result: 1
+markLogicRepository [drawHazard] Number of binding sets in result: 1
+markLogicRepository [drawHazard] Number of binding sets in result: 0
+defaultRepository [drawAffectedOpt] Binding sets in result: 15
+nativeRepository [drawAffectedOpt] Binding sets in result: 15
+markLogicRepository [ml-drawAffectedOpt] Number of binding sets in result: 14
+markLogicRepository [drawAffectedOpt] Number of binding sets in result: 14
+defaultRepository [drawBuffer] Binding sets in result: 3400
+nativeRepository [drawBuffer] Binding sets in result: 3400
+markLogicRepository [drawBuffer] Number of binding sets in result: 3399
+markLogicRepository [drawBuffer] Number of binding sets in result: 3399
+defaultRepository [drawBufferOpt] Binding sets in result: 3400
+nativeRepository [drawBufferOpt] Binding sets in result: 3400
+markLogicRepository [drawBufferOpt] Number of binding sets in result: 3399
+markLogicRepository [drawBufferOpt] Number of binding sets in result: 3399
+defaultRepository [basic] Binding sets in result: 240615
+nativeRepository [basic] Binding sets in result: 240615
+markLogicRepository [basic] Number of binding sets in result: 240615
+markLogicRepository [basic] Number of binding sets in result: 240614
+defaultRepository [drawHealthy] Binding sets in result: 3385
+nativeRepository [drawHealthy] Binding sets in result: 3385
+markLogicRepository [ml-drawHealthy] Number of binding sets in result: 3384
+markLogicRepository [drawHealthy] Number of binding sets in result: 3384
+defaultRepository [drawAffected] Binding sets in result: 15
+nativeRepository [drawAffected] Binding sets in result: 15
+markLogicRepository [ml-drawAffected] Number of binding sets in result: 14
+markLogicRepository [drawAffected] Number of binding sets in result: 14
+
+19:07:26.408 [main] INFO  s.s.s.p.P.C.Case1NoWarmUp100CIMXML - MarkLogic metric:
+evaluateOnMarklogicSemanticApi -> evaluating query lasted 62.384 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 55.51 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.192 secevaluateJavascriptQuery -> evaluating query with handle lasted 55.702 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 0.876 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.213 secevaluateJavascriptQuery -> evaluating query with handle lasted 1.089 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 1.306 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.192 secevaluateJavascriptQuery -> evaluating query with handle lasted 1.498 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 0.287 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.0 secevaluateJavascriptQuery -> evaluating query with handle lasted 0.287 sec
+evaluateOnMarklogicSemanticApi -> evaluating query lasted 68.207 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 55.859 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.001 secevaluateJavascriptQuery -> evaluating query with handle lasted 55.86 sec
+evaluateOnMarklogicSemanticApi -> evaluating query lasted 40.676 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 32.86 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.189 secevaluateJavascriptQuery -> evaluating query with handle lasted 33.049 sec
+evaluateOnMarklogicSemanticApi -> evaluating query lasted 30.025 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 29.389 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.2 secevaluateJavascriptQuery -> evaluating query with handle lasted 29.589 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 2.609 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 5.908 secevaluateJavascriptQuery -> evaluating query with handle lasted 8.517 sec
+evaluateOnMarklogicSemanticApi -> evaluating query lasted 86.767 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 88.347 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.183 secevaluateJavascriptQuery -> evaluating query with handle lasted 88.53 sec
+evaluateOnMarklogicSemanticApi -> evaluating query lasted 66.66 sec
+evaluateJavascriptQuery -> evaluating query without handle lasted 64.39 sec
+handleEvalResult -> handling boolean query result lasted 0.0 sechandleEvalResult -> handling tuple query result lasted 0.001 secevaluateJavascriptQuery -> evaluating query with handle lasted 64.391 sec
+
+19:07:26.456 [main] INFO  s.s.s.p.P.PerformanceTestCommon - deleteAllNative finished
+19:07:27.248 [main] INFO  s.s.s.p.P.PerformanceTestCommon - deleteAllMarkLogic finished
+19:07:27.249 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+19:07:27.253 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 4 ms
+19:07:27.253 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\1000cimxml
+19:07:49.138 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 21885 ms
+19:08:17.601 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+19:08:17.915 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 314 ms
+19:08:17.915 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\1000cimxml
+19:10:55.582 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 157667 ms
+19:11:37.122 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+19:11:38.104 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 982 ms
+19:11:38.104 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\1000cimxml
+19:19:22.383 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 464279 ms
+19:19:23.653 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://example.org/custom-function/buffer
+19:19:23.653 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://www.opengis.net/def/function/geosparql/intersection
+19:29:33.412 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling boolean query result lasted 0.0 sec
+
+19:29:35.369 [main] ERROR s.s.s.p.g.m.q.e.JavaClientEvaluator - Not valid JSON string in tuple query result.
+org.json.JSONException: A JSONObject text must begin with '{' at character 1 of <error:error xsi:schemaLocation="http://marklogic.com/xdmp/error error.xsd" xmlns:error="http://marklogic.com/xdmp/error" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <error:code>XDMP-EXTIME</error:code>
+  <error:name/>
+  <error:xquery-version>1.0-ml</error:xquery-version>
+  <error:message>Time limit exceeded</error:message>
+  <error:format-string>XDMP-EXTIME: { SELECT DISTINCT ?g_wktPolygon ?g_wktLine {   ?postionPointId2 &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://iec.ch/TC57/CIM-generic#PositionPoint&gt; .   ONE-OR-MORE (&lt;http://www.custom.org/Hazard&gt; ?ANON14478285877472488929 ?ANON839271285675627855 ?hazardType  { ?ANON839271285675627855 &lt;http://www.w3.org/2000/01/rdf-schema#subClassOf&gt; ?ANON14478285877472488929 . }) ?hazardId &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; ?hazardType . ?hazardId &lt;http://www.custom.org/Hazard.DangerZone&gt; ?g_wktHazardZone .   ?postionPointId2 &lt;http://iec.ch/TC57/CIM-generic#PositionPoint.Location&gt; ?locationId .  ?postionPointId2 &lt;http://iec.ch/TC57/CIM-generic#PositionPoint.xPosition&gt; ?x2 . ?postionPointId2 &lt;http://iec.ch/TC57/CIM-generic#PositionPoint.yPosition&gt; ?y2 .   ?tmId &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://iec.ch/TC57/CIM-generic#Terminal&gt; .  ?tmId &lt;http://iec.ch/TC57/CIM-generic#Terminal.ConnectivityNode&gt; ?cNodeId . ?tmId &lt;http://iec.ch/TC57/CIM-generic#Terminal.ConductingEquipment&gt; ?condEqId .   ?postionPointId1 &lt;http://iec.ch/TC57/CIM-generic#PositionPoint.Location&gt; ?locationId .  ?postionPointId1 &lt;http://iec.ch/TC57/CIM-generic#PositionPoint.xPosition&gt; ?x1 .  ?postionPointId1 &lt;http://iec.ch/TC57/CIM-generic#PositionPoint.yPosition&gt; ?y1 . ?postionPointId1 &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://iec.ch/TC57/CIM-generic#PositionPoint&gt; . ?condEqId &lt;http://iec.ch/TC57/CIM-generic#PowerSystemResource.Location&gt; ?locationId . BIND (fn:concat("LINESTRING (", fn:string(?x1), " ", fn:string(?y1), ", ", fn:string(?x2), " ", fn:string(?y2), ")") AS ?lineStr) BIND (sem:typed-literal(?lineStr, sem:iri("http://www.opengis.net/ont/geosparql#wktLiteral")) AS ?g_wktLine) BIND (xdmp:apply($bFun, ?lineStr, "50") AS ?polygonStr) BIND (sem:typed-literal(?polygonStr, sem:iri("http://www.opengis.net/ont/geosparql#wktLiteral")) AS ?g_wktPolygon) BIND (xdmp:apply($intersectionFunction, ?g_wktPolygon, ?g_wktHazardZone) AS ?intersection) FILTER (fn:string(?postionPointId1) lt fn:string(?postionPointId2)) FILTER (?x1 ne ?x2 or ?y1 ne ?y2) FILTER (fn:string(?intersection) eq "false") } } -- Time limit exceeded</error:format-string>
+  <error:retryable>false</error:retryable>
+  <error:expr>{ SELECT DISTINCT ?g_wktPolygon ?g_wktLine {   ?postionPointId2 &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://iec.ch/TC57/CIM-generic#PositionPoint&gt; .   ONE-OR-MORE (&lt;http://www.custom.org/Hazard&gt; ?ANON14478285877472488929 ?ANON839271285675627855 ?hazardType  { ?ANON839271285675627855 &lt;http://www.w3.org/2000/01/rdf-schema#subClassOf&gt; ?ANON14478285877472488929 . }) ?hazardId &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; ?hazardType . ?hazardId &lt;http://www.custom.org/Hazard.DangerZone&gt; ?g_wktHazardZone .   ?postionPointId2 &lt;http://iec.ch/TC57/CIM-generic#PositionPoint.Location&gt; ?locationId .  ?postionPointId2 &lt;http://iec.ch/TC57/CIM-generic#PositionPoint.xPosition&gt; ?x2 . ?postionPointId2 &lt;http://iec.ch/TC57/CIM-generic#PositionPoint.yPosition&gt; ?y2 .   ?tmId &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://iec.ch/TC57/CIM-generic#Terminal&gt; .  ?tmId &lt;http://iec.ch/TC57/CIM-generic#Terminal.ConnectivityNode&gt; ?cNodeId . ?tmId &lt;http://iec.ch/TC57/CIM-generic#Terminal.ConductingEquipment&gt; ?condEqId .   ?postionPointId1 &lt;http://iec.ch/TC57/CIM-generic#PositionPoint.Location&gt; ?locationId .  ?postionPointId1 &lt;http://iec.ch/TC57/CIM-generic#PositionPoint.xPosition&gt; ?x1 .  ?postionPointId1 &lt;http://iec.ch/TC57/CIM-generic#PositionPoint.yPosition&gt; ?y1 . ?postionPointId1 &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://iec.ch/TC57/CIM-generic#PositionPoint&gt; . ?condEqId &lt;http://iec.ch/TC57/CIM-generic#PowerSystemResource.Location&gt; ?locationId . BIND (fn:concat("LINESTRING (", fn:string(?x1), " ", fn:string(?y1), ", ", fn:string(?x2), " ", fn:string(?y2), ")") AS ?lineStr) BIND (sem:typed-literal(?lineStr, sem:iri("http://www.opengis.net/ont/geosparql#wktLiteral")) AS ?g_wktLine) BIND (xdmp:apply($bFun, ?lineStr, "50") AS ?polygonStr) BIND (sem:typed-literal(?polygonStr, sem:iri("http://www.opengis.net/ont/geosparql#wktLiteral")) AS ?g_wktPolygon) BIND (xdmp:apply($intersectionFunction, ?g_wktPolygon, ?g_wktHazardZone) AS ?intersection) FILTER (fn:string(?postionPointId1) lt fn:string(?postionPointId2)) FILTER (?x1 ne ?x2 or ?y1 ne ?y2) FILTER (fn:string(?intersection) eq "false") } }</error:expr>
+  <error:data/>
+  <error:stack>
+    <error:frame>
+      <error:line>23</error:line>
+      <error:column>33</error:column>
+      <error:operation>sem:sparql("select distinct ?g_wktPolygon ?g_wktLine\nwhere {\n  ?tmId &lt;http...", {bFun:function bufferFunction(), "/buffer-function.mjs", intersectionFunction:function regionIntersects()})</error:operation>
+      <error:xquery-version>1.0-ml</error:xquery-version>
+    </error:frame>
+    <error:frame>
+      <error:uri>/eval</error:uri>
+      <error:xquery-version>javascript</error:xquery-version>
+    </error:frame>
+    <error:frame>
+      <error:uri>/eval</error:uri>
+      <error:xquery-version>javascript</error:xquery-version>
+    </error:frame>
+  </error:stack>
+</error:error>
+
+	at org.json.JSONTokener.syntaxError(JSONTokener.java:450)
+	at org.json.JSONObject.<init>(JSONObject.java:179)
+	at org.json.JSONObject.<init>(JSONObject.java:326)
+	at swiss.sib.sparql.playground.geosparql.marklogic.query.evaluator.JavaClientEvaluator.tryHandleAsTupleQueryResult(JavaClientEvaluator.java:94)
+	at swiss.sib.sparql.playground.geosparql.marklogic.query.evaluator.JavaClientEvaluator.handleEvalResult(JavaClientEvaluator.java:59)
+	at swiss.sib.sparql.playground.geosparql.marklogic.query.evaluator.JavaClientEvaluator.evaluateJavaScript(JavaClientEvaluator.java:32)
+	at swiss.sib.sparql.playground.geosparql.marklogic.SparqlEvaluator.evaluateQuery(SparqlEvaluator.java:67)
+	at swiss.sib.sparql.playground.Performance.PerformanceTestCommon.evaluateOnMarklogicSemanticApi(PerformanceTestCommon.java:322)
+	at swiss.sib.sparql.playground.Performance.PerformanceTestCommon.marklogicApproach1(PerformanceTestCommon.java:224)
+	at swiss.sib.sparql.playground.Performance.PerformanceTestCommon.markLogicRepositoryTest(PerformanceTestCommon.java:170)
+	at swiss.sib.sparql.playground.Performance.Case1NoWarmUp.Case1NoWarmUp1000CIMXML.test7DrawHealthyOpt(Case1NoWarmUp1000CIMXML.java:149)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:688)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:149)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:140)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:84)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(ExecutableInvoker.java:115)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.lambda$invoke$0(ExecutableInvoker.java:105)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:104)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:98)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$6(TestMethodTestDescriptor.java:210)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:206)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:131)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:65)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:129)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:127)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:126)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:84)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:38)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:143)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:129)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:127)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:126)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:84)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:38)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:143)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:129)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:127)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:126)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:84)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:32)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:51)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:108)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:88)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:67)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:52)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:96)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:84)
+	at org.eclipse.jdt.internal.junit5.runner.JUnit5TestReference.run(JUnit5TestReference.java:98)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:40)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:529)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:756)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:452)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:210)
+19:29:35.370 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling tuple query result lasted 1.958 sec
+
+19:29:35.370 [main] ERROR s.s.s.p.g.marklogic.SparqlEvaluator - Unknown result type.
+java.lang.Exception: Unknown result type.
+	at swiss.sib.sparql.playground.geosparql.marklogic.query.evaluator.JavaClientEvaluator.handleEvalResult(JavaClientEvaluator.java:66)
+	at swiss.sib.sparql.playground.geosparql.marklogic.query.evaluator.JavaClientEvaluator.evaluateJavaScript(JavaClientEvaluator.java:32)
+	at swiss.sib.sparql.playground.geosparql.marklogic.SparqlEvaluator.evaluateQuery(SparqlEvaluator.java:67)
+	at swiss.sib.sparql.playground.Performance.PerformanceTestCommon.evaluateOnMarklogicSemanticApi(PerformanceTestCommon.java:322)
+	at swiss.sib.sparql.playground.Performance.PerformanceTestCommon.marklogicApproach1(PerformanceTestCommon.java:224)
+	at swiss.sib.sparql.playground.Performance.PerformanceTestCommon.markLogicRepositoryTest(PerformanceTestCommon.java:170)
+	at swiss.sib.sparql.playground.Performance.Case1NoWarmUp.Case1NoWarmUp1000CIMXML.test7DrawHealthyOpt(Case1NoWarmUp1000CIMXML.java:149)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:688)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:149)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:140)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:84)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(ExecutableInvoker.java:115)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.lambda$invoke$0(ExecutableInvoker.java:105)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:104)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:98)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$6(TestMethodTestDescriptor.java:210)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:206)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:131)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:65)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:129)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:127)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:126)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:84)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:38)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:143)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:129)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:127)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:126)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:84)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:38)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:143)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:129)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:127)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:126)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:84)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:32)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:51)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:108)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:88)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:67)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:52)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:96)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:84)
+	at org.eclipse.jdt.internal.junit5.runner.JUnit5TestReference.run(JUnit5TestReference.java:98)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:40)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:529)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:756)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:452)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:210)
+19:29:35.375 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+19:29:35.378 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 3 ms
+19:29:35.378 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\1000cimxml
+19:29:58.394 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 23016 ms
+19:30:51.494 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+19:30:51.497 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 2 ms
+19:30:51.498 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\1000cimxml
+19:31:13.145 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 21647 ms
+19:32:04.426 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+19:32:04.429 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 3 ms
+19:32:04.429 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\1000cimxml
+19:32:31.929 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 27500 ms
+19:32:36.987 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+19:32:36.989 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 2 ms
+19:32:36.989 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\1000cimxml
+19:33:02.093 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 25104 ms
+19:34:18.303 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://example.org/custom-function/buffer
+19:34:18.303 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://www.opengis.net/def/function/geosparql/intersection
+19:44:10.866 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling boolean query result lasted 0.0 sec
+
+19:44:10.868 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling tuple query result lasted 0.002 sec
+
+19:53:34.958 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+19:53:34.961 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 3 ms
+19:53:34.961 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\1000cimxml
+19:53:54.017 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 19056 ms
+19:54:43.351 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://example.org/custom-function/buffer
+19:58:59.185 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling boolean query result lasted 0.0 sec
+
+19:59:00.977 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling tuple query result lasted 1.792 sec
+
+20:03:36.828 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+20:03:36.832 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 4 ms
+20:03:36.832 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\1000cimxml
+20:03:56.028 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 19195 ms
+20:04:42.219 [main] DEBUG s.s.s.p.g.GeosparqlQueryModelVisitor - Changing a Function call. Function uri: http://example.org/custom-function/buffer
+20:08:58.742 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling boolean query result lasted 0.0 sec
+
+20:09:00.644 [main] INFO  s.s.s.p.g.m.q.e.JavaClientEvaluator - handleEvalResult -> handling tuple query result lasted 1.902 sec
+
+20:13:34.800 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files from test_folder\ttl-data
+20:13:34.803 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 2 ms
+20:13:34.803 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading rdf files from test_folder\rdf-data\1000cimxml
+20:13:51.662 [main] INFO  s.s.s.p.P.PerformanceTestCommon - Loading turtle files finished in 16859 ms
+java.lang.OutOfMemoryError: Java heap space
+	at java.base/java.lang.StringUTF16.newBytesFor(StringUTF16.java:53)
+	at java.base/java.lang.AbstractStringBuilder.inflate(AbstractStringBuilder.java:272)
+	at java.base/java.lang.AbstractStringBuilder.putStringAt(AbstractStringBuilder.java:1714)
+	at java.base/java.lang.AbstractStringBuilder.append(AbstractStringBuilder.java:583)
+	at java.base/java.lang.StringBuilder.append(StringBuilder.java:173)
+	at swiss.sib.sparql.playground.Performance.MetricTracer.appendResults(MetricTracer.java:65)
+	at swiss.sib.sparql.playground.Performance.PerformanceTestCommon.countTQRBindingSets(PerformanceTestCommon.java:590)
+	at swiss.sib.sparql.playground.Performance.PerformanceTestCommon.defaultRepositoryTest(PerformanceTestCommon.java:121)
+	at swiss.sib.sparql.playground.Performance.Case1NoWarmUp.Case1NoWarmUp1000CIMXML.test0Basic(Case1NoWarmUp1000CIMXML.java:55)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:688)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:149)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:140)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:84)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor$$Lambda$142/0x0000000800be1328.apply(Unknown Source)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(ExecutableInvoker.java:115)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker$ReflectiveInterceptorCall$$Lambda$143/0x0000000800be1738.apply(Unknown Source)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.lambda$invoke$0(ExecutableInvoker.java:105)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker$$Lambda$264/0x0000000800c06e08.apply(Unknown Source)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:104)
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:98)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$6(TestMethodTestDescriptor.java:210)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor$$Lambda$336/0x0000000800ce4120.execute(Unknown Source)

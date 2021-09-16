@@ -1,0 +1,11 @@
+#title:basic
+#comment:
+
+#tags:
+#color:
+#img:
+
+SELECT DISTINCT *
+WHERE {
+    ?s ?p ?o
+}

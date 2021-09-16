@@ -17,7 +17,7 @@
 				this.geomap = {};
 				this.markerGroup = {};
 				this.lineGroup = {};
-				this.healtyPolygonGroup = {};
+				this.healthyPolygonGroup = {};
 				this.affectedPolygonGroup = {};
 				this.hazardPolygonGroup = {};
 
@@ -38,7 +38,7 @@
 				//this.markerGroup = L.markerClusterGroup().addTo(this.geomap);
 				this.markerGroup = L.layerGroup().addTo(this.geomap);
 				this.lineGroup = L.layerGroup().addTo(this.geomap);
-				this.healtyPolygonGroup = L.layerGroup().addTo(this.geomap);
+				this.healthyPolygonGroup = L.layerGroup().addTo(this.geomap);
 				this.affectedPolygonGroup = L.layerGroup().addTo(this.geomap);
 				this.hazardPolygonGroup = L.layerGroup().addTo(this.geomap);
 
@@ -101,12 +101,12 @@
 
 			addSinglePolygonToGeomap(element, polygonType) {
 				if(typeof polygonType == 'undefined') {
-					polygonType = "HEALTY";
+					polygonType = "HEALTHY";
 				}
 
 				switch(polygonType) {
-					case "HEALTY":
-						element.addTo(this.healtyPolygonGroup);
+					case "HEALTHY":
+						element.addTo(this.healthyPolygonGroup);
 						break;
 					case "AFFECTED":
 						element.addTo(this.affectedPolygonGroup);
@@ -129,12 +129,12 @@
 
 			addMultiplePolygonsToGeomap(elementArray, polygonOrigin) {
 				if(typeof polygonOrigin == 'undefined') {
-					polygonOrigin = "HEALTY";
+					polygonOrigin = "HEALTHY";
 				}
 
 				switch(polygonOrigin) {
-					case "HEALTY":
-						L.featureGroup(elementArray).addTo(this.healtyPolygonGroup);
+					case "HEALTHY":
+						L.featureGroup(elementArray).addTo(this.healthyPolygonGroup);
 						break;
 					case "AFFECTED":
 						L.featureGroup(elementArray).addTo(this.affectedPolygonGroup);
@@ -151,7 +151,7 @@
 			clearDrawnItems() {
 				this.markerGroup.clearLayers();
 				this.lineGroup.clearLayers();
-				this.healtyPolygonGroup.clearLayers();
+				this.healthyPolygonGroup.clearLayers();
 				this.affectedPolygonGroup.clearLayers();
 				this.hazardPolygonGroup.clearLayers();
 			}
@@ -180,9 +180,9 @@
 				//
 				//POLYGONS
 				let polygoneMap = new Map();
-				let healtyPolygonCollection = this.healtyPolygonGroup.toGeoJSON();
-				healtyPolygonCollection.bbox = bbox;
-				polygoneMap.set("HEALTY", healtyPolygonCollection);
+				let healthyPolygonCollection = this.healthyPolygonGroup.toGeoJSON();
+				healthyPolygonCollection.bbox = bbox;
+				polygoneMap.set("HEALTHY", healthyPolygonCollection);
 				let affectedPolygonCollection = this.affectedPolygonGroup.toGeoJSON();
 				affectedPolygonCollection.bbox = bbox;
 				polygoneMap.set("AFFECTED", affectedPolygonCollection);
@@ -292,7 +292,7 @@
 		}
 
 		function renderPolygons(polygonCollections, self) {
-			let healtyPolygoneColor = { color: 'blue' };
+			let healthyPolygoneColor = { color: 'blue' };
 			let affectedPolygoneColor = { color: 'red' };
 			let hazardPolygoneColor = { color: 'orange' };
 
@@ -300,10 +300,10 @@
 				let polygonCollection = polygonCollections.get(key);
 
 				switch(key) {
-					case "HEALTY":
-						L.geoJSON(polygonCollection).addTo(self.healtyPolygonGroup);
-						self.healtyPolygonGroup.eachLayer(layer => {
-							layer.setStyle(healtyPolygoneColor);
+					case "HEALTHY":
+						L.geoJSON(polygonCollection).addTo(self.healthyPolygonGroup);
+						self.healthyPolygonGroup.eachLayer(layer => {
+							layer.setStyle(healthyPolygoneColor);
 						});
 						break;
 					case "AFFECTED":

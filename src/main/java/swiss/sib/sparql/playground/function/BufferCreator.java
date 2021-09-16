@@ -9,8 +9,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.rdf4j.query.algebra.evaluation.ValueExprEvaluationException;
 
-import ch.qos.logback.classic.Logger;
-
 public class BufferCreator {
 	private static final Log logger = LogFactory.getLog(BufferCreator.class);
 
@@ -157,10 +155,11 @@ public class BufferCreator {
 		BigDecimal slope = y2.subtract(y1, context).divide(x2.subtract(x1, context), context); // x2 and x1 will not be
 																								// equal
 		Boolean isSharp = slope.compareTo(BigDecimal.valueOf(0).setScale(prec, mode)) > 0;
+
 		// puts coordinates in right order
 		correctCoordOrder(isSharp);
 		// extends line for distanceTotal length at each end
-		// extendLine(slope, isSharp);
+		extendLine();
 
 		return createPolygonStr(slope, isSharp);
 	}
@@ -192,7 +191,12 @@ public class BufferCreator {
 	}
 
 	// extends the line for distanceTotal at each end
-	private void extendLine(BigDecimal slope, Boolean isSharp) {
+	private void extendLine() {
+		// slope of acline segment: slope = (x2 - x1) / (y2 - y1)
+		BigDecimal slope = x2.subtract(x1, context).divide(y2.subtract(y1, context), context); // y2 and y1 will not be
+		// equal
+		Boolean isSharp = slope.compareTo(BigDecimal.valueOf(0).setScale(prec, mode)) > 0;
+
 		// angle of line to x-axis [rad]: angle = arcus tangent(slope)
 		BigDecimal angle = BigDecimal.valueOf(Math.atan(slope.doubleValue())).setScale(prec, mode);
 		if (angle.doubleValue() == 0 || ((Double) angle.doubleValue()).isNaN()) {
@@ -271,62 +275,28 @@ public class BufferCreator {
 		// longitude change [deg]
 		BigDecimal lonDeg = distanceX.divide(lonUnit, context); // lonUnit will never be zero
 
-		if (latDeg.compareTo(BigDecimal.valueOf(0).setScale(prec, mode)) < 0) {
-			// latDeg < 0
-			latDeg = latDeg.multiply(BigDecimal.valueOf(-1).setScale(prec, mode));
-		}
-
-		if (lonDeg.compareTo(BigDecimal.valueOf(0).setScale(prec, mode)) < 0) {
-			// lonDeg < 0
-			lonDeg = lonDeg.multiply(BigDecimal.valueOf(-1).setScale(prec, mode));
-		}
-
 		// POLYGONE POINTS
 		BigDecimal pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4;
 
-		if (isSharp) {
-			// pX1 = x1 - lonDeg
-			// pY1 = y1 + latDeg
-			pX1 = x1.subtract(lonDeg, context);
-			pY1 = y1.add(latDeg, context);
+		// pX1 = x1 - lonDeg
+		// pY1 = y1 - latDeg
+		pX1 = x1.subtract(lonDeg, context);
+		pY1 = y1.subtract(latDeg, context);
 
-			// pX2 = x1 + lonDeg
-			// pY2 = y1 - latDeg
-			pX2 = x1.add(lonDeg, context);
-			pY2 = y1.subtract(latDeg, context);
+		// pX1 = x1 + lonDeg
+		// pY1 = y1 + latDeg
+		pX2 = x1.add(lonDeg, context);
+		pY2 = y1.add(latDeg, context);
 
-			// pX3 = x2 + lonDeg
-			// pY3 = y2 - latDeg
-			pX3 = x2.add(lonDeg, context);
-			pY3 = y2.subtract(latDeg, context);
+		// pX1 = x2 + lonDeg
+		// pY1 = y2 + latDeg
+		pX3 = x2.add(lonDeg, context);
+		pY3 = y2.add(latDeg, context);
 
-			// pX4 = x2 - lonDeg
-			// pY4 = y2 + latDeg
-			pX4 = x2.subtract(lonDeg, context);
-			pY4 = y2.add(latDeg, context);
-			return formatPolygonStr(pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4);
-
-		} else {
-			// pX1 = x1 - lonDeg
-			// pY1 = y1 - latDeg
-			pX1 = x1.subtract(lonDeg, context);
-			pY1 = y1.subtract(latDeg, context);
-
-			// pX1 = x1 + lonDeg
-			// pY1 = y1 + latDeg
-			pX2 = x1.add(lonDeg, context);
-			pY2 = y1.add(latDeg, context);
-
-			// pX1 = x2 + lonDeg
-			// pY1 = y2 + latDeg
-			pX3 = x2.add(lonDeg, context);
-			pY3 = y2.add(latDeg, context);
-
-			// pX1 = x2 - lonDeg
-			// pY1 = y2 - latDeg
-			pX4 = x2.subtract(lonDeg, context);
-			pY4 = y2.subtract(latDeg, context);
-			return formatPolygonStr(pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4);
-		}
+		// pX1 = x2 - lonDeg
+		// pY1 = y2 - latDeg
+		pX4 = x2.subtract(lonDeg, context);
+		pY4 = y2.subtract(latDeg, context);
+		return formatPolygonStr(pX1, pY1, pX2, pY2, pX3, pY3, pX4, pY4);
 	}
 }

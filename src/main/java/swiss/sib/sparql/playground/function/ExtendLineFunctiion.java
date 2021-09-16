@@ -150,8 +150,8 @@ public class ExtendLineFunctiion implements Function {
 
 	// CASE x1 != x2 && y1 != y2
 	private String basicCase() {
-		// slope of acline segment: slope = (y2 - y1) / (x2 - x1)
-		BigDecimal slope = y2.subtract(y1, context).divide(x2.subtract(x1, context), context); // x2 and x1 will not be
+		// slope of acline segment: slope = (x2 - x1) / (y2 - xy1)
+		BigDecimal slope = x2.subtract(x1, context).divide(y2.subtract(y1, context), context); // y2 and y1 will not be
 																								// equal
 
 		// angle of line to x-axis [rad]: angle = arcus tangent(slope)

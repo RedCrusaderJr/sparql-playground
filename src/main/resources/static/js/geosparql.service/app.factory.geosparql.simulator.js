@@ -216,10 +216,10 @@
 			geomapManipulation.clearDrawnItems();
 			shapeRenderer.startBulkRender();
 
-			if(typeof dataMap.healty != 'undefined') {
+			if(typeof dataMap.healthy != 'undefined') {
 				let lineColor = { color: 'green' };
 				let polygonColor = { color: 'blue' };
-				prepareBulkRender(dataMap.healty, lineColor, polygonColor, "HEALTY");
+				prepareBulkRender(dataMap.healthy, lineColor, polygonColor, "HEALTHY");
 			}
 
 			if(typeof dataMap.affected != 'undefined') {
@@ -275,8 +275,8 @@
 				parsedElement.Name = wktMatch.groups.point;
 				parsedElement.Coordinates = {
 					Shapes: [[{
-							x: wktMatch.groups.pointX.trim(),
-							y: wktMatch.groups.pointY.trim(),
+							x: wktMatch.groups.pointY.trim(),
+							y: wktMatch.groups.pointX.trim(),
 						}]
 					]
 				};
@@ -285,11 +285,11 @@
 				parsedElement.Name = wktMatch.groups.line;
 				parsedElement.Coordinates = {
 					Shapes: [[{
-							x: wktMatch.groups.lineX1.trim(),
-							y: wktMatch.groups.lineY1.trim(),
+							x: wktMatch.groups.lineY1.trim(),
+							y: wktMatch.groups.lineX1.trim(),
 						}, {
-							x: wktMatch.groups.lineX2.trim(),
-							y: wktMatch.groups.lineY2.trim(),
+							x: wktMatch.groups.lineY2.trim(),
+							y: wktMatch.groups.lineX2.trim(),
 						}]
 					]
 				};
@@ -303,7 +303,7 @@
 				let shape = [];
 				wktMatch.groups.polygonCoordinates.split(', ').forEach(function(point) {
 					let pointParts = point.split(' ');
-					shape.push({ x: pointParts[0].trim(), y: pointParts[1].trim()});
+					shape.push({ x: pointParts[1].trim(), y: pointParts[0].trim()});
 				});
 				parsedElement.Coordinates.Shapes.push(shape);
 			}

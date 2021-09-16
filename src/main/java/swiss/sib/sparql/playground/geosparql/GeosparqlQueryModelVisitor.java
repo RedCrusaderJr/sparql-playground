@@ -21,7 +21,8 @@ public class GeosparqlQueryModelVisitor extends AbstractQueryModelVisitor<Except
 	@Override
 	public void meet(FunctionCall node) throws Exception {
 		if (!functionMapper.findFunctionByUri(node.getURI())) {
-			logger.debug("Function call will not be changed. Function uri: " + node.getURI());
+			// logger.debug("Function call will not be changed. Function uri: " +
+			// node.getURI());
 			return;
 		}
 		logger.debug("Changing a Function call. Function uri: " + node.getURI());

@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
+import swiss.sib.sparql.playground.domain.JavaScriptQuery;
 import swiss.sib.sparql.playground.domain.SparqlQuery;
 import swiss.sib.sparql.playground.exception.SparqlTutorialException;
 import swiss.sib.sparql.playground.utils.IOUtils;
@@ -32,12 +33,20 @@ import swiss.sib.sparql.playground.utils.IOUtils;
 public class QueryDictionary {
 
 	private Map<String, String> resourcesMap = null;
+	private Map<String, String> jsResourcesMap = null;
 
 	protected Map<String, String> getResourcesMap(String folder) {
 		// In case of changes, reload them (should be removed in a
 		// production environment)
 		loadResources(folder);
 		return resourcesMap;
+	}
+
+	protected Map<String, String> getJSResourcesMap(String folder) {
+		// In case of changes, reload them (should be removed in a
+		// production environment)
+		loadJSResources(folder);
+		return jsResourcesMap;
 	}
 
 	protected String getResource(String resource) {
@@ -50,11 +59,31 @@ public class QueryDictionary {
 		}
 	}
 
+	protected String getJsResource(String resource) {
+		if (jsResourcesMap.containsKey(resource)) {
+			return jsResourcesMap.get(resource);
+
+		} else {
+			throw new SparqlTutorialException(
+					"Resource " + resource + " not found on a total of " + jsResourcesMap.size() + " resources");
+		}
+	}
+
 	protected void loadResources(String folder) {
 		resourcesMap = new TreeMap<String, String>();
 		for (final File fileEntry : new File(folder).listFiles()) {
 			if (!fileEntry.isDirectory() && fileEntry.getName().endsWith(".rq")) {
 				resourcesMap.put(fileEntry.getName().replace(".rq", ""),
+						IOUtils.readFile(fileEntry.getAbsolutePath(), null));
+			}
+		}
+	}
+
+	protected void loadJSResources(String folder) {
+		jsResourcesMap = new TreeMap<String, String>();
+		for (final File fileEntry : new File(folder).listFiles()) {
+			if (!fileEntry.isDirectory() && fileEntry.getName().endsWith(".js")) {
+				jsResourcesMap.put(fileEntry.getName().replace(".js", ""),
 						IOUtils.readFile(fileEntry.getAbsolutePath(), null));
 			}
 		}
@@ -83,6 +112,26 @@ public class QueryDictionary {
 		});
 
 		return queriesList;
+	}
+
+	public synchronized List<JavaScriptQuery> getJavascriptQueries(String folder) {
+		Map<String, String> map = getJSResourcesMap(folder);
+		Collection<String> queries = map.keySet();
+		List<JavaScriptQuery> queriesList = new ArrayList<JavaScriptQuery>();
+
+		for (String queryId : queries) {
+			queriesList.add(buildJavaScriptQueryFromRawContent(queryId, map.get(queryId)));
+		}
+
+		return queriesList;
+	}
+
+	private JavaScriptQuery buildJavaScriptQueryFromRawContent(String queryId, String rawContent) {
+		JavaScriptQuery jsQuery = new JavaScriptQuery();
+		jsQuery.setTitle(queryId);
+		jsQuery.setJavaScript(rawContent);
+
+		return jsQuery;
 	}
 
 	private SparqlQuery buildSparqlQueryFromRawContent(String queryId, String rawContent) {

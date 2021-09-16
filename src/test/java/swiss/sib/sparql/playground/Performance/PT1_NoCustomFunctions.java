@@ -14,8 +14,9 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 public class PT1_NoCustomFunctions {
 	private static final Log logger = LogFactory.getLog(PT1_NoCustomFunctions.class);
 	private static final String NEW_LINE = System.lineSeparator();
-	private static final String SUBFOLDER = "noCustomFunctions";
-	private static final String MARKLOGIC_APPROACH = "Approach";
+	private static final String QUERY_FOLDER = "noCustomFunctions";
+	private static final String CMIXML_FOLDER = "1cimxml";
+	private static final String MARKLOGIC_APPROACH = "";
 
 	private MetricTracer metricTracer;
 	private PerformanceTestCommon ptc;
@@ -23,14 +24,14 @@ public class PT1_NoCustomFunctions {
 	@BeforeAll
 	public void beforeAll() {
 		this.metricTracer = new MetricTracer();
-		this.ptc = new PerformanceTestCommon(metricTracer, SUBFOLDER);
+		this.ptc = new PerformanceTestCommon(metricTracer, QUERY_FOLDER, CMIXML_FOLDER);
 		this.ptc.deleteAll();
 	}
 
 	@AfterEach
 	public void afterEach() {
 		this.ptc.afterEach();
-		this.ptc.deleteAll();
+		// this.ptc.deleteAll();
 	}
 
 	@AfterAll
@@ -40,34 +41,31 @@ public class PT1_NoCustomFunctions {
 		logger.info("Eval metric: " + NEW_LINE + this.metricTracer.traceEval() + NEW_LINE);
 		logger.info("Result counters: " + NEW_LINE + this.metricTracer.traceCounters() + NEW_LINE);
 		logger.info("MarkLogic metric: " + NEW_LINE + this.metricTracer.traceMarkLogic() + NEW_LINE);
+		// logger.info("Results metric: " + NEW_LINE + this.metricTracer.traceResults()
+		// + NEW_LINE);
 	}
 
 	@Test
 	public void test0() throws Exception {
-		try {
-			this.ptc.defaultRepositoryTest("test0");
-			afterEach();
-			this.ptc.nativeRepositoryTest("test0");
-			afterEach();
-			this.ptc.markLogicRepositoryTest("test0", MARKLOGIC_APPROACH);
+		long defaultCount = this.ptc.defaultRepositoryTest("basic");
+		afterEach();
+		long nativeCount = this.ptc.nativeRepositoryTest("basic");
+		afterEach();
+		long marklogicCount = this.ptc.markLogicRepositoryTest("basic", MARKLOGIC_APPROACH);
 
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			Assertions.assertEquals(true, false);
-		}
+		Assertions.assertEquals(defaultCount, nativeCount);
+		Assertions.assertEquals(nativeCount, marklogicCount);
 	}
 
 	@Test
 	public void test1() throws Exception {
-		try {
-			this.ptc.defaultRepositoryTest("test1");
-			afterEach();
-			this.ptc.nativeRepositoryTest("test1");
-			afterEach();
-			this.ptc.markLogicRepositoryTest("test1", MARKLOGIC_APPROACH);
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			Assertions.assertEquals(true, false);
-		}
+		long defaultCount = this.ptc.defaultRepositoryTest("drawFeeder");
+		afterEach();
+		long nativeCount = this.ptc.nativeRepositoryTest("drawFeeder");
+		afterEach();
+		long marklogicCount = this.ptc.markLogicRepositoryTest("drawFeeder", MARKLOGIC_APPROACH);
+
+		Assertions.assertEquals(defaultCount, nativeCount);
+		Assertions.assertEquals(nativeCount, marklogicCount);
 	}
 }

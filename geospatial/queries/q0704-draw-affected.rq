@@ -50,7 +50,9 @@ WHERE {
   BIND(strdt(?polygonStr, geo:wktLiteral) as ?g_wktPolygon).
   
   BIND(geof:intersection(?g_wktPolygon, ?g_wktHazardZone) as ?intersection).
+  #FILTER(str(?intersection) NOT IN ("POINT EMPTY", "false"))
   FILTER(str(?intersection) != "POINT EMPTY")
+  #FILTER(str(?intersection) != "false")
 
   FILTER(?x1 != ?x2 || ?y1 != ?y2)
   FILTER(str(?postionPointId1) < str(?postionPointId2))
