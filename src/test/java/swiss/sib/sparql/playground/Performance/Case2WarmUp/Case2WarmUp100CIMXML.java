@@ -49,10 +49,11 @@ public class Case2WarmUp100CIMXML {
 		logger.info("MarkLogic metric: " + NEW_LINE + this.metricTracer.traceMarkLogic() + NEW_LINE);
 		// logger.info("Results metric: " + NEW_LINE + this.metricTracer.traceResults()
 		// + NEW_LINE);
+		logger.info("Common metric: " + NEW_LINE + this.metricTracer.traceCommon() + NEW_LINE);
 	}
 
 	@Test
-	public void test0Basic() throws Exception {
+	public void test1Basic() throws Exception {
 		// warm up
 		for (int i = 0; i < WARM_UP_ITERATIONS; i++) {
 			this.ptc.defaultRepositoryTest("basic");

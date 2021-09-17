@@ -107,7 +107,7 @@ public class PerformanceTestCommon {
 		double loadDuration = ((double) (System.currentTimeMillis() - loadStart)) / (double) 1000;
 		this.metricTracer.appendLoad("defaultRepository [" + name + "] loading data lasted " + loadDuration + " sec");
 		this.metricTracer.appendLoad(NEW_LINE);
-		metricTracer.appendCommon("Name: " + name + "Repository contains " + countTriplets() + " triplets" + NEW_LINE);
+		metricTracer.appendCommon("Default Repository contains " + countTriplets() + " triplets" + NEW_LINE);
 
 		// evaluate query
 		String sparqlQuery = getSparqlTestQueryString(name);
@@ -146,7 +146,7 @@ public class PerformanceTestCommon {
 					.appendLoad("nativeRepository [" + name + "] loading data lasted " + loadDuration + " sec");
 			this.metricTracer.appendLoad(NEW_LINE);
 		}
-		metricTracer.appendCommon("Name: " + name + "Repository contains " + countTriplets() + " triplets" + NEW_LINE);
+		metricTracer.appendCommon("Native Repository contains " + countTriplets() + " triplets" + NEW_LINE);
 
 		// evaluate query
 		String sparqlQuery = getSparqlTestQueryString(name);
@@ -198,7 +198,7 @@ public class PerformanceTestCommon {
 					.appendLoad("markLogicRepository [" + name + "] Loading data lasted " + loadDuration + " sec");
 			this.metricTracer.appendLoad(NEW_LINE);
 		}
-		metricTracer.appendCommon("Name: " + name + "Repository contains " + countTriplets() + " triplets" + NEW_LINE);
+		metricTracer.appendCommon("Marklogic Repository contains " + countTriplets() + " triplets" + NEW_LINE);
 
 		// evaluate query
 		String sparqlQueryStr = getSparqlTestQueryString(name);
@@ -284,12 +284,14 @@ public class PerformanceTestCommon {
 	}
 
 	boolean deleteDirectory(File directoryToBeDeleted) {
+		// logger.debug("Entering deleteDirectory for: " + directoryToBeDeleted);
 		File[] allContents = directoryToBeDeleted.listFiles();
 		if (allContents != null) {
 			for (File file : allContents) {
 				deleteDirectory(file);
 			}
 		}
+		// logger.debug("Exiting deleteDirectory for: " + directoryToBeDeleted);
 		return directoryToBeDeleted.delete();
 	}
 

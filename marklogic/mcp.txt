@@ -1,0 +1,6 @@
+LINUX
+Desktop/mlcp/bin/mlcp.sh import -mode local -host localhost -port 8070 -username admin -password admin -input_file_path Desktop/mls-fundamentals/data/star-wars -output_uri_replace "home/cent/Desktop/mls-fundamentals/data/star-wars/characters,'character',home/cent/Desktop/mls-fundamentals/data/star-wars/images,'image'"
+ 
+WINDOWS
+E:/FAX/MasterTeza/MarkLogic/mlcp-10.0.6.1/bin/mlcp.bat import -mode local -host localhost -port 8070 -username admin -password admin -input_file_path E:/FAX/MasterTeza/MarkLogic/mls-fundamentals/data/star-wars -output_uri_replace "E:/FAX/MasterTeza/MarkLogic/mls-fundamentals/data/star-wars/characters,'character',E:/FAX/MasterTeza/MarkLogic/mls-fundamentals/data/star-wars/images,'image'"
+E:/FAX/MasterTeza/MarkLogic/mlcp-10.0.6.1/bin/mlcp.bat import -mode local -host localhost -port 8070 -username admin -password admin -input_file_path E:/FAX/MasterTeza/MarkLogic/mls-fundamentals/data/triples/star-wars.nt -input_file_type RDF -output_uri_prefix /triplestore/
