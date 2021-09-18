@@ -13,7 +13,13 @@ WHERE {
   		#conducting equipment of that terminal
     	cim:Terminal.ConductingEquipment ?condEqId.
   
-  	#locations with coordinates
+	#locations
+	?condEqId cim:PowerSystemResource.Location ?locationId.
+	?postionPointId1 cim:PositionPoint.Location ?locationId.
+	?postionPointId2 cim:PositionPoint.Location ?locationId.
+	FILTER(str(?postionPointId1) < str(?postionPointId2))
+
+  	#coordinates
   	?condEqId cim:PowerSystemResource.Location ?locationId.  
   	?postionPointId1 cim:PositionPoint.Location ?locationId;
   		cim:PositionPoint.xPosition ?x1;

@@ -30,5 +30,6 @@ WHERE {
   	BIND(concat("LINESTRING (", str(?x1), " ", str(?y1), ", ", str(?x2), " ", str(?y2), ")") as ?lineStr).
   	BIND(strdt(?lineStr, geo:wktLiteral) as ?g_wktLine).
   	
+	FILTER(str(?postionPointId1) < str(?postionPointId2))
     FILTER(?x1 != ?x2 || ?y1 != ?y2).
 }

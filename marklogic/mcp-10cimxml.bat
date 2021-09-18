@@ -16,5 +16,3 @@ E:/FAX/MasterTeza/MarkLogic/mlcp-10.0.6.1/bin/mlcp.bat import -mode local -host 
 E:/FAX/MasterTeza/MarkLogic/mlcp-10.0.6.1/bin/mlcp.bat import -mode local -host localhost -port 8111 -username admin -password admin -input_file_path E:/FAX/MasterTeza/RedCrusaderJr-sparql-playground/test_folder/rdf-data/10cimxml/Feeder_IEEE37v02_(7).rdf -input_file_type RDF -output_uri_prefix /triplestore/
 E:/FAX/MasterTeza/MarkLogic/mlcp-10.0.6.1/bin/mlcp.bat import -mode local -host localhost -port 8111 -username admin -password admin -input_file_path E:/FAX/MasterTeza/RedCrusaderJr-sparql-playground/test_folder/rdf-data/10cimxml/Feeder_IEEE37v02_(8).rdf -input_file_type RDF -output_uri_prefix /triplestore/
 E:/FAX/MasterTeza/MarkLogic/mlcp-10.0.6.1/bin/mlcp.bat import -mode local -host localhost -port 8111 -username admin -password admin -input_file_path E:/FAX/MasterTeza/RedCrusaderJr-sparql-playground/test_folder/rdf-data/10cimxml/Feeder_IEEE37v02_(9).rdf -input_file_type RDF -output_uri_prefix /triplestore/
-
-cmd /k

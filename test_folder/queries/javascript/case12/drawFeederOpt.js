@@ -13,6 +13,12 @@ WHERE {
   		#conducting equipment of that terminal
     	cim:Terminal.ConductingEquipment ?condEqId.
   
+	#locations
+	?condEqId cim:PowerSystemResource.Location ?locationId.
+	?postionPointId1 cim:PositionPoint.Location ?locationId.
+	?postionPointId2 cim:PositionPoint.Location ?locationId.
+	FILTER(str(?postionPointId1) < str(?postionPointId2))
+
   	#locations with coordinates
   	?condEqId cim:PowerSystemResource.Location ?locationId.  
   	?postionPointId1 cim:PositionPoint.Location ?locationId;
@@ -21,7 +27,8 @@ WHERE {
       
   	?postionPointId2 cim:PositionPoint.Location ?locationId;
   		cim:PositionPoint.xPosition ?x2;
-  		cim:PositionPoint.yPosition ?y2.	
+  		cim:PositionPoint.yPosition ?y2.
+	FILTER(str(?postionPointId1) < str(?postionPointId2))	
   	FILTER(?x1 != ?x2 || ?y1 != ?y2).
   
   	#construct WKTs (draw geometry)
