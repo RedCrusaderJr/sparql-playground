@@ -1,5 +1,7 @@
 package swiss.sib.sparql.playground.Performance;
 
+import java.io.IOException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.AfterAll;
@@ -18,40 +20,37 @@ public class PT1_NoCustomFunctions {
 	private static final String CMIXML_FOLDER = "1cimxml";
 	private static final String MARKLOGIC_APPROACH = "";
 
+	private String currentTestName = "";
 	private MetricTracer metricTracer;
 	private PerformanceTestCommon ptc;
 
 	@BeforeAll
-	public void beforeAll() {
+	public void beforeAll() throws Exception {
 		this.metricTracer = new MetricTracer();
 		this.ptc = new PerformanceTestCommon(metricTracer, QUERY_FOLDER, CMIXML_FOLDER);
 		this.ptc.deleteAll();
 	}
 
 	@AfterEach
-	public void afterEach() {
+	public void afterEach() throws IOException {
 		this.ptc.afterEach();
-		// this.ptc.deleteAll();
+		this.ptc.deleteAll();
+		this.ptc.trace(currentTestName);
 	}
 
-	@AfterAll
-	public void afterAll() {
-		logger.info("Init metric: " + NEW_LINE + this.metricTracer.traceInit() + NEW_LINE);
-		logger.info("Load metric: " + NEW_LINE + this.metricTracer.traceLoad() + NEW_LINE);
-		logger.info("Eval metric: " + NEW_LINE + this.metricTracer.traceEval() + NEW_LINE);
-		logger.info("Result counters: " + NEW_LINE + this.metricTracer.traceCounters() + NEW_LINE);
-		logger.info("MarkLogic metric: " + NEW_LINE + this.metricTracer.traceMarkLogic() + NEW_LINE);
-		// logger.info("Results metric: " + NEW_LINE + this.metricTracer.traceResults()
-		// + NEW_LINE);
+	@Test
+	public void testExcel() throws IOException {
+		this.ptc.excel();
 	}
 
 	@Test
 	public void test0() throws Exception {
-		long defaultCount = this.ptc.defaultRepositoryTest("basic");
+		this.currentTestName = "PT1_NoCustomFunctions-test0";
+		long defaultCount = this.ptc.defaultRepositoryTest(ExcelTracer.BASIC, "");
 		afterEach();
-		long nativeCount = this.ptc.nativeRepositoryTest("basic");
+		long nativeCount = this.ptc.nativeRepositoryTest(ExcelTracer.BASIC, "");
 		afterEach();
-		long marklogicCount = this.ptc.markLogicRepositoryTest("basic", MARKLOGIC_APPROACH);
+		long marklogicCount = this.ptc.markLogicRepositoryTest(ExcelTracer.BASIC, MARKLOGIC_APPROACH, "");
 
 		Assertions.assertEquals(defaultCount, nativeCount);
 		Assertions.assertEquals(nativeCount, marklogicCount);
@@ -59,11 +58,12 @@ public class PT1_NoCustomFunctions {
 
 	@Test
 	public void test1() throws Exception {
-		long defaultCount = this.ptc.defaultRepositoryTest("drawFeeder");
+		this.currentTestName = "PT1_NoCustomFunctions-test1";
+		long defaultCount = this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_FEEDER, "");
 		afterEach();
-		long nativeCount = this.ptc.nativeRepositoryTest("drawFeeder");
+		long nativeCount = this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_FEEDER, "");
 		afterEach();
-		long marklogicCount = this.ptc.markLogicRepositoryTest("drawFeeder", MARKLOGIC_APPROACH);
+		long marklogicCount = this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_FEEDER, MARKLOGIC_APPROACH, "");
 
 		Assertions.assertEquals(defaultCount, nativeCount);
 		Assertions.assertEquals(nativeCount, marklogicCount);

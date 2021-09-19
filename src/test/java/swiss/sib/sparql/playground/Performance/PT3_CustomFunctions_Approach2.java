@@ -1,5 +1,7 @@
 package swiss.sib.sparql.playground.Performance;
 
+import java.io.IOException;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.AfterAll;
@@ -18,39 +20,31 @@ public class PT3_CustomFunctions_Approach2 {
 	private static final String CMIXML_FOLDER = "1cimxml";
 	private static final String MARKLOGIC_APPROACH = "approach2";
 
+	private String currentTestName = "";
 	private MetricTracer metricTracer;
 	private PerformanceTestCommon ptc;
 
 	@BeforeAll
-	public void beforeAll() {
+	public void beforeAll() throws Exception {
 		this.metricTracer = new MetricTracer();
 		this.ptc = new PerformanceTestCommon(metricTracer, QUERY_FOLDER, CMIXML_FOLDER);
 	}
 
 	@AfterEach
-	public void afterEach() {
+	public void afterEach() throws IOException {
 		this.ptc.afterEach();
-		// this.ptc.deleteAll();
-	}
-
-	@AfterAll
-	public void afterAll() {
-		logger.info("Init metric: " + NEW_LINE + this.metricTracer.traceInit() + NEW_LINE);
-		logger.info("Load metric: " + NEW_LINE + this.metricTracer.traceLoad() + NEW_LINE);
-		logger.info("Eval metric: " + NEW_LINE + this.metricTracer.traceEval() + NEW_LINE);
-		logger.info("Result counters: " + NEW_LINE + this.metricTracer.traceCounters() + NEW_LINE);
-		logger.info("MarkLogic metric: " + NEW_LINE + this.metricTracer.traceMarkLogic() + NEW_LINE);
-		// logger.info("Results metric: " + NEW_LINE + this.metricTracer.traceResults()
-		// + NEW_LINE);
+		this.ptc.deleteAll();
+		this.ptc.trace(currentTestName);
 	}
 
 	@Test
 	public void test2() throws Exception {
-		long defaultCount = this.ptc.defaultRepositoryTest("drawBufferOpt");
+		this.currentTestName = "PT3_CustomFunctions_Approach2-test2";
+		long defaultCount = this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_BUFFER_OPT, "");
 		afterEach();
-		long nativeCount = this.ptc.nativeRepositoryTest("drawBufferOpt");
+		long nativeCount = this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_BUFFER_OPT, "");
 		afterEach();
-		long marklogicCount = this.ptc.markLogicRepositoryTest("drawBufferOpt", MARKLOGIC_APPROACH);
+		long marklogicCount = this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_BUFFER_OPT, MARKLOGIC_APPROACH, "");
 
 		Assertions.assertEquals(defaultCount, nativeCount);
 		// Assertions.assertEquals(nativeCount, marklogicCount);
@@ -58,11 +52,12 @@ public class PT3_CustomFunctions_Approach2 {
 
 	@Test
 	public void test3() throws Exception {
-		long defaultCount = this.ptc.defaultRepositoryTest("drawHealthyOpt");
+		this.currentTestName = "PT3_CustomFunctions_Approach2-test3";
+		long defaultCount = this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_HEALTHY_OPT, "");
 		afterEach();
-		long nativeCount = this.ptc.nativeRepositoryTest("drawHealthyOpt");
+		long nativeCount = this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_HEALTHY_OPT, "");
 		afterEach();
-		long marklogicCount = this.ptc.markLogicRepositoryTest("drawHealthyOpt", MARKLOGIC_APPROACH);
+		long marklogicCount = this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_HEALTHY_OPT, MARKLOGIC_APPROACH, "");
 
 		Assertions.assertEquals(defaultCount, nativeCount);
 		// Assertions.assertEquals(nativeCount, marklogicCount);
