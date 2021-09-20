@@ -2,25 +2,17 @@ package swiss.sib.sparql.playground.Performance.Case3NoWarmUp;
 
 import java.io.IOException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 import swiss.sib.sparql.playground.Performance.MetricTracer;
 import swiss.sib.sparql.playground.Performance.PerformanceTestCommon;
 
 public class Case3NoWarmUp10CIMXML {
-	private static final Log logger = LogFactory.getLog(Case3NoWarmUp10CIMXML.class);
-	private static final String NEW_LINE = System.lineSeparator();
 	private static final String QUERY_FOLDER = "case34";
 	private static final String CMIXML_FOLDER = "10cimxml";
-	private static final Long WARM_UP_ITERATIONS = (long) 10;
+	private static final String CASE_NAME = "CASE_3";
+	// private static final Long WARM_UP_ITERATIONS = (long) 10;
 
 	private String currentTestName = "";
 	private MetricTracer metricTracer;
@@ -30,7 +22,7 @@ public class Case3NoWarmUp10CIMXML {
 	public void beforeAll() throws Exception {
 		this.metricTracer = new MetricTracer();
 		this.metricTracer.setTraceEnabled(false);
-		this.ptc = new PerformanceTestCommon(metricTracer, QUERY_FOLDER, CMIXML_FOLDER);
+		this.ptc = new PerformanceTestCommon(metricTracer, QUERY_FOLDER, CMIXML_FOLDER, CASE_NAME);
 		this.ptc.deleteAll();
 		this.ptc.startExcelTracer(CMIXML_FOLDER);
 	}

@@ -27,7 +27,7 @@ public class PT1_NoCustomFunctions {
 	@BeforeAll
 	public void beforeAll() throws Exception {
 		this.metricTracer = new MetricTracer();
-		this.ptc = new PerformanceTestCommon(metricTracer, QUERY_FOLDER, CMIXML_FOLDER);
+		this.ptc = new PerformanceTestCommon(metricTracer, QUERY_FOLDER, CMIXML_FOLDER, "");
 		this.ptc.deleteAll();
 	}
 

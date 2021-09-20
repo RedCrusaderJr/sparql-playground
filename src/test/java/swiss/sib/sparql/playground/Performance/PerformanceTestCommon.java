@@ -70,15 +70,16 @@ public class PerformanceTestCommon {
 	private Map<String, Map<String, SparqlQuery>> sparqlQueryMap;
 	private Map<String, Map<String, JavaScriptQuery>> javascriptQueryMap;
 	private MetricTracer metricTracer;
-	private ExcelTracer excelTracer = new ExcelTracer();
+	private ExcelTracer excelTracer;
 	private SparqlEvaluator sparqlEvaluator;
 
-	public PerformanceTestCommon(MetricTracer metricTracer, String queryFolder, String cimxmlFolder) throws Exception {
+	public PerformanceTestCommon(MetricTracer metricTracer, String queryFolder, String cimxmlFolder,
+			String excelFileName) throws Exception {
 		this.cimxmlFolder = cimxmlFolder;
 		this.queryFolder = queryFolder;
 		this.metricTracer = metricTracer;
 		this.excelTracer = new ExcelTracer();
-		this.excelTracer.startExcelFile("results");
+		this.excelTracer.startExcelFile(excelFileName);
 
 		this.sparqlEvaluator = SparqlEvaluator.getInstance();
 		this.queryDictionary = new QueryDictionary();
@@ -112,8 +113,12 @@ public class PerformanceTestCommon {
 		this.excelTracer.resetRowTracker();
 	}
 
-	public void saveExcel(String currentTestName) throws IOException {
+	public void saveExcel() throws IOException {
 		this.excelTracer.saveExcelFile();
+	}
+
+	public void nextRow() throws IOException {
+		this.excelTracer.nextRow();
 	}
 
 	public void trace(String currentTestName) throws IOException {
@@ -266,12 +271,13 @@ public class PerformanceTestCommon {
 			this.metricTracer.appendEval(NEW_LINE);
 			this.excelTracer.traceToTable(tableName, testName, evalDuration);
 
-			long counter = countTQRBindingSets((TupleQueryResult) result);
-			this.metricTracer.appendCounters(
-					"markLogicRepository [" + testName + "] Number of binding sets in result: " + counter);
-			this.metricTracer.appendCounters(NEW_LINE);
+			// long counter = countTQRBindingSets((TupleQueryResult) result);
+			// this.metricTracer.appendCounters(
+			// "markLogicRepository [" + testName + "] Number of binding sets in result: " +
+			// counter);
+			// this.metricTracer.appendCounters(NEW_LINE);
 
-			return counter;
+			return 0;
 
 		} catch (QueryEvaluationException e) {
 			if (!e.getMessage().contains("Server Message: XDMP-UNDFUN")) {
@@ -285,12 +291,13 @@ public class PerformanceTestCommon {
 			this.metricTracer.appendEval(NEW_LINE);
 			this.excelTracer.traceToTable(tableName, testName, evalDuration);
 
-			long counter = countTQRBindingSets((TupleQueryResult) result);
-			this.metricTracer.appendCounters(
-					"markLogicRepository [" + testName + "] Number of binding sets in result: " + counter);
-			this.metricTracer.appendCounters(NEW_LINE);
+			// long counter = countTQRBindingSets((TupleQueryResult) result);
+			// this.metricTracer.appendCounters(
+			// "markLogicRepository [" + testName + "] Number of binding sets in result: " +
+			// counter);
+			// this.metricTracer.appendCounters(NEW_LINE);
 
-			return counter;
+			return 0;
 		}
 	}
 
@@ -327,12 +334,13 @@ public class PerformanceTestCommon {
 		this.metricTracer.appendEval(NEW_LINE);
 		this.excelTracer.traceToTable(tableName, testName, evalDuration);
 
-		long counter = countTQRBindingSets((TupleQueryResult) result);
-		this.metricTracer
-				.appendCounters("markLogicRepository [" + testName + "] Number of binding sets in result: " + counter);
-		this.metricTracer.appendCounters(NEW_LINE);
+		// long counter = countTQRBindingSets((TupleQueryResult) result);
+		// this.metricTracer
+		// .appendCounters("markLogicRepository [" + testName + "] Number of binding
+		// sets in result: " + 0);
+		// this.metricTracer.appendCounters(NEW_LINE);
 
-		return counter;
+		return 0;
 	}
 
 	private void deleteAllNative() {
@@ -382,7 +390,7 @@ public class PerformanceTestCommon {
 
 	private Object evaluateOnMarklogicSemanticApi(String queryStr) throws Exception {
 		long start = System.currentTimeMillis();
-		Object result = this.sparqlEvaluator.evaluateQuery(queryStr);
+		Object result = this.sparqlEvaluator.evaluateQuery(queryStr, true);
 		long duration = System.currentTimeMillis() - start;
 		this.metricTracer
 				.appendMarkLogic("evaluateOnMarklogicSemanticApi -> evaluating query lasted " + duration + " ms");
@@ -402,14 +410,14 @@ public class PerformanceTestCommon {
 				"evaluateJavascriptQuery -> evaluating query without handle lasted " + durationWithoutHandle + " ms");
 		this.metricTracer.appendMarkLogic(NEW_LINE);
 
-		Object result = handleEvalResult(iterator);
+		// Object result = handleEvalResult(iterator);
 
 		long durationWithHandle = System.currentTimeMillis() - start;
 		this.metricTracer.appendMarkLogic(
 				"evaluateJavascriptQuery -> evaluating query with handle lasted " + durationWithHandle + " ms");
 		this.metricTracer.appendMarkLogic(NEW_LINE);
 
-		return result;
+		return iterator;
 	}
 
 	// #region JAVA API helpers

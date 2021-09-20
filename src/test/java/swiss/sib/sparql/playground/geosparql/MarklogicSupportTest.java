@@ -180,7 +180,7 @@ public class MarklogicSupportTest {
 			String jsQuery = marklogicTestQueries.get(functionUri);
 			logger.debug(String.format("JS query:%s%s", System.lineSeparator(), jsQuery));
 
-			TupleQueryResult result = restApi.evaluateJavaScript(jsQuery);
+			TupleQueryResult result = restApi.evaluateJavaScript(jsQuery, false);
 			printoutTupleQueryResult(result);
 		}
 		logger.debug(String.format("END of Test: evaluateJsGeospatialMarklogicRestApiTest" + System.lineSeparator()));
@@ -195,7 +195,7 @@ public class MarklogicSupportTest {
 			String jsQuery = marklogicTestQueries.get(functionUri);
 			logger.debug(String.format("JS query:%s%s", System.lineSeparator(), jsQuery));
 
-			Object result = javaApi.evaluateJavaScript(jsQuery);
+			Object result = javaApi.evaluateJavaScript(jsQuery, false);
 			Assertions.assertEquals(true, result instanceof TupleQueryResult);
 			printoutTupleQueryResult((TupleQueryResult) result);
 		}
@@ -212,7 +212,7 @@ public class MarklogicSupportTest {
 			String jsQuery = marklogicTestQueries.get(functionUri);
 			logger.debug(String.format("JS query:%s%s", System.lineSeparator(), jsQuery));
 
-			Object result = nodeJsApi.evaluateJavaScript(jsQuery);
+			Object result = nodeJsApi.evaluateJavaScript(jsQuery, false);
 			Assertions.assertEquals(true, result instanceof TupleQueryResult);
 			printoutTupleQueryResult((TupleQueryResult) result);
 		}

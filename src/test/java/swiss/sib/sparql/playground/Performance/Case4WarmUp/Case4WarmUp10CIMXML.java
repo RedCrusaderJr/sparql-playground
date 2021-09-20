@@ -20,6 +20,7 @@ public class Case4WarmUp10CIMXML {
 	private static final String NEW_LINE = System.lineSeparator();
 	private static final String QUERY_FOLDER = "case34";
 	private static final String CMIXML_FOLDER = "10cimxml";
+	private static final String CASE_NAME = "CASE_4";
 	private static final Long WARM_UP_ITERATIONS = (long) 10;
 
 	private String currentTestName = "";
@@ -30,7 +31,7 @@ public class Case4WarmUp10CIMXML {
 	public void beforeAll() throws Exception {
 		this.metricTracer = new MetricTracer();
 		this.metricTracer.setTraceEnabled(false);
-		this.ptc = new PerformanceTestCommon(metricTracer, QUERY_FOLDER, CMIXML_FOLDER);
+		this.ptc = new PerformanceTestCommon(metricTracer, QUERY_FOLDER, CMIXML_FOLDER, CASE_NAME);
 		this.ptc.deleteAll();
 		this.ptc.startExcelTracer(CMIXML_FOLDER);
 	}

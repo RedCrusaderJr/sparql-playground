@@ -24,12 +24,17 @@ public class JavaClientEvaluator implements JavaScriptQueryEvaluator {
 	private static final Log logger = LogFactory.getLog(JavaClientEvaluator.class);
 	private static final String NEW_LINE = System.lineSeparator();
 
-	public Object evaluateJavaScript(String jsQuery) throws Exception {
+	public Object evaluateJavaScript(String jsQuery, Boolean returnRaw) throws Exception {
 		DatabaseClient client = createDbClient();
 		EvalResultIterator iterator = client.newServerEval().javascript(jsQuery).eval();
 		client.release();
 
-		return handleEvalResult(iterator);
+		Object result = iterator;
+		if (!returnRaw) {
+			result = handleEvalResult(iterator);
+		}
+
+		return result;
 	}
 
 	// #region JAVA API helpers

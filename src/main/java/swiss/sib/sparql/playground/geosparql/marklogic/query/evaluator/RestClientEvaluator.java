@@ -30,7 +30,7 @@ public class RestClientEvaluator implements JavaScriptQueryEvaluator {
 	private final Pattern nameSimpleValuePattern = Pattern.compile("\"(?<bindingName>.*)\":(?<value>.*)");
 
 	// utvrditi precizno zasto ne radi...
-	public TupleQueryResult evaluateJavaScript(String jsQuery) throws IOException {
+	public TupleQueryResult evaluateJavaScript(String jsQuery, Boolean reurnRaw) throws IOException {
 		try {
 			String boundaryStr = "BOUNDARY";
 			String params = String.format("javascript=%s", jsQuery);

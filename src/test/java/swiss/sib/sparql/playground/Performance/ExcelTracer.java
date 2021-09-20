@@ -31,18 +31,19 @@ public class ExcelTracer {
 	public static final String DRAW_HEALTHY = "drawHealthy";
 	public static final String DRAW_HEALTHY_OPT = "drawHealthyOpt";
 	public static final String DRAW_AFFECTED = "drawAffected";
-	public static final String DRAW_AFFECTED_OPT = "drawAffected";
+	public static final String DRAW_AFFECTED_OPT = "drawAffectedOpt";
 
 	private Boolean started = false;
 	private File excelFilePath;
 	private ExcelFile excelFile;
 	private String sheetName;
 
-	private Integer rowTracker = 0;
+	private Integer rowTracker;
 
 	public ExcelTracer() {
 		// If using Profssional version, put your serial key below.
 		SpreadsheetInfo.setLicense("FREE-LIMITED-KEY");
+		rowTracker = 0;
 	}
 
 	public void startExcelFile(String fileName) throws Exception {
@@ -68,29 +69,43 @@ public class ExcelTracer {
 		this.rowTracker = 0;
 	}
 
+	public void nextRow() {
+		this.rowTracker++;
+	}
+
 	public void traceToTable(String tableName, String columnName, long data) throws Exception {
+		if (!started) {
+			return;
+		}
+
 		if (this.excelFile == null) {
 			throw new Exception("this.excelFile == null");
 		}
 
-		ExcelWorksheet sheet = excelFile.getWorksheet(this.sheetName);
-		if (this.sheetName == null) {
-			throw new Exception("sheet == null");
+		try {
+			ExcelWorksheet sheet = excelFile.getWorksheet(this.sheetName);
+			if (this.sheetName == null) {
+				throw new Exception("sheet == null");
+			}
+
+			Table table = sheet.getTable(tableName + "_" + sheetName);
+			if (table == null) {
+				throw new Exception("table == null");
+			}
+
+			TableColumn column = table.getColumn(columnName);
+			if (column == null) {
+				throw new Exception("clolumn == null");
+			}
+
+			CellRange range = column.getDataRange();
+			ExcelCell cell = range.get(rowTracker);
+			cell.setValue(data);
+
+		} catch (Exception e) {
+			throw e;
 		}
 
-		Table table = sheet.getTable(tableName);
-		if (table == null) {
-			throw new Exception("table == null");
-		}
-
-		TableColumn column = table.getColumn(columnName);
-		if (column == null) {
-			throw new Exception("clolumn == null");
-		}
-
-		CellRange range = column.getDataRange();
-		ExcelCell cell = range.get(rowTracker);
-		cell.setValue(data);
 	}
 
 	public void saveExcelFile() throws IOException {

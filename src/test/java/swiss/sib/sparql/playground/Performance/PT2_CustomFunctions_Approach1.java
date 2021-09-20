@@ -25,7 +25,7 @@ public class PT2_CustomFunctions_Approach1 {
 	@BeforeAll
 	public void beforeAll() throws Exception {
 		this.metricTracer = new MetricTracer();
-		this.ptc = new PerformanceTestCommon(metricTracer, QUERY_FOLDER, CMIXML_FOLDER);
+		this.ptc = new PerformanceTestCommon(metricTracer, QUERY_FOLDER, CMIXML_FOLDER, "");
 	}
 
 	@AfterEach

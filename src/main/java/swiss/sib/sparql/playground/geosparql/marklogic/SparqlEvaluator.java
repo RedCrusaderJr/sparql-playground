@@ -56,6 +56,10 @@ public class SparqlEvaluator {
 	private JavaScriptQueryEvaluator queryEvaluator;
 
 	public Object evaluateQuery(String sparqlQuery) throws Exception {
+		return evaluateQuery(sparqlQuery, false);
+	}
+
+	public Object evaluateQuery(String sparqlQuery, Boolean reurnRaw) throws Exception {
 		try {
 			String alternatedSparqlQuery = alternateSparqlQuery(sparqlQuery);
 
@@ -64,7 +68,7 @@ public class SparqlEvaluator {
 			String params = createXdmpApplyParams(abbreviations);
 
 			String jsQuery = createJavaScriptQuery(alternatedSparqlQuery, importFunctionsStr, params);
-			return this.queryEvaluator.evaluateJavaScript(jsQuery);
+			return this.queryEvaluator.evaluateJavaScript(jsQuery, reurnRaw);
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
