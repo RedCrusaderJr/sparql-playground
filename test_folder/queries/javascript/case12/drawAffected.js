@@ -20,7 +20,6 @@ WHERE {
     ?condEqId cim:PowerSystemResource.Location ?locationId.
     ?postionPointId1 rdf:type cim:PositionPoint.
     ?postionPointId2 rdf:type cim:PositionPoint.
-    FILTER(str(?postionPointId1) < str(?postionPointId2))
 
     ?postionPointId1 cim:PositionPoint.Location ?locationId;
         cim:PositionPoint.xPosition ?x1;
@@ -28,7 +27,6 @@ WHERE {
     ?postionPointId2 cim:PositionPoint.Location ?locationId;
         cim:PositionPoint.xPosition ?x2;
         cim:PositionPoint.yPosition ?y2.
-    FILTER(?x1 != ?x2 || ?y1 != ?y2)
 
     #hazard zones
     ?hazardType rdfs:subClassOf+ custom:Hazard. 

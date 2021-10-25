@@ -18,7 +18,6 @@ WHERE {
   	?postionPointId1 cim:PositionPoint.Location ?locationId;
   		cim:PositionPoint.xPosition ?x1;
   		cim:PositionPoint.yPosition ?y1.
-      
   	?postionPointId2 cim:PositionPoint.Location ?locationId;
   		cim:PositionPoint.xPosition ?x2;
   		cim:PositionPoint.yPosition ?y2.	
@@ -27,7 +26,7 @@ WHERE {
   	BIND(concat("LINESTRING (", str(?x1), " ", str(?y1), ", ", str(?x2), " ", str(?y2), ")") as ?lineStr).
   	BIND(strdt(?lineStr, geo:wktLiteral) as ?g_wktLine).
   	
-	FILTER(str(?postionPointId1) < str(?postionPointId2))
+	FILTER(str(?postionPointId1) < str(?postionPointId2)).
     FILTER(?x1 != ?x2 || ?y1 != ?y2).
 }
 `;

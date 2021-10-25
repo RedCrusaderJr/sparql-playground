@@ -11,7 +11,9 @@ PREFIX custom: <http://www.custom.org/>
 
 SELECT DISTINCT ?g_wktPolygon ?g_wktLine
 WHERE {
+    #connectivity nodes with a terminal
     ?tmId cim:Terminal.ConnectivityNode ?cNodeId;
+        #conducting equipment of that terminal
         cim:Terminal.ConductingEquipment ?condEqId.							   
 
     ?condEqId cim:PowerSystemResource.Location ?locationId.
@@ -38,7 +40,6 @@ WHERE {
     BIND(strdt(?polygonStr, geo:wktLiteral) as ?g_wktPolygon).
     
     BIND(xdmp:apply(?intersectionFunction, ?g_wktPolygon, ?g_wktHazardZone) as ?intersection).
-
     FILTER(str(?intersection) != "false")
 }
 `;

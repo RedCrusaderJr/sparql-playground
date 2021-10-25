@@ -19,7 +19,7 @@ public class Case2WarmUp10CIMXML {
 	private static final String QUERY_FOLDER = "case12";
 	private static final String CMIXML_FOLDER = "10cimxml";
 	private static final String CASE_NAME = "CASE_2";
-	private static final Long WARM_UP_ITERATIONS = (long) 10;
+	private static final int WARM_UP_ITERATIONS = 10;
 
 	private String currentTestName = "";
 	private MetricTracer metricTracer;
@@ -51,298 +51,160 @@ public class Case2WarmUp10CIMXML {
 	@RepeatedTest(10)
 	public void test1Basic() throws Exception {
 		this.currentTestName = "Case2WarmUp10CIMXML-test1Basic";
-		// warm up
-		for (int i = 0; i < WARM_UP_ITERATIONS; i++) {
-			this.ptc.defaultRepositoryTest(ExcelTracer.BASIC, ExcelTracer.DEFAULT);
-			this.ptc.afterEach();
-			this.ptc.nativeRepositoryTest(ExcelTracer.BASIC, ExcelTracer.NATIVE);
-			this.ptc.afterEach();
-			this.ptc.markLogicRepositoryTest(ExcelTracer.BASIC, PerformanceTestCommon.MARKLOGIC_APPROACH_1,
-					ExcelTracer.MARKLOGIC_RDF4J);
-			this.ptc.afterEach();
-			this.ptc.markLogicRepositoryTest(ExcelTracer.BASIC, PerformanceTestCommon.MARKLOGIC_APPROACH_2,
-					ExcelTracer.APPROACH_2);
-			this.ptc.afterEach();
-		}
-		this.metricTracer.setTraceEnabled(true);
 
-		this.ptc.defaultRepositoryTest(ExcelTracer.BASIC, ExcelTracer.DEFAULT);
+		this.ptc.defaultRepositoryTest(ExcelTracer.BASIC, ExcelTracer.DEFAULT, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
-		this.ptc.nativeRepositoryTest(ExcelTracer.BASIC, ExcelTracer.NATIVE);
+		this.ptc.nativeRepositoryTest(ExcelTracer.BASIC, ExcelTracer.NATIVE, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 		this.ptc.markLogicRepositoryTest(ExcelTracer.BASIC, PerformanceTestCommon.MARKLOGIC_APPROACH_1,
-				ExcelTracer.MARKLOGIC_RDF4J);
+				ExcelTracer.MARKLOGIC_RDF4J, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 		this.ptc.markLogicRepositoryTest(ExcelTracer.BASIC, PerformanceTestCommon.MARKLOGIC_APPROACH_2,
-				ExcelTracer.APPROACH_2);
+				ExcelTracer.APPROACH_2, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 	}
 
 	@RepeatedTest(10)
 	public void test2DrawFeeder() throws Exception {
 		this.currentTestName = "Case2WarmUp10CIMXML-test2DrawFeeder";
-		// warm up
-		for (int i = 0; i < WARM_UP_ITERATIONS; i++) {
-			this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_FEEDER, ExcelTracer.DEFAULT);
-			this.ptc.afterEach();
-			this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_FEEDER, ExcelTracer.NATIVE);
-			this.ptc.afterEach();
-			this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_FEEDER, PerformanceTestCommon.MARKLOGIC_APPROACH_1,
-					ExcelTracer.MARKLOGIC_RDF4J);
-			this.ptc.afterEach();
-			this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_FEEDER, PerformanceTestCommon.MARKLOGIC_APPROACH_2,
-					ExcelTracer.APPROACH_2);
-			this.ptc.afterEach();
-		}
-		this.metricTracer.setTraceEnabled(true);
 
-		this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_FEEDER, ExcelTracer.DEFAULT);
+		this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_FEEDER, ExcelTracer.DEFAULT, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
-		this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_FEEDER, ExcelTracer.NATIVE);
+		this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_FEEDER, ExcelTracer.NATIVE, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 		this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_FEEDER, PerformanceTestCommon.MARKLOGIC_APPROACH_1,
-				ExcelTracer.MARKLOGIC_RDF4J);
+				ExcelTracer.MARKLOGIC_RDF4J, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 		this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_FEEDER, PerformanceTestCommon.MARKLOGIC_APPROACH_2,
-				ExcelTracer.APPROACH_2);
+				ExcelTracer.APPROACH_2, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 	}
 
 	@RepeatedTest(10)
 	public void test3DrawFeederOpt() throws Exception {
 		this.currentTestName = "Case2WarmUp10CIMXML-test3DrawFeederOpt";
-		// warm up
-		for (int i = 0; i < WARM_UP_ITERATIONS; i++) {
-			this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_FEEDER_OPT, ExcelTracer.DEFAULT);
-			this.ptc.afterEach();
-			this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_FEEDER_OPT, ExcelTracer.NATIVE);
-			this.ptc.afterEach();
-			this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_FEEDER_OPT, PerformanceTestCommon.MARKLOGIC_APPROACH_1,
-					ExcelTracer.MARKLOGIC_RDF4J);
-			this.ptc.afterEach();
-			this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_FEEDER_OPT, PerformanceTestCommon.MARKLOGIC_APPROACH_2,
-					ExcelTracer.APPROACH_2);
-		}
-		this.metricTracer.setTraceEnabled(true);
 
-		this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_FEEDER_OPT, ExcelTracer.DEFAULT);
+		this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_FEEDER_OPT, ExcelTracer.DEFAULT, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
-		this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_FEEDER_OPT, ExcelTracer.NATIVE);
+		this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_FEEDER_OPT, ExcelTracer.NATIVE, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 		this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_FEEDER_OPT, PerformanceTestCommon.MARKLOGIC_APPROACH_1,
-				ExcelTracer.MARKLOGIC_RDF4J);
+				ExcelTracer.MARKLOGIC_RDF4J, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 		this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_FEEDER_OPT, PerformanceTestCommon.MARKLOGIC_APPROACH_2,
-				ExcelTracer.APPROACH_2);
+				ExcelTracer.APPROACH_2, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 	}
 
 	@RepeatedTest(10)
 	public void test4DrawBuffer() throws Exception {
 		this.currentTestName = "Case2WarmUp10CIMXML-test4DrawBuffer";
-		// warm up
-		for (int i = 0; i < WARM_UP_ITERATIONS; i++) {
-			this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_BUFFER, ExcelTracer.DEFAULT);
-			this.ptc.afterEach();
-			this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_BUFFER, ExcelTracer.NATIVE);
-			this.ptc.afterEach();
-			this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_BUFFER, PerformanceTestCommon.MARKLOGIC_APPROACH_1,
-					ExcelTracer.APPROACH_1);
-			this.ptc.afterEach();
-			this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_BUFFER, PerformanceTestCommon.MARKLOGIC_APPROACH_2,
-					ExcelTracer.APPROACH_2);
-			this.ptc.afterEach();
-		}
-		this.metricTracer.setTraceEnabled(true);
 
-		this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_BUFFER, ExcelTracer.DEFAULT);
+		this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_BUFFER, ExcelTracer.DEFAULT, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
-		this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_BUFFER, ExcelTracer.NATIVE);
+		this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_BUFFER, ExcelTracer.NATIVE, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 		this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_BUFFER, PerformanceTestCommon.MARKLOGIC_APPROACH_1,
-				ExcelTracer.APPROACH_1);
+				ExcelTracer.APPROACH_1, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 		this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_BUFFER, PerformanceTestCommon.MARKLOGIC_APPROACH_2,
-				ExcelTracer.APPROACH_2);
+				ExcelTracer.APPROACH_2, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 	}
 
 	@RepeatedTest(10)
 	public void test5DrawBuffertOpt() throws Exception {
 		this.currentTestName = "Case2WarmUp10CIMXML-test5DrawBuffertOpt";
-		// warm up
-		for (int i = 0; i < WARM_UP_ITERATIONS; i++) {
-			this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_BUFFER_OPT, ExcelTracer.DEFAULT);
-			this.ptc.afterEach();
-			this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_BUFFER_OPT, ExcelTracer.NATIVE);
-			this.ptc.afterEach();
-			this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_BUFFER_OPT, PerformanceTestCommon.MARKLOGIC_APPROACH_1,
-					ExcelTracer.APPROACH_1);
-			this.ptc.afterEach();
-			this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_BUFFER_OPT, PerformanceTestCommon.MARKLOGIC_APPROACH_2,
-					ExcelTracer.APPROACH_2);
-			this.ptc.afterEach();
-		}
-		this.metricTracer.setTraceEnabled(true);
 
-		this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_BUFFER_OPT, ExcelTracer.DEFAULT);
+		this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_BUFFER_OPT, ExcelTracer.DEFAULT, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
-		this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_BUFFER_OPT, ExcelTracer.NATIVE);
+		this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_BUFFER_OPT, ExcelTracer.NATIVE, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 		this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_BUFFER_OPT, PerformanceTestCommon.MARKLOGIC_APPROACH_1,
-				ExcelTracer.APPROACH_1);
+				ExcelTracer.APPROACH_1, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 		this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_BUFFER_OPT, PerformanceTestCommon.MARKLOGIC_APPROACH_2,
-				ExcelTracer.APPROACH_2);
+				ExcelTracer.APPROACH_2, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 	}
 
 	@RepeatedTest(10)
 	public void test6DrawHealthy() throws Exception {
 		this.currentTestName = "Case2WarmUp10CIMXML-test6DrawHealthy";
-		// warm up
-		for (int i = 0; i < WARM_UP_ITERATIONS; i++) {
-			this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_HEALTHY, ExcelTracer.DEFAULT);
-			this.ptc.afterEach();
-			this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_HEALTHY, ExcelTracer.NATIVE);
-			this.ptc.afterEach();
-			this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_HEALTHY, PerformanceTestCommon.MARKLOGIC_APPROACH_1_ML,
-					ExcelTracer.APPROACH_1);
-			this.ptc.afterEach();
-			this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_HEALTHY, PerformanceTestCommon.MARKLOGIC_APPROACH_2,
-					ExcelTracer.APPROACH_2);
-		}
-		this.metricTracer.setTraceEnabled(true);
 
-		this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_HEALTHY, ExcelTracer.DEFAULT);
+		this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_HEALTHY, ExcelTracer.DEFAULT, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
-		this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_HEALTHY, ExcelTracer.NATIVE);
+		this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_HEALTHY, ExcelTracer.NATIVE, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 		this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_HEALTHY, PerformanceTestCommon.MARKLOGIC_APPROACH_1_ML,
-				ExcelTracer.APPROACH_1);
+				ExcelTracer.APPROACH_1, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 		this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_HEALTHY, PerformanceTestCommon.MARKLOGIC_APPROACH_2,
-				ExcelTracer.APPROACH_2);
+				ExcelTracer.APPROACH_2, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 	}
 
 	@RepeatedTest(10)
 	public void test7DrawHealthyOpt() throws Exception {
 		this.currentTestName = "Case2WarmUp10CIMXML-test7DrawHealthyOpt";
-		// warm up
-		for (int i = 0; i < WARM_UP_ITERATIONS; i++) {
-			this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_HEALTHY_OPT, ExcelTracer.DEFAULT);
-			this.ptc.afterEach();
-			this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_HEALTHY_OPT, ExcelTracer.NATIVE);
-			this.ptc.afterEach();
-			this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_HEALTHY_OPT,
-					PerformanceTestCommon.MARKLOGIC_APPROACH_1_ML, ExcelTracer.APPROACH_1);
-			this.ptc.afterEach();
-			this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_HEALTHY_OPT, PerformanceTestCommon.MARKLOGIC_APPROACH_2,
-					ExcelTracer.APPROACH_2);
-			this.ptc.afterEach();
-		}
-		this.metricTracer.setTraceEnabled(true);
 
-		this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_HEALTHY_OPT, ExcelTracer.DEFAULT);
+		this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_HEALTHY_OPT, ExcelTracer.DEFAULT, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
-		this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_HEALTHY_OPT, ExcelTracer.NATIVE);
+		this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_HEALTHY_OPT, ExcelTracer.NATIVE, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 		this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_HEALTHY_OPT, PerformanceTestCommon.MARKLOGIC_APPROACH_1_ML,
-				ExcelTracer.APPROACH_1);
+				ExcelTracer.APPROACH_1, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 		this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_HEALTHY_OPT, PerformanceTestCommon.MARKLOGIC_APPROACH_2,
-				ExcelTracer.APPROACH_2);
+				ExcelTracer.APPROACH_2, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 	}
 
 	@RepeatedTest(10)
 	public void test8DrawAffected() throws Exception {
 		this.currentTestName = "Case2WarmUp10CIMXML-test8DrawAffected";
-		// warm up
-		for (int i = 0; i < WARM_UP_ITERATIONS; i++) {
-			this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_AFFECTED, ExcelTracer.DEFAULT);
-			this.ptc.afterEach();
-			this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_AFFECTED, ExcelTracer.NATIVE);
-			this.ptc.afterEach();
-			this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_AFFECTED, PerformanceTestCommon.MARKLOGIC_APPROACH_1_ML,
-					ExcelTracer.APPROACH_1);
-			this.ptc.afterEach();
-			this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_AFFECTED, PerformanceTestCommon.MARKLOGIC_APPROACH_2,
-					ExcelTracer.APPROACH_2);
-			this.ptc.afterEach();
-		}
-		this.metricTracer.setTraceEnabled(true);
 
-		this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_AFFECTED, ExcelTracer.DEFAULT);
+		this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_AFFECTED, ExcelTracer.DEFAULT, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
-		this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_AFFECTED, ExcelTracer.NATIVE);
+		this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_AFFECTED, ExcelTracer.NATIVE, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 		this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_AFFECTED, PerformanceTestCommon.MARKLOGIC_APPROACH_1_ML,
-				ExcelTracer.APPROACH_1);
+				ExcelTracer.APPROACH_1, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 		this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_AFFECTED, PerformanceTestCommon.MARKLOGIC_APPROACH_2,
-				ExcelTracer.APPROACH_2);
+				ExcelTracer.APPROACH_2, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 	}
 
 	@RepeatedTest(10)
 	public void test9DrawAffectedOpt() throws Exception {
 		this.currentTestName = "Case2WarmUp10CIMXML-test9DrawAffectedOpt";
-		// warm up
-		for (int i = 0; i < WARM_UP_ITERATIONS; i++) {
-			this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_AFFECTED_OPT, ExcelTracer.DEFAULT);
-			this.ptc.afterEach();
-			this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_AFFECTED_OPT, ExcelTracer.NATIVE);
-			this.ptc.afterEach();
-			this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_AFFECTED_OPT,
-					PerformanceTestCommon.MARKLOGIC_APPROACH_1_ML, ExcelTracer.APPROACH_1);
-			this.ptc.afterEach();
-			this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_AFFECTED_OPT, PerformanceTestCommon.MARKLOGIC_APPROACH_2,
-					ExcelTracer.APPROACH_2);
-			this.ptc.afterEach();
-		}
-		this.metricTracer.setTraceEnabled(true);
 
-		this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_AFFECTED_OPT, ExcelTracer.DEFAULT);
+		this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_AFFECTED_OPT, ExcelTracer.DEFAULT, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
-		this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_AFFECTED_OPT, ExcelTracer.NATIVE);
+		this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_AFFECTED_OPT, ExcelTracer.NATIVE, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 		this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_AFFECTED_OPT, PerformanceTestCommon.MARKLOGIC_APPROACH_1_ML,
-				ExcelTracer.APPROACH_1);
+				ExcelTracer.APPROACH_1, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 		this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_AFFECTED_OPT, PerformanceTestCommon.MARKLOGIC_APPROACH_2,
-				ExcelTracer.APPROACH_2);
+				ExcelTracer.APPROACH_2, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 	}
 
 	@RepeatedTest(10)
 	public void test10DrawHazard() throws Exception {
 		this.currentTestName = "Case2WarmUp10CIMXML-test10DrawHazard";
-		// warm up
-		for (int i = 0; i < WARM_UP_ITERATIONS; i++) {
-			this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_HAZARD, ExcelTracer.DEFAULT);
-			this.ptc.afterEach();
-			this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_HAZARD, ExcelTracer.NATIVE);
-			this.ptc.afterEach();
-			this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_HAZARD, PerformanceTestCommon.MARKLOGIC_APPROACH_1,
-					ExcelTracer.MARKLOGIC_RDF4J);
-			this.ptc.afterEach();
-			this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_HAZARD, PerformanceTestCommon.MARKLOGIC_APPROACH_2,
-					ExcelTracer.APPROACH_2);
-			this.ptc.afterEach();
-		}
-		this.metricTracer.setTraceEnabled(true);
 
-		this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_HAZARD, ExcelTracer.DEFAULT);
+		this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_HAZARD, ExcelTracer.DEFAULT, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
-		this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_HAZARD, ExcelTracer.NATIVE);
+		this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_HAZARD, ExcelTracer.NATIVE, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 		this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_HAZARD, PerformanceTestCommon.MARKLOGIC_APPROACH_1,
-				ExcelTracer.MARKLOGIC_RDF4J);
+				ExcelTracer.MARKLOGIC_RDF4J, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 		this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_HAZARD, PerformanceTestCommon.MARKLOGIC_APPROACH_2,
-				ExcelTracer.APPROACH_2);
+				ExcelTracer.APPROACH_2, WARM_UP_ITERATIONS);
 		this.ptc.afterEach();
 	}
 }

@@ -18,9 +18,7 @@ WHERE {
     #connectivity nodes with a terminal
     ?tmId cim:Terminal.ConnectivityNode ?cNodeId;
         #conducting equipment of that terminal
-        cim:Terminal.ConductingEquipment ?condEqId;
-        #is a terminal
-        a cim:Terminal.							   
+        cim:Terminal.ConductingEquipment ?condEqId.							   
         
     #locations - coordinates
     ?condEqId cim:PowerSystemResource.Location ?locationId.
@@ -31,7 +29,6 @@ WHERE {
     ?postionPointId1 cim:PositionPoint.Location ?locationId;
         cim:PositionPoint.xPosition ?x1;
         cim:PositionPoint.yPosition ?y1.
-
     ?postionPointId2 cim:PositionPoint.Location ?locationId;
         cim:PositionPoint.xPosition ?x2;
         cim:PositionPoint.yPosition ?y2.

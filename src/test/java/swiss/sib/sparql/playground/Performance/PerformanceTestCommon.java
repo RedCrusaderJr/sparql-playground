@@ -125,7 +125,7 @@ public class PerformanceTestCommon {
 		logger.info(this.metricTracer.completeTrace(currentTestName) + NEW_LINE);
 	}
 
-	public long defaultRepositoryTest(String testName, String tableName) throws Exception {
+	public long defaultRepositoryTest(String testName, String tableName, int warmupCount) throws Exception {
 		// init
 		long initStart = System.currentTimeMillis();
 		initializeDefaultRepository();
@@ -136,34 +136,40 @@ public class PerformanceTestCommon {
 		// this.excelTracer.traceToTable(tableName, columnName, data);
 
 		// load data
-		long loadStart = System.currentTimeMillis();
-		loadDataFromFiles();
-		long loadDuration = System.currentTimeMillis() - loadStart;
-		this.metricTracer
-				.appendLoad("defaultRepository [" + testName + "] loading data lasted " + loadDuration + " ms");
-		this.metricTracer.appendLoad(NEW_LINE);
-		metricTracer.appendCommon("Default Repository contains " + countTriplets() + " triplets" + NEW_LINE);
-		// this.excelTracer.traceToTable(tableName, columnName, data);
+		long tripletCounter = countTriplets();
+		if (tripletCounter == 0) {
+			long loadStart = System.currentTimeMillis();
+			loadDataFromFiles();
+			long loadDuration = System.currentTimeMillis() - loadStart;
+			this.metricTracer
+					.appendLoad("defaultRepository [" + testName + "] Loading data lasted " + loadDuration + " ms");
+			this.metricTracer.appendLoad(NEW_LINE);
+			// this.excelTracer.traceToTable(tableName, columnName,
+			// evalDuration);
+		}
+		metricTracer.appendCommon("defaultRepository contains " + countTriplets() + " triplets" + NEW_LINE);
+
+		String sparqlQuery = getSparqlTestQueryString(testName);
+		Query query = this.connection.prepareQuery(QueryLanguage.SPARQL, sparqlQuery);
+
+		// warmup
+		for (int i = 0; i < warmupCount; i++) {
+			evaluateQuery(query);
+		}
 
 		// evaluate query
-		String sparqlQuery = getSparqlTestQueryString(testName);
 		long evalStart = System.currentTimeMillis();
-		Query query = this.connection.prepareQuery(QueryLanguage.SPARQL, sparqlQuery);
-		Object result = evaluateQuery(query);
+		evaluateQuery(query);
 		long evalDuration = System.currentTimeMillis() - evalStart;
 		this.metricTracer
 				.appendEval("defaultRepository [" + testName + "] evaluating query lasted " + evalDuration + " ms");
 		this.metricTracer.appendEval(NEW_LINE);
+
 		this.excelTracer.traceToTable(tableName, testName, evalDuration);
-
-		long counter = countTQRBindingSets((TupleQueryResult) result);
-		this.metricTracer.appendCounters("defaultRepository [" + testName + "] Binding sets in result: " + counter);
-		this.metricTracer.appendCounters(NEW_LINE);
-
-		return counter;
+		return evalDuration;
 	}
 
-	public long nativeRepositoryTest(String testName, String tableName) throws Exception {
+	public long nativeRepositoryTest(String testName, String tableName, int warmupCount) throws Exception {
 		// init
 		long initStart = System.currentTimeMillis();
 		File rdf4jDataFolder = new File(TEST_FOLDER + "/rdf4j-db");
@@ -190,44 +196,49 @@ public class PerformanceTestCommon {
 		}
 		metricTracer.appendCommon("Native Repository contains " + countTriplets() + " triplets" + NEW_LINE);
 
-		// evaluate query
 		String sparqlQuery = getSparqlTestQueryString(testName);
-		long evalStart = System.currentTimeMillis();
 		Query query = this.connection.prepareQuery(QueryLanguage.SPARQL, sparqlQuery);
-		Object result = evaluateQuery(query);
-		long evalDuration = System.currentTimeMillis() - evalStart;
-		this.metricTracer
-				.appendEval("nativeRepository [" + testName + "] evaluating query lasted " + evalDuration + " ms");
-		this.metricTracer.appendEval(NEW_LINE);
-		this.excelTracer.traceToTable(tableName, testName, evalDuration);
 
-		long counter = countTQRBindingSets((TupleQueryResult) result);
-		this.metricTracer.appendCounters("nativeRepository [" + testName + "] Binding sets in result: " + counter);
-		this.metricTracer.appendCounters(NEW_LINE);
-
-		return counter;
-	}
-
-	public long markLogicRepositoryTest(String testName, String approach, String tableName) throws Exception {
-		long counter = 0;
-
-		if (approach.equals(MARKLOGIC_APPROACH_1)) {
-			counter = marklogicApproach1(testName, tableName, false);
-
-		} else if (approach.equals(MARKLOGIC_APPROACH_2)) {
-			counter = marklogicApproach2(testName, tableName);
-
-		} else if (approach.equals(MARKLOGIC_APPROACH_1_ML)) {
-			counter = marklogicApproach1(testName, tableName, true);
-
-		} else {
-			counter = marklogicApproach1(testName, tableName, false);
+		// warmup
+		for (int i = 0; i < warmupCount; i++) {
+			evaluateQuery(query);
 		}
 
-		return counter;
+		// evaluate query
+		long evalStart = System.currentTimeMillis();
+		evaluateQuery(query);
+		long evalDuration = System.currentTimeMillis() - evalStart;
+		this.metricTracer
+				.appendEval("defaultRepository [" + testName + "] evaluating query lasted " + evalDuration + " ms");
+		this.metricTracer.appendEval(NEW_LINE);
+
+		this.excelTracer.traceToTable(tableName, testName, evalDuration);
+		return evalDuration;
 	}
 
-	private long marklogicApproach1(String testName, String tableName, Boolean isMLCase) throws Exception {
+	public long markLogicRepositoryTest(String testName, String approach, String tableName, int warmupCount)
+			throws Exception {
+
+		// evaluate query
+		long duration = 0;
+		if (approach.equals(MARKLOGIC_APPROACH_1)) {
+			duration = marklogicApproach1(testName, tableName, false, warmupCount);
+
+		} else if (approach.equals(MARKLOGIC_APPROACH_2)) {
+			duration = marklogicApproach2(testName, tableName, warmupCount);
+
+		} else if (approach.equals(MARKLOGIC_APPROACH_1_ML)) {
+			duration = marklogicApproach1(testName, tableName, true, warmupCount);
+
+		} else {
+			duration = marklogicApproach1(testName, tableName, false, warmupCount);
+		}
+
+		return duration;
+	}
+
+	private long marklogicApproach1(String testName, String tableName, Boolean isMLCase, int warmupCount)
+			throws Exception {
 		// init
 		long initStart = System.currentTimeMillis();
 		initializeMarkLogicRepository();
@@ -252,7 +263,6 @@ public class PerformanceTestCommon {
 		}
 		metricTracer.appendCommon("Marklogic Repository contains " + countTriplets() + " triplets" + NEW_LINE);
 
-		// evaluate query
 		String sparqlQueryStr = "";
 		if (isMLCase) {
 			sparqlQueryStr = getSparqlTestQueryString("ml-" + testName);
@@ -264,44 +274,44 @@ public class PerformanceTestCommon {
 
 		try {
 			Query sparqlQuery = this.connection.prepareQuery(QueryLanguage.SPARQL, sparqlQueryStr);
-			Object result = evaluateQuery(sparqlQuery);
+
+			// warmup
+			for (int i = 0; i < warmupCount; i++) {
+				evaluateQuery(sparqlQuery);
+			}
+
+			// evaluate query
+			evaluateQuery(sparqlQuery);
 			long evalDuration = System.currentTimeMillis() - evalStart;
 			this.metricTracer.appendEval(
 					"markLogicRepository [" + testName + "] evaluating query lasted " + evalDuration + " ms");
 			this.metricTracer.appendEval(NEW_LINE);
+
 			this.excelTracer.traceToTable(tableName, testName, evalDuration);
-
-			// long counter = countTQRBindingSets((TupleQueryResult) result);
-			// this.metricTracer.appendCounters(
-			// "markLogicRepository [" + testName + "] Number of binding sets in result: " +
-			// counter);
-			// this.metricTracer.appendCounters(NEW_LINE);
-
-			return 0;
+			return evalDuration;
 
 		} catch (QueryEvaluationException e) {
 			if (!e.getMessage().contains("Server Message: XDMP-UNDFUN")) {
 				throw e;
 			}
 
-			Object result = evaluateOnMarklogicSemanticApi(sparqlQueryStr);
+			// warmup
+			for (int i = 0; i < warmupCount; i++) {
+				evaluateOnMarklogicSemanticApi(sparqlQueryStr);
+			}
+
+			evaluateOnMarklogicSemanticApi(sparqlQueryStr);
 			long evalDuration = System.currentTimeMillis() - evalStart;
 			this.metricTracer.appendEval(
 					"markLogicRepository [" + testName + "] evaluating query lasted " + evalDuration + " ms");
 			this.metricTracer.appendEval(NEW_LINE);
+
 			this.excelTracer.traceToTable(tableName, testName, evalDuration);
-
-			// long counter = countTQRBindingSets((TupleQueryResult) result);
-			// this.metricTracer.appendCounters(
-			// "markLogicRepository [" + testName + "] Number of binding sets in result: " +
-			// counter);
-			// this.metricTracer.appendCounters(NEW_LINE);
-
-			return 0;
+			return evalDuration;
 		}
 	}
 
-	private long marklogicApproach2(String testName, String tableName) throws Exception {
+	private long marklogicApproach2(String testName, String tableName, int warmupCount) throws Exception {
 		// init
 		long initStart = System.currentTimeMillis();
 		initializeMarkLogicRepository();
@@ -323,24 +333,22 @@ public class PerformanceTestCommon {
 			// this.excelTracer.traceToTable(tableName, testName, evalDuration);
 		}
 
-		// evaluate query
+		// warmup
 		String javascriptQueryStr = getJavascriptTestQueryString(testName);
-		long evalStart = System.currentTimeMillis();
+		for (int i = 0; i < warmupCount; i++) {
+			evaluateJavascriptQuery(javascriptQueryStr);
+		}
 
-		Object result = evaluateJavascriptQuery(javascriptQueryStr);
+		// evaluate query
+		long evalStart = System.currentTimeMillis();
+		evaluateJavascriptQuery(javascriptQueryStr);
 		long evalDuration = System.currentTimeMillis() - evalStart;
 		this.metricTracer
 				.appendEval("markLogicRepository [" + testName + "] evaluating query lasted " + evalDuration + " ms");
 		this.metricTracer.appendEval(NEW_LINE);
+
 		this.excelTracer.traceToTable(tableName, testName, evalDuration);
-
-		// long counter = countTQRBindingSets((TupleQueryResult) result);
-		// this.metricTracer
-		// .appendCounters("markLogicRepository [" + testName + "] Number of binding
-		// sets in result: " + 0);
-		// this.metricTracer.appendCounters(NEW_LINE);
-
-		return 0;
+		return evalDuration;
 	}
 
 	private void deleteAllNative() {

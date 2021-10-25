@@ -24,11 +24,9 @@ WHERE {
   	?postionPointId1 cim:PositionPoint.Location ?locationId;
   		cim:PositionPoint.xPosition ?x1;
   		cim:PositionPoint.yPosition ?y1.
-      
   	?postionPointId2 cim:PositionPoint.Location ?locationId;
   		cim:PositionPoint.xPosition ?x2;
-  		cim:PositionPoint.yPosition ?y2.
-	FILTER(str(?postionPointId1) < str(?postionPointId2))	
+  		cim:PositionPoint.yPosition ?y2.	
   	FILTER(?x1 != ?x2 || ?y1 != ?y2).
   
   	#construct WKTs (draw geometry)

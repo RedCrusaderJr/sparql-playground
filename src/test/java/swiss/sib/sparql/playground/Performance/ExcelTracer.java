@@ -30,6 +30,7 @@ public class ExcelTracer {
 	public static final String DRAW_BUFFER_OPT = "drawBufferOpt";
 	public static final String DRAW_HEALTHY = "drawHealthy";
 	public static final String DRAW_HEALTHY_OPT = "drawHealthyOpt";
+	public static final String DRAW_HEALTHY_UPDATE = "drawHealthyUpdate";
 	public static final String DRAW_AFFECTED = "drawAffected";
 	public static final String DRAW_AFFECTED_OPT = "drawAffectedOpt";
 

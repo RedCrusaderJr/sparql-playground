@@ -46,11 +46,11 @@ public class PT1_NoCustomFunctions {
 	@Test
 	public void test0() throws Exception {
 		this.currentTestName = "PT1_NoCustomFunctions-test0";
-		long defaultCount = this.ptc.defaultRepositoryTest(ExcelTracer.BASIC, "");
+		long defaultCount = this.ptc.defaultRepositoryTest(ExcelTracer.BASIC, "", 0);
 		afterEach();
-		long nativeCount = this.ptc.nativeRepositoryTest(ExcelTracer.BASIC, "");
+		long nativeCount = this.ptc.nativeRepositoryTest(ExcelTracer.BASIC, "", 0);
 		afterEach();
-		long marklogicCount = this.ptc.markLogicRepositoryTest(ExcelTracer.BASIC, MARKLOGIC_APPROACH, "");
+		long marklogicCount = this.ptc.markLogicRepositoryTest(ExcelTracer.BASIC, MARKLOGIC_APPROACH, "", 0);
 
 		Assertions.assertEquals(defaultCount, nativeCount);
 		Assertions.assertEquals(nativeCount, marklogicCount);
@@ -59,11 +59,11 @@ public class PT1_NoCustomFunctions {
 	@Test
 	public void test1() throws Exception {
 		this.currentTestName = "PT1_NoCustomFunctions-test1";
-		long defaultCount = this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_FEEDER, "");
+		long defaultCount = this.ptc.defaultRepositoryTest(ExcelTracer.DRAW_FEEDER, "", 0);
 		afterEach();
-		long nativeCount = this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_FEEDER, "");
+		long nativeCount = this.ptc.nativeRepositoryTest(ExcelTracer.DRAW_FEEDER, "", 0);
 		afterEach();
-		long marklogicCount = this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_FEEDER, MARKLOGIC_APPROACH, "");
+		long marklogicCount = this.ptc.markLogicRepositoryTest(ExcelTracer.DRAW_FEEDER, MARKLOGIC_APPROACH, "", 0);
 
 		Assertions.assertEquals(defaultCount, nativeCount);
 		Assertions.assertEquals(nativeCount, marklogicCount);
