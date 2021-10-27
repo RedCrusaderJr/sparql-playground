@@ -7,7 +7,6 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
-
 import swiss.sib.sparql.playground.function.BufferCreator;
 
 @TestInstance(Lifecycle.PER_CLASS)
@@ -18,23 +17,33 @@ public class GeoSPARQLFunctionTest {
 	private long sumDurations = 0;
 	private long iterationCounter = 0;
 
-	@RepeatedTest(800)
+	@Test
 	public void javaFunctionTest() {
-		long functionStart = System.currentTimeMillis();
+		int totalIterations = 3400;
 
-		BufferCreator bufferCreator = new BufferCreator(1.0, 1.0, 0.0, 0.0, 50.0);
-		String bufferStr = bufferCreator.create();
+		for (int iteration = 0; iteration < totalIterations; iteration++) {
+			long functionStart = System.currentTimeMillis();
 
-		long functionDuration = System.currentTimeMillis() - functionStart;
+			BufferCreator bufferCreator = new BufferCreator(1.0, 1.0, 0.0, 0.0, 50.0);
+			String bufferStr = bufferCreator.create();
 
-		sumDurations += functionDuration;
-		iterationCounter++;
+			long functionDuration = System.currentTimeMillis() - functionStart;
+
+			sumDurations += functionDuration;
+			iterationCounter++;
+		}
 	}
 
 	@AfterAll
 	public void afterAll() {
-		logger.info(
-				"Average function evaluation: " + (double) sumDurations / (double) iterationCounter + " ms" + NEW_LINE);
-		logger.info("Total function evaluation duration: " + sumDurations + " ms" + NEW_LINE);
+		StringBuilder sb = new StringBuilder();
+		sb.append(NEW_LINE);
+		sb.append("Average function evaluation: " + (double) sumDurations / (double) iterationCounter + " ms");
+		sb.append(NEW_LINE);
+		sb.append("Total function evaluation duration: " + sumDurations + " ms");
+		sb.append(NEW_LINE);
+		sb.append("Number of iterations: " + iterationCounter);
+		sb.append(NEW_LINE);
+		logger.info(sb.toString());
 	}
 }
