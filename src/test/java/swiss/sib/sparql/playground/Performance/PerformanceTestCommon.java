@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -495,11 +496,13 @@ public class PerformanceTestCommon {
 				return null;
 			}
 
-			String[] names = JSONObject.getNames(jsonObj);
+			Iterator<?> keys = jsonObj.keys();
 			List<Value> values = new ArrayList<Value>();
 
-			for (String name : names) {
+			while(keys.hasNext()) {
+				String name = (String)keys.next();
 				String valueStr = jsonObj.getString(name);
+
 				try {
 					values.add(valueFactory.createIRI(valueStr));
 

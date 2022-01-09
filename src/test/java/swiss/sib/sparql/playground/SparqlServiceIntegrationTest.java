@@ -2,20 +2,20 @@ package swiss.sib.sparql.playground;
 
 import swiss.sib.sparql.playground.service.SparqlService;
 
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 
 import org.eclipse.rdf4j.query.QueryEvaluationException;
 import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = { Application.class })
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = { Application.class })
 @WebAppConfiguration
 public class SparqlServiceIntegrationTest {
 
@@ -31,7 +31,7 @@ public class SparqlServiceIntegrationTest {
 		String query = sb.toString();
 
 		Boolean result = (Boolean) sparqlService.evaluateQuery(query);
-		Assert.assertTrue(result);
+		Assertions.assertTrue(result);
 	}
 
 	@Test
@@ -44,7 +44,7 @@ public class SparqlServiceIntegrationTest {
 		String query = sb.toString();
 
 		TupleQueryResult result = (TupleQueryResult) sparqlService.evaluateQuery(query);
-		Assert.assertEquals(2, countResults(result));
+		Assertions.assertEquals(2, countResults(result));
 	}
 
 	@Test
@@ -59,7 +59,7 @@ public class SparqlServiceIntegrationTest {
 		String query = sb.toString();
 
 		TupleQueryResult result = (TupleQueryResult) sparqlService.evaluateQuery(query);
-		Assert.assertEquals(2, countResults(result));
+		Assertions.assertEquals(2, countResults(result));
 	}
 
 	// This query stopped working from 2.8.7 upgrade
@@ -67,7 +67,7 @@ public class SparqlServiceIntegrationTest {
 	// https://groups.google.com/forum/#!topic/sesame-users/NpidJt61cCQ
 
 	@Test
-	@Ignore
+	@Disabled
 	public void testFederatedQueryWithEBI() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		sb.append("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>").append(System.lineSeparator());
@@ -83,7 +83,7 @@ public class SparqlServiceIntegrationTest {
 		String federatedQuery = sb.toString();
 
 		TupleQueryResult result = sparqlService.executeSelectQuery(federatedQuery);
-		Assert.assertEquals(2, countResults(result));
+		Assertions.assertEquals(2, countResults(result));
 	}
 
 	@Test
@@ -107,11 +107,11 @@ public class SparqlServiceIntegrationTest {
 		String federatedQuery = sb.toString();
 
 		TupleQueryResult result = sparqlService.executeSelectQuery(federatedQuery);
-		Assert.assertTrue(countResults(result) > 3);
+		Assertions.assertTrue(countResults(result) > 3);
 	}
 
 	@Test
-	@Ignore
+	@Disabled
 	public void testFederatedQuery() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		sb.append(sparqlService.getPrefixesString()).append(System.lineSeparator());
@@ -133,15 +133,15 @@ public class SparqlServiceIntegrationTest {
 		String federatedQuery = sb.toString();
 
 		TupleQueryResult result = (TupleQueryResult) sparqlService.evaluateQuery(federatedQuery);
-		Assert.assertEquals(2, countResults(result));
+		Assertions.assertEquals(2, countResults(result));
 	}
 
 	@Test
 	public void testCountNumberOfTriples() throws Exception {
 		Long n = sparqlService.countNumberOfTriples();
 		System.out.println(n + " triples");
-		Assert.assertTrue(n > 50);
-		Assert.assertTrue(n < 100);
+		Assertions.assertTrue(n > 50);
+		Assertions.assertTrue(n < 100);
 	}
 
 	private long countResults(TupleQueryResult results) {
