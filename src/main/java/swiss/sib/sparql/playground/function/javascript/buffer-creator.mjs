@@ -118,7 +118,7 @@ export class BufferCreator {
       	// puts coordinates in right order
 		this.correctCoordOrder(isSharp);
 		// extends line for distanceTotal length at each end
-		this.extendLine();
+		this.extendLine(slope);
 
 		return this.createPolygonStr(slope);
     }
@@ -150,11 +150,7 @@ export class BufferCreator {
     }
 
     // extends the line for distanceTotal at each end
-    extendLine() {
-		// slope of acline segment: slope = (x2 - x1) / (y2 - y1)
-		let slope = this.x2.minus(this.x1).dividedBy(this.y2.minus(this.y1));
-		let isSharp = slope.isPositive();
-
+    extendLine(slope) {
 		// angle of line to x-axis [rad]: pAngle = arcus tangent(pSlope)
 		let angle = new BigNumber(Math.atan(slope));
 		if (angle.isZero() || angle.isNaN()) {
@@ -170,40 +166,19 @@ export class BufferCreator {
 
 		// TODO: UMT conversion
 		// longitude change [deg]
-		let lonDeg = distanceY.dividedBy(this.lonUnit); // lonUnit will never be zero
+		let lonDeg = distanceX.dividedBy(this.lonUnit); // lonUnit will never be zero
 		// latitude change [deg]
-		let latDeg = distanceX.dividedBy(this.latUnit); // latUnit will never be zero
-		
-		if(lonDeg.isNegative()) {
-			lonDeg = lonDeg.multipliedBy(new BigNumber(-1))
-		}
+		let latDeg = distanceY.dividedBy(this.latUnit); // latUnit will never be zero
 
-		if(latDeg.isNegative()) {
-			latDeg = latDeg.multipliedBy(new BigNumber(-1))
-		}
+		// x1 = x1 - lonDeg
+		// y1 = y1 - latDeg
+		this.x1 = this.x1.minus(lonDeg);
+		this.y1 = this.y1.minus(latDeg);
 
-		if(isSharp) {
-			// x1 = x1 - lonDeg
-			// y1 = y1 - latDeg
-			this.x1 = this.x1.minus(lonDeg);
-			this.y1 = this.y1.minus(latDeg);
-
-			// x2 = x2 + lonDeg
-			// y2 = y2 + latDeg
-			this.x2 = this.x2.plus(lonDeg);
-			this.y2 = this.y2.plus(latDeg);
-		}
-		else {
-			// x1 = x1 - lonDeg
-			// y1 = y1 + latDeg
-			this.x1 = this.x1.minus(lonDeg);
-			this.y1 = this.y1.plus(latDeg);
-
-			// x2 = x2 + lonDeg
-			// y2 = y2 - latDeg
-			this.x2 = this.x2.plus(lonDeg);
-			this.y2 = this.y2.minus(latDeg);
-		}
+		// x2 = x2 + lonDeg
+		// y2 = y2 + latDeg
+		this.x2 = this.x2.plus(lonDeg);
+		this.y2 = this.y2.plus(latDeg);
     }
 
     createPolygonStr(slope) {

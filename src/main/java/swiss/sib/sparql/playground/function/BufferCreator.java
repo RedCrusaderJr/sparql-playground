@@ -16,9 +16,9 @@ public class BufferCreator {
 	private final RoundingMode mode = RoundingMode.HALF_EVEN;
 	private final MathContext context = new MathContext(prec, mode);
 
-	// [m / deg]
+	//[m / deg]
 	private final BigDecimal latUnit = BigDecimal.valueOf(111200.0).setScale(prec, mode); // consistant
-	// [m / deg]
+	//[m / deg]
 	private final BigDecimal lonUnit = BigDecimal.valueOf(87620.0).setScale(prec, mode); // California zone
 
 	private BigDecimal x1;
@@ -157,7 +157,7 @@ public class BufferCreator {
 		// puts coordinates in right order
 		correctCoordOrder(isSharp);
 		// extends line for distanceTotal length at each end
-		extendLine();
+		extendLine(slope);
 
 		return createPolygonStr(slope);
 	}
@@ -189,11 +189,7 @@ public class BufferCreator {
 	}
 
 	// extends the line for distanceTotal at each end
-	private void extendLine() {
-		// slope of acline segment: slope = (x2 - x1) / (y2 - y1)
-		BigDecimal slope = x2.subtract(x1, context).divide(y2.subtract(y1, context), context); // y2 and y1 will not be equal
-		Boolean isSharp = slope.compareTo(BigDecimal.valueOf(0).setScale(prec, mode)) > 0;
-
+	private void extendLine(BigDecimal slope) {
 		// angle of line to x-axis [rad]: angle = arcus tangent(slope)
 		BigDecimal angle = BigDecimal.valueOf(Math.atan(slope.doubleValue())).setScale(prec, mode);
 		if (angle.doubleValue() == 0 || ((Double) angle.doubleValue()).isNaN()) {
@@ -209,51 +205,24 @@ public class BufferCreator {
 
 		// TODO: UMT conversion
 		// longitude change [deg]
-		BigDecimal lonDeg = distanceY.divide(lonUnit, context); // lonUnit will never be zero
+		BigDecimal lonDeg = distanceX.divide(lonUnit, context); // lonUnit will never be zero
 		// latitude change [deg]
-		BigDecimal latDeg = distanceX.divide(latUnit, context); // latUnit will never be zero
+		BigDecimal latDeg = distanceY.divide(latUnit, context); // latUnit will never be zero
 		
+		// x1 = x1 - lonDeg
+		// y1 = y1 - latDeg
+		x1 = x1.subtract(lonDeg, context);
+		y1 = y1.subtract(latDeg, context);
 
-		if (lonDeg.compareTo(BigDecimal.valueOf(0).setScale(prec, mode)) < 0) {
-			// lonDeg < 0
-			lonDeg = lonDeg.multiply(BigDecimal.valueOf(-1).setScale(prec, mode));
-		}
-
-		if (latDeg.compareTo(BigDecimal.valueOf(0).setScale(prec, mode)) < 0) {
-			// latDeg < 0
-			latDeg = latDeg.multiply(BigDecimal.valueOf(-1).setScale(prec, mode));
-		}
-
-		if (isSharp) {
-			// x1 = x1 - lonDeg
-			// y1 = y1 - latDeg
-			x1 = x1.subtract(lonDeg, context);
-			y1 = y1.subtract(latDeg, context);
-
-			// x2 = x2 + lonDeg
-			// y2 = y2 + latDeg
-			x2 = x2.add(lonDeg, context);
-			y2 = y2.add(latDeg, context);
-
-		} 
-		else {
-			// x1 = x1 - lonDeg
-			// y1 = y1 + latDeg
-			x1 = x1.subtract(lonDeg, context);
-			y1 = y1.add(latDeg, context);
-
-			// x2 = x2 + lonDeg
-			// y2 = y2 - latDeg
-			x2 = x2.add(lonDeg, context);
-			y2 = y2.subtract(latDeg, context);
-		}
+		// x2 = x2 + lonDeg
+		// y2 = y2 + latDeg
+		x2 = x2.add(lonDeg, context);
+		y2 = y2.add(latDeg, context);
 	}
 
 	private String createPolygonStr(BigDecimal slope) throws Exception {
 		// slope of perpendicular line: pSlope = - 1 / Slope
-		BigDecimal pSlope = BigDecimal.valueOf(-1).setScale(prec, mode).divide(slope, context); // slope will not be
-																								// zero if longitudes
-																								// are not equal
+		BigDecimal pSlope = BigDecimal.valueOf(-1).setScale(prec, mode).divide(slope, context); // slope will not be zero if latitudes are not equal
 
 		// angle of perpendicular line to x-axis [rad]: pAngle = arcus tangent(pSlope)
 		BigDecimal pAngle = BigDecimal.valueOf(Math.atan(pSlope.doubleValue())).setScale(prec, mode);
