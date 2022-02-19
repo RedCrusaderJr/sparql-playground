@@ -33,9 +33,8 @@ public class BufferCreator {
 		this.x2 = BigDecimal.valueOf(x2).setScale(prec, mode);
 		this.y2 = BigDecimal.valueOf(y2).setScale(prec, mode);
 		if (x2.compareTo(x1) == 0 && y2.compareTo(y1) == 0) {
-			throw new ValueExprEvaluationException(
-					"Invalid LINESTRING definition: x1 equals x2 and y1 equals y2. " + "x1: " + x1.doubleValue()
-							+ " y1: " + y1.doubleValue() + "| x2: " + x1.doubleValue() + " y2: " + y1.doubleValue());
+			throw new ValueExprEvaluationException("Invalid LINESTRING definition: x1 equals x2 and y1 equals y2. " +
+				"x1: " + x1.doubleValue() + " y1: " + y1.doubleValue() + "| x2: " + x1.doubleValue() + " y2: " + y1.doubleValue());
 		}
 
 		this.distanceTotal = BigDecimal.valueOf(distance).setScale(prec, mode);

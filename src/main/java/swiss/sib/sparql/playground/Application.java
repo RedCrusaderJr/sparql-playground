@@ -25,21 +25,25 @@ public class Application {
 	private static final Log logger = LogFactory.getLog(Application.class);
 
 	// argument with index 0
-	private static String FOLDER = "default"; // e.g. nextprot, uniprot, geospatial
+	private static int APPLICATION_PORT = 8080;
 	// argument with index 1
-	private static RepositoryType REPOSITORY_TYPE = RepositoryType.parseType(""); // get default value
+	private static String FOLDER = "default"; // e.g. nextprot, uniprot, geospatial
 	// argument with index 2
-	private static Boolean INFERENCING_ENABLED = false;
+	private static RepositoryType REPOSITORY_TYPE = RepositoryType.parseType(""); // get default value
 	// argument with index 3
-	private static EvaluatorType MARKLOGIC_EVALUATOR_TYPE = EvaluatorType.parseType(""); // get
-																							// default
-																							// value
+	private static Boolean INFERENCING_ENABLED = false;
 	// argument with index 4
-	private static String MARKLOGIC_HOST = "localhost";
+	private static EvaluatorType MARKLOGIC_EVALUATOR_TYPE = EvaluatorType.parseType(""); // get default value
 	// argument with index 5
-	private static int MARKLOGIC_PORT = 8111;
+	private static String MARKLOGIC_HOST = "localhost";
 	// argument with index 6
+	private static int MARKLOGIC_PORT = 8111;
+	// argument with index 7
 	private static String MARKLOGIC_DB_NAME = "sparql-playground";
+
+	public static int getApplicationPort() {
+		return APPLICATION_PORT;
+	}
 
 	public static String getFolder() {
 		return FOLDER;
@@ -73,13 +77,25 @@ public class Application {
 		logger.info("SPARQL Playground\n");
 
 		try {
+			setApplicationPort(args);
+			logger.debug("APPLICATION_PORT: " + APPLICATION_PORT);
+
 			setFolder(args);
+			logger.debug("FOLDER: " + FOLDER);
+
 			setRepositoryType(args);
+			logger.debug("REPOSITORY_TYPE: " + REPOSITORY_TYPE);
+
 			setInferencingEnabled(args);
+			logger.debug("INFERENCING_ENABLED: " + INFERENCING_ENABLED);
+
 			setMarkLogicSettings(args);
+			logger.debug("MARKLOGIC_EVALUATOR_TYPE: " + MARKLOGIC_EVALUATOR_TYPE);
+			logger.debug("MARKLOGIC_ADDRESS: " + MARKLOGIC_HOST);
+			logger.debug("MARKLOGIC_PORT: " + MARKLOGIC_PORT);
+			logger.debug("MARKLOGIC_DB_NAME: " + MARKLOGIC_DB_NAME);
 
 			SpringApplication.run(Application.class, args);
-
 			logHostingAddress();
 
 		} catch (Exception e) {
@@ -88,103 +104,90 @@ public class Application {
 	}
 
 	// argument with index 0
-	private static void setFolder(String[] args) {
-		if (args.length == 0) {
+	private static void setApplicationPort(String[] args)
+	{
+		if ((args.length < 1) || (args[0] == "")) {
 			return;
 		}
 
-		String folderAux = args[0];
-
-		if (new File(folderAux).exists()) {
-			FOLDER = folderAux;
-
-		} else {
-			logger.debug(folderAux + " folder not found");
+		try {
+			APPLICATION_PORT = Integer.parseInt(args[0]);
+		} catch (NumberFormatException e) {
+			logger.error(e.getMessage());
 		}
-
-		logger.debug("FOLDER: " + FOLDER);
 	}
 
 	// argument with index 1
-	private static void setRepositoryType(String[] args) {
-		String repositoryTypeStr = "";
-		if (args.length >= 2 && args[1] != "") {
-			repositoryTypeStr = args[1];
-		}
-
-		if (System.getProperty("repository.type") != null) {
-			repositoryTypeStr = System.getProperty("repository.type");
-		}
-
-		REPOSITORY_TYPE = RepositoryType.parseType(repositoryTypeStr);
-		logger.debug("REPOSITORY_TYPE: " + REPOSITORY_TYPE);
-	}
-
-	// argument with index 2
-	private static void setInferencingEnabled(String[] args) {
-		String inferencingEnabledStr = "";
-		if (args.length >= 3 && args[2] != "") {
-			inferencingEnabledStr = args[2];
-		}
-
-		// if format is wrong then it would be left on the default value: false
-		if (inferencingEnabledStr.equals("true")) {
-			INFERENCING_ENABLED = true;
-		}
-
-		logger.debug("INFERENCING_ENABLED: " + INFERENCING_ENABLED);
-	}
-
-	// arguments with index 3, 4 and 5 (and optional 6)
-	private static void setMarkLogicSettings(String[] args) {
-		// HOST AND ADDRESS MUST BE SET IN PAIR
-		if (args.length < 6) {
+	private static void setFolder(String[] args) {
+		if ((args.length < 2) || (args[1] == "")) {
 			return;
 		}
 
-		if (args[3] != "") {
-			MARKLOGIC_EVALUATOR_TYPE = EvaluatorType.parseType(args[3]);
+		String folderStr = args[1];
+
+		if (new File(folderStr).exists()) {
+			FOLDER = folderStr;
+		} else {
+			logger.warn(folderStr + " folder not found. Default value set to: " + FOLDER);
+		}
+	}
+
+	// argument with index 2
+	private static void setRepositoryType(String[] args) {	
+		if (System.getProperty("repository.type") != null) {
+			REPOSITORY_TYPE = RepositoryType.parseType(System.getProperty("repository.type"));
+			return;
 		}
 
-		if (args[4] != "") {
-			MARKLOGIC_HOST = args[4];
+		if ((args.length < 3) || (args[2] == "")) {
+			return;
 		}
 
-		if (args[5] != "") {
-			String portString = args[5];
+		REPOSITORY_TYPE = RepositoryType.parseType(args[2]);
+	}
 
-			try {
-				MARKLOGIC_PORT = Integer.parseInt(portString);
-			} catch (NumberFormatException e) {
-				logger.error(e.getMessage());
-			}
+	// argument with index 3
+	private static void setInferencingEnabled(String[] args) {
+		if ((args.length < 4) || (args[3] == "")) {
+			return;
 		}
 
-		// OPTIONAL
-		if (args.length > 6 && args[6] != "") {
-			MARKLOGIC_DB_NAME = args[6];
+		INFERENCING_ENABLED = args[3].equals("true");
+	}
+
+	// arguments with index 4, 5, 6 and 7
+	private static void setMarkLogicSettings(String[] args) {
+		// HOST AND ADDRESS MUST BE SET IN PAIR
+		if ((args.length < 8) || (args[4] == "") || (args[5] == "") || (args[6] == "") || (args[7] == "")) {
+			return;
 		}
 
-		logger.debug("MARKLOGIC_EVALUATOR_TYPE: " + MARKLOGIC_EVALUATOR_TYPE);
-		logger.debug("MARKLOGIC_ADDRESS: " + MARKLOGIC_HOST);
-		logger.debug("MARKLOGIC_PORT: " + MARKLOGIC_PORT);
-		logger.debug("MARKLOGIC_DB_NAME: " + MARKLOGIC_DB_NAME);
+		MARKLOGIC_EVALUATOR_TYPE = EvaluatorType.parseType(args[4]);
+		MARKLOGIC_HOST = args[5];
+
+		try {
+			MARKLOGIC_PORT = Integer.parseInt(args[6]);
+		} catch (NumberFormatException e) {
+			logger.error(e.getMessage());
+		}
+
+		MARKLOGIC_DB_NAME = args[7];
 	}
 
 	private static void logHostingAddress() {
-		String port = null;
+		String portStr = null;
 
-		if (System.getProperty("server.port") == null) {
-			port = "8080";
-			logger.info(
-					"Taking default port 8080. The value of the port can be changed, by adding the jvm option: -Dserver.port=8090");
-
-		} else {
-			port = System.getProperty("server.port");
-			logger.info("server.port option found. Taking port " + port);
+		if (System.getProperty("server.port") != null) {
+			portStr = System.getProperty("server.port");
+			logger.info("server.port option found. Taking port " + portStr);
+			logger.info("The value of the port can be changed, by adding the jvm option: -Dserver.port=8090");
 		}
+		else  {
+			portStr = Integer.toString(APPLICATION_PORT);
+			System.setProperty("server.port", portStr);
+		} 
 
-		String serverUrl = "http://localhost:" + port; // path to your new file
+		String serverUrl = "http://localhost:" + portStr;
 		logger.info("Server started at " + serverUrl);
 	}
 

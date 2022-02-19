@@ -28,11 +28,11 @@ public interface RDF4jRepository {
 
 	boolean hasStatement(Statement st);
 
-	RepositoryResult<Statement> getStatements(Resource subj, IRI pred, Value obj, boolean includeInferred);
+	Iterable<Statement> getStatements(Resource subj, IRI pred, Value obj, boolean includeInferred);
 
-	void addStatements(List<Statement> statements);
+	void addStatements(Iterable<Statement> statements);
 
-	void removeStatements(List<Statement> statements);
+	void removeStatements(Iterable<Statement> statements);
 
 	void removeAllStatements();
 

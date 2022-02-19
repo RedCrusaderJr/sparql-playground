@@ -10,7 +10,7 @@
             "request": "launch",
             "mainClass": "swiss.sib.sparql.playground.Application",
             "projectName": "sparql-playground",
-            "args": "geospatial default false"
+            "args": "8080 geospatial default false"
         },
         {
             "type": "java",
@@ -18,7 +18,7 @@
             "request": "launch",
             "mainClass": "swiss.sib.sparql.playground.Application",
             "projectName": "sparql-playground",
-            "args": "geospatial default true"
+            "args": "8080 geospatial default true"
         },
         {
             "type": "java",
@@ -26,7 +26,7 @@
             "request": "launch",
             "mainClass": "swiss.sib.sparql.playground.Application",
             "projectName": "sparql-playground",
-            "args": "geospatial native false"
+            "args": "8080 geospatial native false"
         },
         {
             "type": "java",
@@ -34,23 +34,39 @@
             "request": "launch",
             "mainClass": "swiss.sib.sparql.playground.Application",
             "projectName": "sparql-playground",
-            "args": "geospatial native true"
+            "args": "8080 geospatial native true"
         },
         {
             "type": "java",
-            "name": "Marklogic geospatial",
+            "name": "Marklogic geospatial [instance 1]",
             "request": "launch",
             "mainClass": "swiss.sib.sparql.playground.Application",
             "projectName": "sparql-playground",
-            "args": "geospatial marklogic false java localhost 8111 sparql-playground"
+            "args": "8080 geospatial marklogic false java localhost 8111 sparql-playground-db"
         },
         {
             "type": "java",
-            "name": "Marklogic geospatial with inferencing",
+            "name": "Marklogic geospatial with inferencing [instance 1]",
             "request": "launch",
             "mainClass": "swiss.sib.sparql.playground.Application",
             "projectName": "sparql-playground",
-            "args": "geospatial marklogic true java localhost 8111 sparql-playground"
+            "args": "8080 geospatial marklogic true java localhost 8111 sparql-playground-db"
+        },
+        {
+            "type": "java",
+            "name": "Marklogic geospatial [instance 2]",
+            "request": "launch",
+            "mainClass": "swiss.sib.sparql.playground.Application",
+            "projectName": "sparql-playground",
+            "args": "8081 geospatial marklogic false java localhost 8111 sparql-playground-db"
+        },
+        {
+            "type": "java",
+            "name": "Marklogic geospatial with inferencing [instance 2]",
+            "request": "launch",
+            "mainClass": "swiss.sib.sparql.playground.Application",
+            "projectName": "sparql-playground",
+            "args": "8081 geospatial marklogic true java localhost 8111 sparql-playground-db"
         },
     ]
 }

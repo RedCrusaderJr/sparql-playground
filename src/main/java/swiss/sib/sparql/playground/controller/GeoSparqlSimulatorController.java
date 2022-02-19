@@ -24,16 +24,17 @@ import org.springframework.web.bind.annotation.RestController;
 import swiss.sib.sparql.playground.Application;
 import swiss.sib.sparql.playground.domain.SparqlQuery;
 import swiss.sib.sparql.playground.repository.QueryDictionary;
+import swiss.sib.sparql.playground.repository.impl.RepositoryType;
 import swiss.sib.sparql.playground.service.SparqlService;
 
 @RestController
 public class GeoSparqlSimulatorController implements InitializingBean {
 	private static final Log logger = LogFactory.getLog(SparqlController.class);
 	private static String SIMULATOR_FOLDER_NAME = "simulator";
-	private static String DEFAULT_FOLDER_NAME = "default";
+	private static String ENGINE_NAME = "rdf4j";
 	private static String ASK_FOLDER_NAME = "ask";
+	private static String DEFAULT_FOLDER_NAME = "default";
 	private static String ALTERNATIVE_FOLDER_NAME = "alternative";
-	// private static String MARKLOGIC_FOLDER_NAME = "marklogic";
 
 	@Autowired
 	private QueryDictionary queryDictionary;
@@ -44,6 +45,11 @@ public class GeoSparqlSimulatorController implements InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		this.queryMap = new HashMap<String, Map<String, SparqlQuery>>();
+		
+		if(Application.getRepositoryType().equals(RepositoryType.MARK_LOGIC)) {
+			ENGINE_NAME = "marklogic";
+		}
+		
 		initQueryMap();
 	}
 
@@ -61,7 +67,7 @@ public class GeoSparqlSimulatorController implements InitializingBean {
 				|| this.queryMap.containsKey(ASK_FOLDER_NAME) == false
 				|| this.queryMap.containsKey(ALTERNATIVE_FOLDER_NAME) == false) {
 			throw new NameNotFoundException(
-					"Folder structure of '" + SIMULATOR_FOLDER_NAME + "' not valid. It should contain these folders: '"
+					"Folder structure of '" + SIMULATOR_FOLDER_NAME  + "/" + ENGINE_NAME + "' not valid. It should contain these folders: '"
 							+ DEFAULT_FOLDER_NAME + "', '" + ASK_FOLDER_NAME + "', '" + ALTERNATIVE_FOLDER_NAME + "'");
 		}
 
@@ -99,7 +105,7 @@ public class GeoSparqlSimulatorController implements InitializingBean {
 	}
 
 	private void initQueryMap() {
-		File simulatorFolder = new File(Application.getFolder() + "/" + SIMULATOR_FOLDER_NAME);
+		File simulatorFolder = new File(Application.getFolder() + "/" + SIMULATOR_FOLDER_NAME + "/" + ENGINE_NAME);
 		if (simulatorFolder.exists() == false) {
 			logger.error("Simulator folder not found. Path: " + simulatorFolder.getPath());
 			return;

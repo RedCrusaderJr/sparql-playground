@@ -7,7 +7,6 @@ import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.client.DatabaseClientFactory.SecurityContext;
 import com.marklogic.client.eval.EvalResultIterator;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.rdf4j.model.Value;
@@ -29,6 +28,7 @@ public class JavaClientEvaluator implements JavaScriptQueryEvaluator {
 		EvalResultIterator iterator = client.newServerEval().javascript(jsQuery).eval();
 		client.release();
 
+		//handel propperly -> iterator.close() in finally
 		Object result = iterator;
 		if (!returnRaw) {
 			result = handleEvalResult(iterator);
@@ -83,6 +83,7 @@ public class JavaClientEvaluator implements JavaScriptQueryEvaluator {
 				return false;
 			}
 		}
+
 		return null;
 	}
 

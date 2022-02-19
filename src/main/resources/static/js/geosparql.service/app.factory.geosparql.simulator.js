@@ -254,61 +254,9 @@
 			geoSpatialColumnHeaders.forEach(columnName => {
 				let columnNameVar = columnName;
 				bindings.forEach(binding => {
-					let parsedElement = parseElement(binding[columnNameVar]);
-					shapeRenderer.addParsedElementToBulkRender(parsedElement, lineColor, polygonColor, elementOrigin);
+					shapeRenderer.addElementToBulkRender(binding[columnNameVar], lineColor, polygonColor, elementOrigin);
 				});
 			});
-		}
-
-		function parseElement(element) {
-			let wktRegex = /.*(?<point>POINT) \((?<pointX>.*) (?<pointY>.*)\).*|.*(?<line>LINESTRING) \((?<lineX1>.*) (?<lineY1>.*), (?<lineX2>.*) (?<lineY2>.*)\).*|.*(?<polygon>POLYGON) \(\((?<polygonCoordinates>.*)\)\).*/
-			let wktMatch = element.match(wktRegex);
-
-			if (typeof wktMatch.groups.point == 'undefined'
-			&& typeof wktMatch.groups.line == 'undefined'
-			&& typeof wktMatch.groups.polygon == 'undefined') {
-				return;
-			}
-
-			let parsedElement = new Object;
-			if(wktMatch.groups.point == "POINT") {
-				parsedElement.Name = wktMatch.groups.point;
-				parsedElement.Coordinates = {
-					Shapes: [[{
-							x: wktMatch.groups.pointY.trim(),
-							y: wktMatch.groups.pointX.trim(),
-						}]
-					]
-				};
-			}
-			else if(wktMatch.groups.line == "LINESTRING") {
-				parsedElement.Name = wktMatch.groups.line;
-				parsedElement.Coordinates = {
-					Shapes: [[{
-							x: wktMatch.groups.lineY1.trim(),
-							y: wktMatch.groups.lineX1.trim(),
-						}, {
-							x: wktMatch.groups.lineY2.trim(),
-							y: wktMatch.groups.lineX2.trim(),
-						}]
-					]
-				};
-			}
-			else if(wktMatch.groups.polygon == "POLYGON") {
-				parsedElement.Name = wktMatch.groups.polygon;
-				parsedElement.Coordinates = {
-					Shapes: []
-				};
-
-				let shape = [];
-				wktMatch.groups.polygonCoordinates.split(', ').forEach(function(point) {
-					let pointParts = point.split(' ');
-					shape.push({ x: pointParts[1].trim(), y: pointParts[0].trim()});
-				});
-				parsedElement.Coordinates.Shapes.push(shape);
-			}
-
-			return parsedElement;
 		}
 
 		return instance;

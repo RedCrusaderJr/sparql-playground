@@ -2,29 +2,20 @@
 @prefix geo:     <http://www.opengis.net/ont/geosparql#> .
 @prefix custom: <http://www.custom.org/> .
 
-<http://iec.ch/TC57/2010/CIM-schema-cim17#_4a91e70e-1b84-40c8-8a2e-ada18a8773df>
-    custom:Hazard.DangerZone "POLYGON ((-122.107534 38.289806, -122.102806 38.271495, -122.115806 38.271495, -122.118600 38.283597, -122.114818 38.284894, -122.107534 38.289806))"^^geo:wktLiteral.
+<http://iec.ch/TC57/2010/CIM-schema-cim17#_4a91e70e-1b84-40c8-8a2e-ada18a8773df> custom:Hazard.DangerZone "POLYGON ((-122.107534 38.289806, -122.102806 38.271495, -122.115806 38.271495, -122.118600 38.283597, -122.114818 38.284894, -122.107534 38.289806))"^^geo:wktLiteral.
 	
-<http://iec.ch/TC57/2010/CIM-schema-cim17#_4a91e70e-1b84-40c8-8a2e-ada18a8773df>
-    custom:Hazard.DangerZone "POLYGON ((38.389806 -122.207534, 38.371495 -122.202806, 38.371495 -122.215806, 38.383597 -122.218600, 38.384894 -122.214818, 38.389806 -122.207534))"^^geo:wktLiteral.
-
-<http://iec.ch/TC57/2010/CIM-schema-cim17#_4a91e70e-1b84-40c8-8a2e-ada18a8773df>
-    custom:Hazard.DangerZone "POLYGON ((38.489806 -122.307534, 38.471495 -122.302806, 38.471495 -122.315806, 38.483597 -122.318600, 38.484894 -122.314818, 38.489806 -122.307534))"^^geo:wktLiteral.
-
-<http://iec.ch/TC57/2010/CIM-schema-cim17#_2130dd25-18a3-43bb-8bc6-9b6b4f14441d>
-    custom:Hazard.DangerZone "POLYGON ((38.589806 -122.407534, 38.571495 -122.402806, 38.571495 -122.415806, 38.583597 -122.418600, 38.584894 -122.414818, 38.589806 -122.407534))"^^geo:wktLiteral.
-
-<http://iec.ch/TC57/2010/CIM-schema-cim17#_2130dd25-18a3-43bb-8bc6-9b6b4f14441d>
-    custom:Hazard.DangerZone "POLYGON ((38.689806 -122.507534, 38.671495 -122.502806, 38.671495 -122.515806, 38.683597 -122.518600, 38.684894 -122.514818, 38.689806 -122.507534))"^^geo:wktLiteral.
-
-<http://iec.ch/TC57/2010/CIM-schema-cim17#_2130dd25-18a3-43bb-8bc6-9b6b4f14441d>
-    custom:Hazard.DangerZone "POLYGON ((38.789806 -122.607534, 38.771495 -122.602806, 38.771495 -122.615806, 38.783597 -122.618600, 38.784894 -122.614818, 38.789806 -122.607534))"^^geo:wktLiteral.
-
-<http://iec.ch/TC57/2010/CIM-schema-cim17#_5668dc68-71de-43ff-a676-1afcabb1ae83>
-    custom:Hazard.DangerZone "POLYGON ((38.889806 -122.707534, 38.871495 -122.702806, 38.871495 -122.715806, 38.883597 -122.718600, 38.884894 -122.714818, 38.889806 -122.707534))"^^geo:wktLiteral.
-
-<http://iec.ch/TC57/2010/CIM-schema-cim17#_5668dc68-71de-43ff-a676-1afcabb1ae83>
-    custom:Hazard.DangerZone "POLYGON ((38.989806 -122.807534, 38.971495 -122.802806, 38.971495 -122.815806, 38.983597 -122.818600, 38.984894 -122.814818, 38.989806 -122.807534))"^^geo:wktLiteral.
-
-<http://iec.ch/TC57/2010/CIM-schema-cim17#_5668dc68-71de-43ff-a676-1afcabb1ae83>
-    custom:Hazard.DangerZone "POLYGON ((38.189806 -122.007534, 38.171495 -122.002806, 38.171495 -122.015806, 38.183597 -122.018600, 38.184894 -122.014818, 38.189806 -122.007534))"^^geo:wktLiteral.
+<http://iec.ch/TC57/2010/CIM-schema-cim17#_4a91e70e-1b84-40c8-8a2e-ada18a8773df> custom:Hazard.DangerZone "POLYGON ((-122.207534 38.389806, -122.202806 38.371495, -122.215806 38.371495, -122.218600 38.383597, -122.214818 38.384894, -122.207534 38.389806))"^^geo:wktLiteral.
+																																 
+<http://iec.ch/TC57/2010/CIM-schema-cim17#_4a91e70e-1b84-40c8-8a2e-ada18a8773df> custom:Hazard.DangerZone "POLYGON ((-122.307534 38.489806, -122.302806 38.471495, -122.315806 38.471495, -122.318600 38.483597, -122.314818 38.484894, -122.307534 38.489806))"^^geo:wktLiteral.
+																																 
+<http://iec.ch/TC57/2010/CIM-schema-cim17#_2130dd25-18a3-43bb-8bc6-9b6b4f14441d> custom:Hazard.DangerZone "POLYGON ((-122.407534 38.589806, -122.402806 38.571495, -122.415806 38.571495, -122.418600 38.583597, -122.414818 38.584894, -122.407534 38.589806))"^^geo:wktLiteral.
+																																 
+<http://iec.ch/TC57/2010/CIM-schema-cim17#_2130dd25-18a3-43bb-8bc6-9b6b4f14441d> custom:Hazard.DangerZone "POLYGON ((-122.507534 38.689806, -122.502806 38.671495, -122.515806 38.671495, -122.518600 38.683597, -122.514818 38.684894, -122.507534 38.689806))"^^geo:wktLiteral.
+																																 
+<http://iec.ch/TC57/2010/CIM-schema-cim17#_2130dd25-18a3-43bb-8bc6-9b6b4f14441d> custom:Hazard.DangerZone "POLYGON ((-122.607534 38.789806, -122.602806 38.771495, -122.615806 38.771495, -122.618600 38.783597, -122.614818 38.784894, -122.607534 38.789806))"^^geo:wktLiteral.
+																																 
+<http://iec.ch/TC57/2010/CIM-schema-cim17#_5668dc68-71de-43ff-a676-1afcabb1ae83> custom:Hazard.DangerZone "POLYGON ((-122.707534 38.889806, -122.702806 38.871495, -122.715806 38.871495, -122.718600 38.883597, -122.714818 38.884894, -122.707534 38.889806))"^^geo:wktLiteral.
+																																 
+<http://iec.ch/TC57/2010/CIM-schema-cim17#_5668dc68-71de-43ff-a676-1afcabb1ae83> custom:Hazard.DangerZone "POLYGON ((-122.807534 38.989806, -122.802806 38.971495, -122.815806 38.971495, -122.818600 38.983597, -122.814818 38.984894, -122.807534 38.989806))"^^geo:wktLiteral.
+																																 
+<http://iec.ch/TC57/2010/CIM-schema-cim17#_5668dc68-71de-43ff-a676-1afcabb1ae83> custom:Hazard.DangerZone "POLYGON ((-122.007534 38.189806, -122.002806 38.171495, -122.015806 38.171495, -122.018600 38.183597, -122.014818 38.184894, -122.007534 38.189806))"^^geo:wktLiteral.

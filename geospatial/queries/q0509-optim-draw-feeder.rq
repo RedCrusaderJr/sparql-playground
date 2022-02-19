@@ -1,13 +1,9 @@
 #title:Optim-Draw-feeder
 #comment: draw feeder optimized
 
-#tags:
-#color:
+#tags:draw-geometry,connected-points,wkt,coordinates
+#color:ex-blue
 #img:
-
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-PREFIX geo: <http://www.opengis.net/ont/geosparql#> 
-PREFIX cim: <http://iec.ch/TC57/CIM-generic#> 
 
 SELECT DISTINCT ?g_wktLine
 WHERE {

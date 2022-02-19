@@ -10,8 +10,13 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.client.DatabaseClientFactory.SecurityContext;
+import com.marklogic.client.query.DeleteQueryDefinition;
+import com.marklogic.client.query.SearchQueryDefinition;
+import com.marklogic.client.semantics.SPARQLQueryDefinition;
+import com.marklogic.client.semantics.SPARQLQueryManager;
 import com.marklogic.semantics.rdf4j.MarkLogicRepository;
 
 import org.apache.commons.logging.Log;
@@ -64,6 +69,9 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 
 	private Repository repository = null;
 	private RepositoryConnection connection = null;
+	private SecurityContext securityContext = null;
+	private DatabaseClient databaseClient = null;
+	private SPARQLQueryManager sparqlQueryManager = null;
 
 	// #region Initialization
 	@PostConstruct
@@ -152,17 +160,15 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 	private Boolean initializeMarklogicRepository() throws RDFParseException, RepositoryException, IOException {
 		String host = Application.getMarklogicHost();
 		Integer port = Application.getMarklogicPort();
-		SecurityContext securityContext = new DatabaseClientFactory.DigestAuthContext("admin", "admin");
+		String dbName = Application.getMarklogicDbName();
+
+		this.securityContext = new DatabaseClientFactory.DigestAuthContext("admin", "admin");
+		this.databaseClient = DatabaseClientFactory.newClient(host, port, dbName, securityContext);
+		this.sparqlQueryManager = databaseClient.newSPARQLQueryManager();
 
 		logger.info("Initializing MarkLogic repository");
 
-		// if (Application.getInferencingEnabled()) {
-
-		// } else {
-
-		// }
-
-		this.repository = new MarkLogicRepository(host, port, securityContext);
+		this.repository = new MarkLogicRepository(host, port, this.securityContext);
 		this.repository.init();
 		this.connection = repository.getConnection();
 
@@ -273,28 +279,64 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 		return this.connection.hasStatement(statement, true);
 	}
 
-	public RepositoryResult<Statement> getStatements(Resource subject, IRI predicate, Value object,
+	public Iterable<Statement> getStatements(Resource subject, IRI predicate, Value object,
 			boolean includeInferred) {
 		return this.connection.getStatements(subject, predicate, object, includeInferred);
 	}
 
-	public void addStatements(List<Statement> statements) {
+	public void addStatements(Iterable<Statement> statements) {
 		this.connection.add(statements);
-	}
-
-	public void removeStatements(List<Statement> statements) {
-		this.connection.remove(statements);
 	}
 
 	public void removeAllStatements() {
 		try {
 			RepositoryResult<Statement> statements = this.connection.getStatements(null, null, null, true);
-			this.connection.remove(statements);
+			removeStatements(statements);
 
 		} catch (RepositoryException e) {
 			e.printStackTrace();
 			throw new SparqlTutorialException(e);
 		}
+	}
+
+	public void removeStatements(Iterable<Statement> statements) {
+		try {
+			RepositoryType repositoryType = Application.getRepositoryType();
+
+			if(repositoryType == RepositoryType.DEFAULT || repositoryType == RepositoryType.NATIVE) {
+				this.connection.remove(statements);
+			}
+			else if(repositoryType == RepositoryType.MARK_LOGIC) {
+				SPARQLQueryDefinition deleteQuery = createSparqlDeleteDataQuery(statements);
+				this.sparqlQueryManager.executeUpdate(deleteQuery);
+			}
+
+		} catch (RepositoryException e) {
+			e.printStackTrace();
+			throw new SparqlTutorialException(e);
+		}
+	}
+
+	private SPARQLQueryDefinition createSparqlDeleteDataQuery(Iterable<Statement> statements) {
+		StringBuilder sparqlSb = new StringBuilder();
+		sparqlSb.append("DELETE DATA {\n");
+		for (Statement statement : statements) {
+			sparqlSb.append("<").append(statement.getSubject()).append("> ");
+			sparqlSb.append("<").append(statement.getPredicate()).append("> ");
+			
+			Value object = statement.getObject();
+			if(object.isLiteral()) {
+				sparqlSb.append(object);
+			}
+			else {
+				sparqlSb.append("<").append(object).append(">");
+			}
+			sparqlSb.append(".\n");
+		}
+		sparqlSb.append(" }");
+
+		logger.debug("TOMMO: " + sparqlSb.toString());
+		return this.sparqlQueryManager.newQueryDefinition(sparqlSb.toString());
 	}
 
 	public long countInferredTriplets() {

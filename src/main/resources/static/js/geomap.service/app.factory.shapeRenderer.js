@@ -10,8 +10,8 @@
 
 	//
 	// implement shapeRenderer factory
-	shapeRendererFactory.$inject=["geomapManipulation"]
-	function shapeRendererFactory(geomapManipulation) {
+	shapeRendererFactory.$inject=["geomapManipulation", "wktParser"]
+	function shapeRendererFactory(geomapManipulation, wktParser) {
 		class ShapeRenderer {
 			constructor() {
 				this.bulkRenderGroupKeys = ["POINT", "LINESTRING", "POLYGON"]//-HEALTHY", "POLYGON-AFFECTED", "POLYGON-HAZARD"]
@@ -31,62 +31,13 @@
 				}
 			}
 
-			addElementToBulkRender(element, column, lineColor, polygoneColor, elementOrigin) {
-				let unparsedElement = element[column].value;
-				if(unparsedElement == "POINT EMPTY") {
-					return
-				}
-				let parsedElement = parseElement(unparsedElement);
-				this.addParsedElementToBulkRender(parsedElement, lineColor, polygoneColor, elementOrigin)
-			}
-
-			//todo: get rid of it
-			addParsedElementToBulkRender(parsedElement, lineColor, polygoneColor, elementOrigin) {
-				if(!this.bulkRenderMap.has(parsedElement.Name)) {
-					console.error("KEY: '" + parsedElement.Name + "' not present in 'bulkRenderMap'.");
+			addElementToBulkRender(rawValue, lineColor, polygoneColor, elementOrigin) {
+				if(rawValue == "POINT EMPTY") {
 					return;
 				}
-
-				if(typeof lineColor == 'undefined') {
-					lineColor = { color: 'green' };
-				}
-				if(typeof polygoneColor == 'undefined') {
-					polygoneColor = { color: 'blue' };
-				}
-				//
-				//get group from map
-				let	bulkRenderGroup = this.bulkRenderMap.get(parsedElement.Name);
-				//
-				//change group
-				switch(parsedElement.Name) {
-					case "POINT":
-						let point = geomapManipulation.createPoint(extractPointCoordinates(parsedElement));
-						bulkRenderGroup.push(point);
-						//TODO: think about elementOrigin sub-group
-						break;
-
-					case "LINESTRING":
-						let line = geomapManipulation.createLine(extractLineCoordinates(parsedElement), lineColor);
-						bulkRenderGroup.push(line);
-						//TODO: think about elementOrigin sub-group
-						break;
-
-					case "POLYGON":
-						let polygon = geomapManipulation.createPolygon(extractPolygonCoordinates(parsedElement), polygoneColor);
-						if(bulkRenderGroup.has(elementOrigin) == false) {
-							bulkRenderGroup.set(elementOrigin, []);
-						}
-						let subGroup = bulkRenderGroup.get(elementOrigin);
-						subGroup.push(polygon);
-						bulkRenderGroup.set(elementOrigin, subGroup);
-						break;
-
-					default:
-						break;
-				}
-				//
-				//set group back to map
-				this.bulkRenderMap.set(parsedElement.Name, bulkRenderGroup);
+				
+				let parsedElement = wktParser.parseElement(rawValue);
+				addParsedElementToBulkRender(parsedElement, this.bulkRenderMap, lineColor, polygoneColor, elementOrigin)
 			}
 
 			finishBulkRender() {
@@ -97,124 +48,70 @@
 				this.bulkRenderMap.clear();
 			}
 
-			//
-			//depreciated
-			renderSingleElement(element, column) {
-				let unparsedElement = element[column].value;
-				if(unparsedElement == "POINT EMPTY") {
-					return
-				}
-				let parsedElement = parseElement(unparsedElement);
-				addSingleElementToGeomap(parsedElement);
-			}
-
 			routeChangeStart() {
 				return true;
 			}
 		}
 
 		//
-		//HELPER FUNCTIONS
-		function parseElement(unparsedElement) {
-			let parsedElement = new Object;
-			let splittedElement = unparsedElement.substring(0, unparsedElement.length - 1).split(" (");
-			parsedElement.Name = splittedElement[0].trim();
-			parsedElement.Coordinates = parseCoordinates(splittedElement[1]);
-			return parsedElement;
-		};
-
-		function parseCoordinates(unparsedCoordinates) {
-			let coordinates = new Object;
-			coordinates.Shapes = [];
-			if(unparsedCoordinates.charAt(0) ==='('){
-				let splittedByComma = unparsedCoordinates.split("), (");
-				if(splittedByComma.length > 1){
-					splittedByComma.forEach(shape => {
-						shape = removeParentheses(shape);
-						coordinates.Shapes.push(parseShape(shape));
-					});
-				}
-				else{
-					coordinates.Shapes.push(parseShape(unparsedCoordinates));
-				}
-			}
-			else {
-				coordinates.Shapes.push(parseShape(unparsedCoordinates));
+		//PRIVATE FUNCTIONS
+		function addParsedElementToBulkRender(parsedElement, bulkRenderMap, lineColor, polygoneColor, elementOrigin) {
+			if(!bulkRenderMap.has(parsedElement.Name)) {
+				console.error("KEY: '" + parsedElement.Name + "' not present in 'bulkRenderMap'.");
+				return;
 			}
 
-			return coordinates;
-		};
-
-		function parseShape(coordinates) {
-			let shape = [];
-			coordinates = removeParentheses(coordinates);
-			let splittedCoordinates = coordinates.split(', ');
-			splittedCoordinates.forEach(pointPair => {
-				let splittedPointPair = pointPair.trim().split(' ');
-				shape.push({ x: splittedPointPair[1].trim(), y: splittedPointPair[0].trim() });
-			});
-			return shape;
-		};
-
-		function removeParentheses(str) {
-			str = str.replaceAll("(", "");
-			str = str.replaceAll(")", "");
-			return str;
-		};
-
-		function extractPointCoordinates(parsedElement) {
-			let point = parsedElement.Coordinates.Shapes[0][0];
-			geomapManipulation.setMapViewLatitude(point.x);
-			geomapManipulation.setMapViewLongitude(point.y);
-
-			return point;
-		};
-
-		function extractLineCoordinates(parsedElement) {
-			let lineParsedCoords = parsedElement.Coordinates.Shapes[0];
-			let lineCoordinates = [];
-			lineParsedCoords.forEach(point => {
-				lineCoordinates.push([point.x, point.y]);
-				geomapManipulation.setMapViewLatitude(point.x);
-				geomapManipulation.setMapViewLongitude(point.y);
-			});
-
-			return lineCoordinates;
-		};
-
-		function extractPolygonCoordinates(parsedElement) {
-			let polygonParsedCoords = parsedElement.Coordinates.Shapes[0];
-			let polygonCoordinates = [];
-			polygonParsedCoords.forEach(point => {
-				polygonCoordinates.push([point.x, point.y]);
-				geomapManipulation.setMapViewLatitude(point.x);
-				geomapManipulation.setMapViewLongitude(point.y);
-			});
-
-			return polygonCoordinates;
-		};
-
-		function addSingleElementToGeomap(parsedElement) {
+			if(typeof lineColor == 'undefined') {
+				lineColor = { color: 'green' };
+			}
+			if(typeof polygoneColor == 'undefined') {
+				polygoneColor = { color: 'blue' };
+			}
+			
+			//
+			//get group from map
+			let	bulkRenderGroup = bulkRenderMap.get(parsedElement.Name);
+			//
+			//change group
 			switch(parsedElement.Name) {
 				case "POINT":
-					let point = geomapManipulation.createPoint(extractPointCoordinates(parsedElement));
-					geomapManipulation.addSingleElementToGeomap(point);
+					let point = geomapManipulation.createPoint(wktParser.extractPointCoordinates(parsedElement));
+					bulkRenderGroup.push(point);
+					//TODO: think about elementOrigin sub-group
+
+					geomapManipulation.setMapViewLatitude(point.latitude);
+                	geomapManipulation.setMapViewLongitude(point.longitude);
 					break;
 
 				case "LINESTRING":
-					let line = geomapManipulation.createLine(extractLineCoordinates(parsedElement), { color: 'green' });
-					geomapManipulation.addSingleElementToGeomap(line);
+					let line = geomapManipulation.createLine(wktParser.extractLineCoordinates(parsedElement), lineColor);
+					bulkRenderGroup.push(line);
+					//TODO: think about elementOrigin sub-group
+
+					geomapManipulation.setMapViewLatitude(line._latlngs[0].lat);
+                    geomapManipulation.setMapViewLongitude(line._latlngs[0].lng);
 					break;
 
 				case "POLYGON":
-					let polygon = geomapManipulation.createPolygon(extractPolygonCoordinates(parsedElement), { color: 'blue' })
-					geomapManipulation.addSingleElementToGeomap(polygon);
+					let polygon = geomapManipulation.createPolygon(wktParser.extractPolygonCoordinates(parsedElement), polygoneColor);
+					if(!bulkRenderGroup.has(elementOrigin)) {
+						bulkRenderGroup.set(elementOrigin, []);
+					}
+					let subGroup = bulkRenderGroup.get(elementOrigin);
+					subGroup.push(polygon);
+					bulkRenderGroup.set(elementOrigin, subGroup);
+
+					geomapManipulation.setMapViewLatitude(polygon._latlngs[0][0].lat);
+                    geomapManipulation.setMapViewLongitude(polygon._latlngs[0][0].lng);
 					break;
 
 				default:
 					break;
 			}
-		};
+			//
+			//set group back to map
+			bulkRenderMap.set(parsedElement.Name, bulkRenderGroup);
+		}
 
 		function addMultipleElementsToGeomap(groupKey, bulkRenderGroup) {
 			switch(groupKey) {

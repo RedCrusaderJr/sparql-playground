@@ -520,6 +520,11 @@
 
 		function renderGeospatialData(self) {
 			geomapManipulation.clearDrawnItems();
+
+			if(angular.equals(self.result.head, {})) {
+				return;
+			}
+
 			var geoSpatialColumnHeaders = self.result.head.vars.filter(function (item) {
 				var finder = 'g_';
 				return eval('/' + finder + '/').test(item);
@@ -529,8 +534,13 @@
 				var elements = self.result.results.bindings;
 				shapeRenderer.startBulkRender();
 				geoSpatialColumnHeaders.forEach(column => {
-					elements.forEach(element => {
-						shapeRenderer.addElementToBulkRender(element, column);
+					elements.forEach(binding => {
+						if(typeof binding[column] != 'undefined') {
+							shapeRenderer.addElementToBulkRender(binding[column].value);
+						}
+						else {
+							console.log(binding + ' has undefined value for key: ' + column)
+						}
 					});
 				});
 				shapeRenderer.finishBulkRender();

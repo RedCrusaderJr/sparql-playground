@@ -78,7 +78,7 @@
 
 			//#region Create Element
 			createPoint(pointCoords) {
-				return new L.marker([pointCoords.x, pointCoords.y]).bindPopup("POINT ("+ pointCoords.x + " " + pointCoords.y + ")");
+				return new L.marker([pointCoords.latitude, pointCoords.longitude]).bindPopup("POINT ("+ pointCoords.latitude + " " + pointCoords.longitude + ")");
 			}
 
 			createLine(lineCoords, color) {
@@ -191,7 +191,8 @@
 				polygoneMap.set("HAZARD", hazardPolygonCollection);
 				exportMap.set('POLYGON', polygoneMap);
 
-				exportMap.set("VIEW", [this.mapViewLatitud, this.mapViewLongitudee, this.mapViewZoom]);
+				//LONGITUDE-LATITUDE => ORDER MUST BE MATHCED WITH THE ONE IN 'importGeojson'
+				exportMap.set("VIEW", [this.mapViewLongitude, this.mapViewLatitude, this.mapViewZoom]);
 
 				console.log(exportMap);
 				console.log(this.exportURL);
@@ -233,6 +234,7 @@
 								renderPolygons(elements, self);
 								break;
 							case "VIEW":
+								//LONGITUDE-LATITUDE => ORDER MUST BE MATHCED WITH THE ONE IN 'exportGeojson'
 								self.mapViewLongitude = elements[0];
 								self.mapViewLatitude = elements[1];
 								self.mapViewZoom = elements[2];
@@ -257,7 +259,7 @@
 		}
 
 		//
-		//HELPER FUNCTIONS
+		//#region HELPER FUNCTIONS
 		function createMap(latitude, longitude, zoom) {
 			let geomap = L.map('geomapDiv').setView([latitude, longitude], zoom);
 			L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
@@ -323,6 +325,7 @@
 				}
 			}
 		}
+		//#endregion HELPER FUNCTIONS
 
 		return new GeomapManipulation();
 	}
