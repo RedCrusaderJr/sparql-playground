@@ -8,6 +8,15 @@ import java.util.Locale;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.rdf4j.query.algebra.evaluation.ValueExprEvaluationException;
+import org.geotools.referencing.CRS;
+import org.locationtech.jts.geom.Envelope;
+import org.geotools.geometry.jts.JTS;
+import org.opengis.geometry.Geometry;
+import org.opengis.referencing.FactoryException;
+import org.opengis.referencing.NoSuchAuthorityCodeException;
+import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.opengis.referencing.operation.MathTransform;
+import org.opengis.referencing.operation.TransformException;
 
 public class BufferCreator {
 	private static final Log logger = LogFactory.getLog(BufferCreator.class);
@@ -189,7 +198,7 @@ public class BufferCreator {
 	}
 
 	// extends the line for distanceTotal at each end
-	private void extendLine(BigDecimal slope) {
+	private void extendLine(BigDecimal slope) throws NoSuchAuthorityCodeException, FactoryException, TransformException {
 		// angle of line to x-axis [rad]: angle = arcus tangent(slope)
 		BigDecimal angle = BigDecimal.valueOf(Math.atan(slope.doubleValue())).setScale(prec, mode);
 		if (angle.doubleValue() == 0 || ((Double) angle.doubleValue()).isNaN()) {
@@ -204,6 +213,11 @@ public class BufferCreator {
 		BigDecimal distanceX = distanceY.divide(slope, context); // slope will not be zero if latitudes are not equal
 
 		// TODO: UMT conversion
+		CoordinateReferenceSystem sourceCRS = CRS.decode("EPSG:4326");
+		CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:25832");
+		MathTransform transform = CRS.findMathTransform(sourceCRS, targetCRS, false);
+		Geometry targetGeometry = (Geometry) JTS.transform(new Envelope(), transform);
+		
 		// longitude change [deg]
 		BigDecimal lonDeg = distanceX.divide(lonUnit, context); // lonUnit will never be zero
 		// latitude change [deg]
