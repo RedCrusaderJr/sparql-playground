@@ -1,4 +1,4 @@
-package swiss.sib.sparql.playground.function;
+package swiss.sib.sparql.playground.function.createBuffer;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,6 +8,8 @@ import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.ValueFactory;
 import org.eclipse.rdf4j.query.algebra.evaluation.ValueExprEvaluationException;
 import org.eclipse.rdf4j.query.algebra.evaluation.function.Function;
+import org.opengis.geometry.MismatchedDimensionException;
+import org.opengis.referencing.operation.TransformException;
 
 public class CreateBufferFunction implements Function {
 	public static final String NAMESPACE = "http://example.org/custom-function/";
@@ -33,9 +35,16 @@ public class CreateBufferFunction implements Function {
 		Double y2 = Double.parseDouble(wktLinestringMatcher.group("y2"));
 		Double distanceArg = parseArg1(args[1]);
 
-		BufferCreator bufferCreator = new BufferCreator(x1, y1, x2, y2, distanceArg);
-		String bufferStr = bufferCreator.create();
-		return valueFactory.createLiteral(bufferStr);
+		BufferCreator bufferCreator;
+		try {
+			bufferCreator = new BufferCreator(x1, y1, x2, y2, distanceArg);
+			return valueFactory.createLiteral(bufferCreator.create());
+
+		} catch (MismatchedDimensionException | TransformException e) {
+			e.printStackTrace();
+			return valueFactory.createLiteral(-1);
+		}
+		
 	}
 
 	private Matcher parseArg0(Value arg) {

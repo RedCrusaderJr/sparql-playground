@@ -3,11 +3,13 @@ package swiss.sib.sparql.playground.Performance.Functions;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
-import swiss.sib.sparql.playground.function.BufferCreator;
+import org.opengis.geometry.MismatchedDimensionException;
+import org.opengis.referencing.operation.TransformException;
+
+import swiss.sib.sparql.playground.function.createBuffer.BufferCreator;
 
 @TestInstance(Lifecycle.PER_CLASS)
 public class GeoSPARQLFunctionTest {
@@ -18,7 +20,7 @@ public class GeoSPARQLFunctionTest {
 	private long iterationCounter = 0;
 
 	@Test
-	public void javaFunctionTest() {
+	public void javaFunctionTest() throws MismatchedDimensionException, TransformException {
 		int totalIterations = 3400;
 
 		for (int iteration = 0; iteration < totalIterations; iteration++) {

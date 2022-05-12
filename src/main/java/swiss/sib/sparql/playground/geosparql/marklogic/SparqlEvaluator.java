@@ -147,7 +147,7 @@ public class SparqlEvaluator {
 
 			String mlName = function.marklogicFunction;
 			String modulePath = ((CustomFunction) function).modulePath;
-			sb.append("import { ").append(mlName).append(" } from  '").append(modulePath).append("';");
+			sb.append("import ").append(mlName).append(" from  '").append(modulePath).append("';");
 			sb.append(newLine);
 		}
 

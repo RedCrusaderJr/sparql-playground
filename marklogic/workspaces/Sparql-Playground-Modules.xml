@@ -2,9 +2,11 @@
 <workspace name="Sparql-Playground-Modules">
 <query name="Import modules" focus="true" listorder="1" taborder="1" active="true" database="16004715573724256548" server="6083025199173533748" database-name="sparql-playground-modules" server-name="App-Services" mode="javascript">
 declareUpdate();
-xdmp.documentLoad('&lt;insert-path&gt;/sparql-playground/src/main/java/swiss/sib/sparql/playground/function/javascript/bignumber.js', {'uri': '/bignumber.js'});
-xdmp.documentLoad('&lt;insert-path&gt;/sparql-playground/src/main/java/swiss/sib/sparql/playground/function/javascript/buffer-function.mjs', {'uri': '/buffer-function.mjs'});
-xdmp.documentLoad('&lt;insert-path&gt;/sparql-playground/src/main/java/swiss/sib/sparql/playground/function/javascript/buffer-creator.mjs', {'uri': '/buffer-creator.mjs'});
+xdmp.documentLoad('C:/Users/Dimitrije Mitic/Desktop/RedCrusaderJr-sparql-playground/src/main/java/swiss/sib/sparql/playground/function/javascript/bignumber.js', {'uri': '/bignumber.js'});
+xdmp.documentLoad('C:/Users/Dimitrije Mitic/Desktop/RedCrusaderJr-sparql-playground/src/main/java/swiss/sib/sparql/playground/function/javascript/proj4js.js', {'uri': '/proj4js.js'});
+xdmp.documentLoad('C:/Users/Dimitrije Mitic/Desktop/RedCrusaderJr-sparql-playground/src/main/java/swiss/sib/sparql/playground/function/javascript/crs-transformator.mjs', {'uri': '/crs-transformator.mjs'});
+xdmp.documentLoad('C:/Users/Dimitrije Mitic/Desktop/RedCrusaderJr-sparql-playground/src/main/java/swiss/sib/sparql/playground/function/javascript/create-buffer/create-buffer-function.mjs', {'uri': '/create-buffer-function.mjs'});
+xdmp.documentLoad('C:/Users/Dimitrije Mitic/Desktop/RedCrusaderJr-sparql-playground/src/main/java/swiss/sib/sparql/playground/function/javascript/create-buffer/buffer-creator.mjs', {'uri': '/buffer-creator.mjs'});    
 </query>
 </workspace>
 </export>

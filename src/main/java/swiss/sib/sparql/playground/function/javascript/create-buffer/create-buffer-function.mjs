@@ -1,6 +1,6 @@
-import { BufferCreator } from  "/buffer-creator.mjs";
+import BufferCreator from  "/buffer-creator.mjs";
 
-export function bufferFunction(lineStr, distanceArg) {
+export default function bufferFunction(lineStr, distanceArg) {
 	if(lineStr == null || distanceArg == null) {
 		throw new Error("One of arguments was null/undefined -> lineStr: " + lineStr + ", distanceArg: " + distanceArg);
 	}
@@ -15,8 +15,14 @@ export function bufferFunction(lineStr, distanceArg) {
 		throw new Error("Not a number: " + distanceArg);
 	}
 
-	let bufferCreator = new BufferCreator(x1, y1, x2, y2, distanceArg);
-	return bufferCreator.evaluate();
+	try {
+		let bufferCreator = new BufferCreator(parseFloat(x1), parseFloat(y1), parseFloat(x2), parseFloat(y2), parseFloat(distanceArg));
+		return bufferCreator.evaluate();
+			
+	} catch (error) {
+		return "" + error;
+	}
+
 }
 
 function parseLineStr(lineStr) {

@@ -1,5 +1,5 @@
 var sem = require('/MarkLogic/semantics.xqy');
-import { bufferFunction } from  '/buffer-function.mjs';
+import bufferFunction from  '/create-buffer-function.mjs';
 
 var query = `
 SELECT DISTINCT *

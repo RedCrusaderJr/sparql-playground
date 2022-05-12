@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -13,8 +12,6 @@ import javax.annotation.PostConstruct;
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.client.DatabaseClientFactory.SecurityContext;
-import com.marklogic.client.query.DeleteQueryDefinition;
-import com.marklogic.client.query.SearchQueryDefinition;
 import com.marklogic.client.semantics.SPARQLQueryDefinition;
 import com.marklogic.client.semantics.SPARQLQueryManager;
 import com.marklogic.semantics.rdf4j.MarkLogicRepository;

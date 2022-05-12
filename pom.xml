@@ -28,6 +28,7 @@
 	</dependencyManagement>
 
 	<dependencies>
+		<!-- org.springframework.boot -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -38,6 +39,8 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- org.eclipse.rdf4j -->
 		<dependency>
 			<groupId>org.eclipse.rdf4j</groupId>
 			<artifactId>rdf4j-query</artifactId>
@@ -69,27 +72,8 @@
 			<type>pom</type>
 			<version>3.7.4</version>
 		</dependency>
-		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20070829</version>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-api</artifactId>
-			<version>5.8.2</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.5.13</version>
-		</dependency>
+
+		<!-- com.marklogic -->
 		<dependency>
 			<groupId>com.marklogic</groupId>
 			<artifactId>marklogic-rdf4j</artifactId>
@@ -100,26 +84,74 @@
 			<artifactId>marklogic-client-api</artifactId>
 			<version>5.4.0</version>
 		</dependency>
+
+		<!-- org.geotools -->
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-referencing</artifactId>
+			<version>26.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-geotiff</artifactId>
+			<version>26.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.geotools</groupId>
+			<artifactId>gt-epsg-hsql</artifactId>
+			<version>26.3</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.locationtech.proj4j/proj4j -->
+		<dependency>
+			<groupId>org.locationtech.proj4j</groupId>
+			<artifactId>proj4j</artifactId>
+			<version>1.1.5</version>
+		</dependency>
+
+		<!-- org.json -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20070829</version>
+		</dependency>
+
+		<!-- org.apache.httpcomponents -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5.13</version>
+		</dependency>
+
+		<!-- com.fasterxml.jackson.core -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
-			<version>2.12.2</version>
+			<version>2.11.4</version>
 		</dependency>
+
+		<!-- ch.qos.logback -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.2.3</version>
+			<version>1.2.9</version>
 		</dependency>
+
+		<!-- javax.xml.bind -->
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
 			<version>2.3.1</version>
 		</dependency>
+		
+		<!-- com.sun.activation -->
 		<dependency>
 			<groupId>com.sun.activation</groupId>
 			<artifactId>javax.activation</artifactId>
 			<version>1.2.0</version>
 		</dependency>
+
+		<!-- org.slf4j -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -130,22 +162,28 @@
 			<artifactId>slf4j-jdk14</artifactId>
 			<version>1.7.32</version>
 		</dependency>
+
+		<!-- org.junit.jupiter -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.8.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
+		</dependency>	
+
+		<!-- com.gembox -->
 		<dependency>
 			<groupId>com.gembox</groupId>
 			<artifactId>gembox-spreadsheet</artifactId>
-			<version>1.1.1246</version> <!-- You can choose other version -->
+			<version>1.1.1246</version>
 		</dependency>
-		<dependency>
-			<groupId>org.geotools</groupId>
-			<artifactId>gt-referencing</artifactId>
-			<version>26.3</version>
-		</dependency>
-        <dependency>
-            <groupId>org.geotools</groupId>
-            <artifactId>gt-geotiff</artifactId>
-            <version>26.3</version>
-        </dependency>
 	</dependencies>
+
 	<repositories>
 		<repository>
 			<id>jcenter</id>

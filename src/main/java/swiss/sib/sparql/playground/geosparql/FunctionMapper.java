@@ -49,7 +49,7 @@ public class FunctionMapper {
 		function2.functionUri = "http://example.org/custom-function/buffer";
 		function2.abbreviation = "bFun";
 		function2.marklogicFunction = "bufferFunction";
-		function2.modulePath = "/buffer-function.mjs";
+		function2.modulePath = "/create-buffer-function.mjs";
 
 		addFunction(function1);
 		addFunction(function2);
