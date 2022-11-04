@@ -1,11 +1,13 @@
 package swiss.sib.sparql.playground.geosparql.marklogic.query.evaluator;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.client.DatabaseClientFactory.SecurityContext;
+import com.marklogic.client.eval.EvalResult;
 import com.marklogic.client.eval.EvalResultIterator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -49,56 +51,28 @@ public class JavaClientEvaluator implements JavaScriptQueryEvaluator {
 
 	// ponovo razmotriti da li je ovo prepakivanje neophodno - Moze li se do fronta
 	// proslediti json... tj premeriti pazljivo koliko sta traje
-	private Object handleEvalResult(EvalResultIterator iterator) throws Exception {
-		Object result;
-
-		long booleanStart = System.currentTimeMillis();
-		result = tryHandleAsBooleanResult(iterator);
-		double booleanDuration = ((double) (System.currentTimeMillis() - booleanStart)) / (double) 1000;
-		logger.info("handleEvalResult -> handling boolean query result lasted " + booleanDuration + " sec" + NEW_LINE);
-		if (result != null) {
-			return result;
+	private Object handleEvalResult(EvalResultIterator iterator) throws Exception {		
+		if (!iterator.hasNext()) {
+			return null;
 		}
-
-		long tupleStart = System.currentTimeMillis();
-		result = tryHandleAsTupleQueryResult(iterator);
-		double tupleDuration = ((double) (System.currentTimeMillis() - tupleStart)) / (double) 1000;
-		logger.info("handleEvalResult -> handling tuple query result lasted " + tupleDuration + " sec" + NEW_LINE);
-		if (result != null) {
-			return result;
+		
+		String resultStr = iterator.next().getAs(String.class);
+		if ("true".equals(resultStr)) {
+			return true;
 		}
-
-		throw new Exception("Unknown result type.");
-	}
-
-	private Boolean tryHandleAsBooleanResult(EvalResultIterator iterator) {
-		if (iterator.hasNext()) {
-			String resultStr = iterator.next().getAs(String.class);
-
-			if ("true".equals(resultStr)) {
-				return true;
-			}
-
-			if ("false".equals(resultStr)) {
-				return false;
-			}
+		if ("false".equals(resultStr)) {
+			return false;
 		}
-
-		return null;
-	}
-
-	private TupleQueryResult tryHandleAsTupleQueryResult(EvalResultIterator iterator) throws JSONException {
+		
+		JSONObject jsonObj;
 		Boolean bindingNamesInitialized = false;
 		List<String> bindingNames = new ArrayList<String>();
 		ValidatingValueFactory valueFactory = new ValidatingValueFactory();
 		TupleQueryResultBuilder builder = new TupleQueryResultBuilder();
 
-		while (iterator.hasNext()) {
-			String jsonStr = iterator.next().getAs(String.class);
-			JSONObject jsonObj;
+		while(true) {
 			try {
-				jsonObj = new JSONObject(jsonStr);
-
+				jsonObj = new JSONObject(resultStr);
 			} catch (JSONException ex) {
 				// try {// new JSONArray(jsonStr);// } catch (JSONException ex)...
 				logger.error("Not valid JSON string in tuple query result.", ex);
@@ -128,6 +102,13 @@ public class JavaClientEvaluator implements JavaScriptQueryEvaluator {
 				builder.startQueryResult(bindingNames);
 			}
 			builder.handleSolution(new ListBindingSet(bindingNames, values));
+
+			if(iterator.hasNext()) {
+				resultStr = iterator.next().getAs(String.class);
+			}
+			else {
+				break;
+			}
 		}
 
 		// handling the empty result...

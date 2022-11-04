@@ -128,14 +128,17 @@ public class SparqlService implements InitializingBean {
 		this.prefixesString = IOUtils.readFile(Application.getFolder() + "/prefixes.ttl", "");
 
 		String prefixes[] = this.prefixesString.split("\n");
-		Map<String, String> m = new TreeMap<String, String>();
+		Map<String, String> prefixMap = new TreeMap<String, String>();
 
-		for (String p : prefixes) {
-			String[] ptks = p.split(" ");
-			m.put(ptks[1].replaceAll(":", ""), ptks[2].replaceAll("<", "").replaceAll(">", ""));
+		for (String prefix : prefixes) {
+			String[] prefixParts = prefix.split(" ");
+			String prefixId = prefixParts[1].replaceAll(":", "").trim();
+			String prefixUri = prefixParts[2].replaceAll("<", "").replaceAll(">", "").trim();
+
+			prefixMap.put(prefixId, prefixUri);
 		}
 
-		this.setPrefixes(m);
+		this.setPrefixes(prefixMap);
 	}
 
 	public void writeData(OutputStream out) {

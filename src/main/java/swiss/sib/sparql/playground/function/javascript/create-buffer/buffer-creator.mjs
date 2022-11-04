@@ -67,19 +67,19 @@ export default class BufferCreator {
 		
 		// point1.x = utmEasting1 - distanceTotal
 		// point1.y = utmNorthing1 - distanceTotal
-		let point1 = new Proj4js.Point([this.utmEasting1.minus(this.distanceTotal).toNumber(), this.utmNorthing1.minus(this.distanceTotal).toNumber()]);
+		let point1 = new Proj4js.toPoint([this.utmEasting1.minus(this.distanceTotal).toNumber(), this.utmNorthing1.minus(this.distanceTotal).toNumber()]);
 	
 		// point2.x = utmEasting1 + distanceTotal
 		// point2.y = utmNorthing1 - distanceTotal
-		let point2 = new Proj4js.Point([this.utmEasting1.plus(this.distanceTotal).toNumber(), this.utmNorthing1.minus(this.distanceTotal).toNumber()]);
+		let point2 = new Proj4js.toPoint([this.utmEasting1.plus(this.distanceTotal).toNumber(), this.utmNorthing1.minus(this.distanceTotal).toNumber()]);
 	
 		// point3.x = utmEasting2 + distanceTotal
 		// point3.y = utmNorthing2 + distanceTotal
-		let point3 = new Proj4js.Point([this.utmEasting2.plus(this.distanceTota).toNumber(), this.utmNorthing2.plus(this.distanceTota).toNumber()]);
+		let point3 = new Proj4js.toPoint([this.utmEasting2.plus(this.distanceTotal).toNumber(), this.utmNorthing2.plus(this.distanceTotal).toNumber()]);
 	
 		// point4.x = utmEasting2 - distanceTotal
 		// point4.y = utmNorthing2 + distanceTotal
-		let point4 = new Proj4js.Point([this.utmEasting2.minus(this.distanceTota).toNumber(), this.utmNorthing2.plus(this.distanceTota).toNumber()]);
+		let point4 = new Proj4js.toPoint([this.utmEasting2.minus(this.distanceTotal).toNumber(), this.utmNorthing2.plus(this.distanceTotal).toNumber()]);
 	
 		return formatPolygonStr(point1, point2, point3, point4);
 	}
@@ -97,19 +97,19 @@ export default class BufferCreator {
 	
 		// point1.x = utmEasting1 - distanceTotal
 		// point1.y = utmNorthing1 - distanceTotal
-		let point1 = new Proj4js.Point([this.utmEasting1.minus(this.distanceTotal).toNumber(), this.utmNorthing1.minus(this.distanceTotal).toNumber()]);
+		let point1 = new Proj4js.toPoint([this.utmEasting1.minus(this.distanceTotal).toNumber(), this.utmNorthing1.minus(this.distanceTotal).toNumber()]);
 	
 		// point2.x = utmEasting1 - distanceTotal
 		// point2.y = utmNorthing1 + distanceTotal
-		let point2 = new Proj4js.Point([this.utmEasting1.minus(this.distanceTotal).toNumber(), this.utmNorthing1.plus(this.distanceTotal).toNumber()]);
+		let point2 = new Proj4js.toPoint([this.utmEasting1.minus(this.distanceTotal).toNumber(), this.utmNorthing1.plus(this.distanceTotal).toNumber()]);
 	
 		// point3.x = utmEasting2 + distanceTotal
 		// point3.y = utmNorthing2 + distanceTotal
-		let point3 = new Proj4js.Point([this.utmEasting2.plus(this.distanceTotal).toNumber(), this.utmNorthing2.plus(this.distanceTotal).toNumber()]);
+		let point3 = new Proj4js.toPoint([this.utmEasting2.plus(this.distanceTotal).toNumber(), this.utmNorthing2.plus(this.distanceTotal).toNumber()]);
 	
 		// point4.x = utmEasting2 + distanceTotal
 		// point4.y = utmNorthing2 - distanceTotal
-		let point4 = new Proj4js.Point([this.utmEasting2.plus(this.distanceTotal).toNumber(), this.utmNorthing2.minus(this.distanceTotal).toNumber()]);
+		let point4 = new Proj4js.toPoint([this.utmEasting2.plus(this.distanceTotal).toNumber(), this.utmNorthing2.minus(this.distanceTotal).toNumber()]);
 	
 		return formatPolygonStr(point1, point2, point3, point4);
 	}

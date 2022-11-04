@@ -26,7 +26,7 @@ public class GeoSPARQLFunctionTest {
 		for (int iteration = 0; iteration < totalIterations; iteration++) {
 			long functionStart = System.currentTimeMillis();
 
-			BufferCreator bufferCreator = new BufferCreator(1.0, 1.0, 0.0, 0.0, 50.0);
+			BufferCreator bufferCreator = new BufferCreator(-122.0, 32.0, -123.0, 31.0, 50.0);
 			String bufferStr = bufferCreator.create();
 
 			long functionDuration = System.currentTimeMillis() - functionStart;

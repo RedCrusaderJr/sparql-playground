@@ -79,6 +79,7 @@ public class MarklogicSupportTest {
 	}
 
 	@Test
+	@Disabled
 	public void evaluateQueryTest() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT *").append(System.lineSeparator());
@@ -246,6 +247,42 @@ public class MarklogicSupportTest {
 			// POSTMAN: success with 3 bindings
 		}
 		logger.debug(String.format("END of Test: evaluateJsGeospatialMarklogic3rdPartyTest" + System.lineSeparator()));
+	}
+
+	@Test
+	public void evaluateJsGeospatialWithSelectSubqueryOnMarklogicJavaApiTest() throws Exception {
+		logger.debug(String.format("Test: evaluateJsGeospatialWithSelectSubqueryOnMarklogicJavaApiTest"));
+		JavaClientEvaluator javaApi = new JavaClientEvaluator();
+
+		for (String functionUri : supportedFunctions) {
+			//String jsQuery = marklogicTestQueries.get(functionUri);
+			String jsQuery = createQueryWithGeosparqlBinaryFunctionCallAndSelectSubquery(functionUri);
+			logger.debug(String.format("JS query:%s%s", System.lineSeparator(), jsQuery));
+
+			Object result = javaApi.evaluateJavaScript(jsQuery, false);
+			Assertions.assertEquals(true, result instanceof TupleQueryResult);
+			printoutTupleQueryResult((TupleQueryResult) result);
+		}
+		logger.debug(String.format("END of Test: evaluateJsGeospatialWithSelectSubqueryOnMarklogicJavaApiTest" + System.lineSeparator()));
+	}
+
+	private static String createQueryWithGeosparqlBinaryFunctionCallAndSelectSubquery(String function) {
+		String bindStr = String.format("  BIND(<%s>(?wktPoint1, ?wktPoint2) as ?functionResult)", function);
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("PREFIX geo:<http://www.opengis.net/ont/geosparql#>").append(System.lineSeparator());
+		sb.append("SELECT DISTINCT ?functionResult").append(System.lineSeparator());
+		sb.append("WHERE {").append(System.lineSeparator());
+		sb.append("  {").append(System.lineSeparator());
+		sb.append("    SELECT DISTINCT ?wktPoint1 ?wktPoint2").append(System.lineSeparator());
+		sb.append("    WHERE {").append(System.lineSeparator());
+		sb.append("      BIND(\"POINT (1 1)\"^^geo:wktLiteral as ?wktPoint1)").append(System.lineSeparator());
+		sb.append("      BIND(\"POINT (2 2)\"^^geo:wktLiteral as ?wktPoint2)").append(System.lineSeparator());
+		sb.append("    }").append(System.lineSeparator());
+		sb.append("  }").append(System.lineSeparator());
+		sb.append(bindStr).append(System.lineSeparator());
+		sb.append("}").append(System.lineSeparator());
+		return sb.toString();
 	}
 
 	// MAYBE one day

@@ -39,7 +39,7 @@ public class Application {
 	// argument with index 6
 	private static int MARKLOGIC_PORT = 8111;
 	// argument with index 7
-	private static String MARKLOGIC_DB_NAME = "sparql-playground";
+	private static String MARKLOGIC_DB_NAME = "sparql-playground-db";
 
 	public static int getApplicationPort() {
 		return APPLICATION_PORT;

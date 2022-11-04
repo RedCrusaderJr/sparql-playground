@@ -87,6 +87,7 @@ public class SparqlServiceIntegrationTest {
 	}
 
 	@Test
+	@Disabled
 	public void testFederatedQueryWithDBPedia() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		sb.append("PREFIX dbp: <http://dbpedia.org/property/>").append(System.lineSeparator());

@@ -16,8 +16,11 @@ export default function bufferFunction(lineStr, distanceArg) {
 	}
 
 	try {
+		console.log("buffer-creator -> lineStr: " + lineStr + ", distance: " + distanceArg);
 		let bufferCreator = new BufferCreator(parseFloat(x1), parseFloat(y1), parseFloat(x2), parseFloat(y2), parseFloat(distanceArg));
-		return bufferCreator.evaluate();
+		let result = bufferCreator.evaluate()
+		console.log("buffer-creator -> result: " + result);
+		return result;
 			
 	} catch (error) {
 		return "" + error;
