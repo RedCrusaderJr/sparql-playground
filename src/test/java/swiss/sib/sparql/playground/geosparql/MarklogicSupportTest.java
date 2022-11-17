@@ -5,13 +5,13 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import swiss.sib.sparql.playground.Application;
 import swiss.sib.sparql.playground.domain.SparqlQueryType;
-import swiss.sib.sparql.playground.geosparql.marklogic.SparqlEvaluator;
-import swiss.sib.sparql.playground.geosparql.marklogic.query.evaluator.JavaClientEvaluator;
-import swiss.sib.sparql.playground.geosparql.marklogic.query.evaluator.NodeJsClientEvaluator;
-import swiss.sib.sparql.playground.geosparql.marklogic.query.evaluator.RestClientEvaluator;
+import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.java.JavaClientEvaluator;
+import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.nodejs.NodeJsClientEvaluator;
+import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.rest.RestClientEvaluator;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,6 +46,9 @@ public class MarklogicSupportTest {
 	private static Map<String, String> marklogicTestQueries;
 	private static Repository inMemoryRepo;
 	private static Repository marklogicRepo;
+
+	@Autowired
+	private GeoSparqlEvaluator geoSparqlEvaluator;
 
 	@BeforeAll
 	public static void beforeAll() {
@@ -88,8 +91,7 @@ public class MarklogicSupportTest {
 		sb.append("}").append(System.lineSeparator());
 		sb.append("LIMIT 10");
 
-		SparqlEvaluator ms = SparqlEvaluator.getInstance();
-		Object result = ms.evaluateQuery(sb.toString());
+		Object result = geoSparqlEvaluator.evaluateQuery(sb.toString());
 		Assertions.assertEquals(true, result instanceof TupleQueryResult);
 		TupleQueryResult tupleQueryResult = (TupleQueryResult) result;
 
@@ -145,13 +147,12 @@ public class MarklogicSupportTest {
 	@Test
 	public void evaluateGeospatialOnMarklogicRepoTest() throws Exception {
 		logger.debug(String.format("Test: evaluateGeospatialMarklogicRepoTest"));
-		SparqlEvaluator ms = SparqlEvaluator.getInstance();
-
+		
 		for (String functionUri : supportedFunctions) {
 			String sparqlQuery = geosparqlTestQueries.get(functionUri);
 			logger.debug(String.format("Sparql query:%s%s", System.lineSeparator(), sparqlQuery));
 
-			Object result = ms.evaluateQuery(sparqlQuery);
+			Object result = geoSparqlEvaluator.evaluateQuery(sparqlQuery);
 			Assertions.assertEquals(true, result instanceof TupleQueryResult);
 			printoutTupleQueryResult((TupleQueryResult) result);
 		}
@@ -181,7 +182,7 @@ public class MarklogicSupportTest {
 			String jsQuery = marklogicTestQueries.get(functionUri);
 			logger.debug(String.format("JS query:%s%s", System.lineSeparator(), jsQuery));
 
-			TupleQueryResult result = restApi.evaluateJavaScript(jsQuery, false);
+			TupleQueryResult result = restApi.evaluate(jsQuery, false);
 			printoutTupleQueryResult(result);
 		}
 		logger.debug(String.format("END of Test: evaluateJsGeospatialMarklogicRestApiTest" + System.lineSeparator()));
@@ -196,7 +197,7 @@ public class MarklogicSupportTest {
 			String jsQuery = marklogicTestQueries.get(functionUri);
 			logger.debug(String.format("JS query:%s%s", System.lineSeparator(), jsQuery));
 
-			Object result = javaApi.evaluateJavaScript(jsQuery, false);
+			Object result = javaApi.evaluate(jsQuery, false);
 			Assertions.assertEquals(true, result instanceof TupleQueryResult);
 			printoutTupleQueryResult((TupleQueryResult) result);
 		}
@@ -213,7 +214,7 @@ public class MarklogicSupportTest {
 			String jsQuery = marklogicTestQueries.get(functionUri);
 			logger.debug(String.format("JS query:%s%s", System.lineSeparator(), jsQuery));
 
-			Object result = nodeJsApi.evaluateJavaScript(jsQuery, false);
+			Object result = nodeJsApi.evaluate(jsQuery, false);
 			Assertions.assertEquals(true, result instanceof TupleQueryResult);
 			printoutTupleQueryResult((TupleQueryResult) result);
 		}
@@ -259,7 +260,7 @@ public class MarklogicSupportTest {
 			String jsQuery = createQueryWithGeosparqlBinaryFunctionCallAndSelectSubquery(functionUri);
 			logger.debug(String.format("JS query:%s%s", System.lineSeparator(), jsQuery));
 
-			Object result = javaApi.evaluateJavaScript(jsQuery, false);
+			Object result = javaApi.evaluate(jsQuery, false);
 			Assertions.assertEquals(true, result instanceof TupleQueryResult);
 			printoutTupleQueryResult((TupleQueryResult) result);
 		}

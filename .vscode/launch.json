@@ -12,23 +12,25 @@
             "projectName": "sparql-playground",
             "args": "8080 geospatial default false"
         },
-        {
-            "type": "java",
-            "name": "Launch - Default geospatial with inferencing",
-            "request": "launch",
-            "mainClass": "swiss.sib.sparql.playground.Application",
-            "projectName": "sparql-playground",
-            "args": "8080 geospatial default true"
-        },
-        {
-            "type": "java",
-            "name": "Attach - Default geospatial",
-            "request": "attach",
-            "projectName": "sparql-playground",
-            "hostName": "localhost",
-            "port": 8801,
-            "processId": "${command:PickJavaProcess}"
-        },
+        // inferencing
+        // {
+        //     "type": "java",
+        //     "name": "Launch - Default geospatial with inferencing",
+        //     "request": "launch",
+        //     "mainClass": "swiss.sib.sparql.playground.Application",
+        //     "projectName": "sparql-playground",
+        //     "args": "8080 geospatial default true"
+        // },
+        // attach
+        // {
+        //     "type": "java",
+        //     "name": "Attach - Default geospatial",
+        //     "request": "attach",
+        //     "projectName": "sparql-playground",
+        //     "hostName": "localhost",
+        //     "port": 8801,
+        //     "processId": "${command:PickJavaProcess}"
+        // },
         {
             "type": "java",
             "name": "Launch - Native geospatial",
@@ -39,45 +41,19 @@
         },
         {
             "type": "java",
-            "name": "Launch - Native geospatial with inferencing",
+            "name": "Launch - Marklogic geospatial - Jena SPARQL parser",
             "request": "launch",
             "mainClass": "swiss.sib.sparql.playground.Application",
             "projectName": "sparql-playground",
-            "args": "8080 geospatial native true"
+            "args": "8080 geospatial marklogic false java localhost 8111 sparql-playground-db jena"
         },
         {
             "type": "java",
-            "name": "Attach - Native geospatial",
-            "request": "attach",
-            "projectName": "sparql-playground",
-            "hostName": "localhost",
-            "port": 8802,
-            "processId": "${command:PickJavaProcess}"
-        },
-        {
-            "type": "java",
-            "name": "Launch - Marklogic geospatial",
+            "name": "Launch - Marklogic geospatial - RDF4J SPARQL parser",
             "request": "launch",
             "mainClass": "swiss.sib.sparql.playground.Application",
             "projectName": "sparql-playground",
-            "args": "8080 geospatial marklogic false java localhost 8111 sparql-playground-db"
-        },
-        {
-            "type": "java",
-            "name": "Marklogic geospatial with inferencing",
-            "request": "launch",
-            "mainClass": "swiss.sib.sparql.playground.Application",
-            "projectName": "sparql-playground",
-            "args": "8080 geospatial marklogic true java localhost 8111 sparql-playground-db"
-        },
-        {
-            "type": "java",
-            "name": "Attach - Marklogic geospatial",
-            "request": "attach",
-            "projectName": "sparql-playground",
-            "hostName": "localhost",
-            "port": 8803,
-            "processId": "${command:PickJavaProcess}"
+            "args": "8080 geospatial marklogic false java localhost 8111 sparql-playground-db rdf4j"
         },
     ]
 }

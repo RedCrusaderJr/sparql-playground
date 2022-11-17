@@ -1,4 +1,4 @@
-package swiss.sib.sparql.playground.geosparql.marklogic.query.evaluator;
+package swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.rest;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -21,16 +21,17 @@ import org.eclipse.rdf4j.query.impl.ListBindingSet;
 import org.eclipse.rdf4j.query.impl.TupleQueryResultBuilder;
 
 import swiss.sib.sparql.playground.Application;
+import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.JavaScriptQueryEvaluator;
 
 public class RestClientEvaluator implements JavaScriptQueryEvaluator {
-	private static final Log logger = LogFactory.getLog(JavaClientEvaluator.class);
+	private static final Log logger = LogFactory.getLog(RestClientEvaluator.class);
 
 	private final Pattern bindingsPattern = Pattern.compile("map\\{(?<bindings>.*)\\}");
 	private final Pattern nameStrValuePattern = Pattern.compile("\"(?<bindingName>.*)\":\"(?<value>.*)\"");
 	private final Pattern nameSimpleValuePattern = Pattern.compile("\"(?<bindingName>.*)\":(?<value>.*)");
 
 	// utvrditi precizno zasto ne radi...
-	public TupleQueryResult evaluateJavaScript(String jsQuery, Boolean reurnRaw) throws IOException {
+	public TupleQueryResult evaluate(String jsQuery, Boolean reurnRaw) throws IOException {
 		try {
 			String boundaryStr = "BOUNDARY";
 			String params = String.format("javascript=%s", jsQuery);

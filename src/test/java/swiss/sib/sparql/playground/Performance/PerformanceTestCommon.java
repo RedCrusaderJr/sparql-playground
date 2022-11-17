@@ -42,11 +42,12 @@ import org.eclipse.rdf4j.sail.memory.MemoryStore;
 import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import swiss.sib.sparql.playground.domain.JavaScriptQuery;
 import swiss.sib.sparql.playground.domain.SparqlQuery;
 import swiss.sib.sparql.playground.domain.SparqlQueryType;
-import swiss.sib.sparql.playground.geosparql.marklogic.SparqlEvaluator;
+import swiss.sib.sparql.playground.geosparql.GeoSparqlEvaluator;
 import swiss.sib.sparql.playground.repository.QueryDictionary;
 
 public class PerformanceTestCommon {
@@ -72,7 +73,8 @@ public class PerformanceTestCommon {
 	private Map<String, Map<String, JavaScriptQuery>> javascriptQueryMap;
 	private MetricTracer metricTracer;
 	private ExcelTracer excelTracer;
-	private SparqlEvaluator sparqlEvaluator;
+	@Autowired
+	private GeoSparqlEvaluator geoSparqlEvaluator;
 
 	public PerformanceTestCommon(MetricTracer metricTracer, String queryFolder, String cimxmlFolder,
 			String excelFileName) throws Exception {
@@ -82,7 +84,6 @@ public class PerformanceTestCommon {
 		this.excelTracer = new ExcelTracer();
 		this.excelTracer.startExcelFile(excelFileName);
 
-		this.sparqlEvaluator = SparqlEvaluator.getInstance();
 		this.queryDictionary = new QueryDictionary();
 		this.sparqlQueryMap = new HashMap<String, Map<String, SparqlQuery>>();
 		this.javascriptQueryMap = new HashMap<String, Map<String, JavaScriptQuery>>();
@@ -399,7 +400,7 @@ public class PerformanceTestCommon {
 
 	private Object evaluateOnMarklogicSemanticApi(String queryStr) throws Exception {
 		long start = System.currentTimeMillis();
-		Object result = this.sparqlEvaluator.evaluateQuery(queryStr, true);
+		Object result = this.geoSparqlEvaluator.evaluateQuery(queryStr, true);
 		long duration = System.currentTimeMillis() - start;
 		this.metricTracer
 				.appendMarkLogic("evaluateOnMarklogicSemanticApi -> evaluating query lasted " + duration + " ms");

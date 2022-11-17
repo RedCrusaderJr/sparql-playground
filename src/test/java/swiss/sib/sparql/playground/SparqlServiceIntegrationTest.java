@@ -82,7 +82,7 @@ public class SparqlServiceIntegrationTest {
 		sb.append("}");
 		String federatedQuery = sb.toString();
 
-		TupleQueryResult result = sparqlService.executeSelectQuery(federatedQuery);
+		TupleQueryResult result = (TupleQueryResult)sparqlService.evaluateQuery(federatedQuery);
 		Assertions.assertEquals(2, countResults(result));
 	}
 
@@ -107,7 +107,7 @@ public class SparqlServiceIntegrationTest {
 		sb.append("}");
 		String federatedQuery = sb.toString();
 
-		TupleQueryResult result = sparqlService.executeSelectQuery(federatedQuery);
+		TupleQueryResult result = (TupleQueryResult)sparqlService.evaluateQuery(federatedQuery);
 		Assertions.assertTrue(countResults(result) > 3);
 	}
 

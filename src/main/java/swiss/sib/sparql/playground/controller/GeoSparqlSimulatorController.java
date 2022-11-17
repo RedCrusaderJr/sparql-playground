@@ -35,6 +35,8 @@ public class GeoSparqlSimulatorController implements InitializingBean {
 	private static String ASK_FOLDER_NAME = "ask";
 	private static String DEFAULT_FOLDER_NAME = "default";
 	private static String ALTERNATIVE_FOLDER_NAME = "alternative";
+	private static final String FOLDER_STRUCTURE_FALTED_MESSAGE = "Folder structure of '" + SIMULATOR_FOLDER_NAME  + "/" + ENGINE_NAME + "' not valid. It should contain these folders: '"
+			+ DEFAULT_FOLDER_NAME + "', '" + ASK_FOLDER_NAME + "', '" + ALTERNATIVE_FOLDER_NAME + "'";
 
 	@Autowired
 	private QueryDictionary queryDictionary;
@@ -62,40 +64,45 @@ public class GeoSparqlSimulatorController implements InitializingBean {
 
 	@RequestMapping(value = "simulator/evaluate", method = RequestMethod.GET)
 	public @ResponseBody String evaluate() throws NameNotFoundException {
+		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		if (this.queryMap.containsKey(DEFAULT_FOLDER_NAME) == false
-				|| this.queryMap.containsKey(ASK_FOLDER_NAME) == false
-				|| this.queryMap.containsKey(ALTERNATIVE_FOLDER_NAME) == false) {
-			throw new NameNotFoundException(
-					"Folder structure of '" + SIMULATOR_FOLDER_NAME  + "/" + ENGINE_NAME + "' not valid. It should contain these folders: '"
-							+ DEFAULT_FOLDER_NAME + "', '" + ASK_FOLDER_NAME + "', '" + ALTERNATIVE_FOLDER_NAME + "'");
+		
+		if (!queryFolderStructureIsValid()) {
+			throw new NameNotFoundException(FOLDER_STRUCTURE_FALTED_MESSAGE);
 		}
 
-		long start = System.currentTimeMillis();
+		long start = System.currentTimeMillis();		
 		for (SparqlQuery defaultSelectQuery : this.queryMap.get(DEFAULT_FOLDER_NAME).values()) {
+			
 			String queryTitle = defaultSelectQuery.getTitle().trim();
 
-			if (this.queryMap.get(ASK_FOLDER_NAME).containsKey(queryTitle)) {
-				SparqlQuery askQuery = this.queryMap.get(ASK_FOLDER_NAME).get(queryTitle);
-
-				if (evaluateAskQuery(askQuery) == false) {
-					// ASK query evaluated FALSE
-					if (this.queryMap.get(ALTERNATIVE_FOLDER_NAME).containsKey(queryTitle) == false) {
-						// ALTERNATIVE query not present -> skip evaluation
-						continue;
-					}
-					SparqlQuery alternativeSelectQuery = this.queryMap.get(ALTERNATIVE_FOLDER_NAME).get(queryTitle);
+			SparqlQuery askQuery = this.queryMap.get(ASK_FOLDER_NAME).get(queryTitle);
+			if (askQuery != null && !evaluateAskQuery(askQuery)) {
+				// ASK query evaluated FALSE
+				SparqlQuery alternativeSelectQuery = this.queryMap.get(ALTERNATIVE_FOLDER_NAME).get(queryTitle);
+				
+				if (alternativeSelectQuery != null) {
+					// ALTERNATIVE query  EXISTS
 					TupleQueryResult result = evaluateSelectQuery(alternativeSelectQuery);
 					putToResultMap(resultMap, queryTitle, result);
-					continue;
 				}
+				
+				continue;
 			}
-			// ASK query does not exist or evaluated TRUE
+
+			// ASK query DOES NOT EXIST or evaluated TRUE
 			TupleQueryResult result = evaluateSelectQuery(defaultSelectQuery);
 			putToResultMap(resultMap, queryTitle, result);
 		}
+
 		logger.info("GeoSparql Simulator Evaluation finished in " + (System.currentTimeMillis() - start) + " ms");
 		return new JSONObject(resultMap).toString();
+	}
+
+	private boolean queryFolderStructureIsValid() {
+		return this.queryMap.containsKey(DEFAULT_FOLDER_NAME) &&
+			   this.queryMap.containsKey(ASK_FOLDER_NAME) &&
+			   this.queryMap.containsKey(ALTERNATIVE_FOLDER_NAME);
 	}
 
 	@RequestMapping(value = "simulator/stop", method = RequestMethod.GET)
@@ -106,7 +113,7 @@ public class GeoSparqlSimulatorController implements InitializingBean {
 
 	private void initQueryMap() {
 		File simulatorFolder = new File(Application.getFolder() + "/" + SIMULATOR_FOLDER_NAME + "/" + ENGINE_NAME);
-		if (simulatorFolder.exists() == false) {
+		if (!simulatorFolder.exists()) {
 			logger.error("Simulator folder not found. Path: " + simulatorFolder.getPath());
 			return;
 		}

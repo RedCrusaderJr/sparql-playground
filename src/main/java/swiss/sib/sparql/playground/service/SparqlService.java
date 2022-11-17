@@ -16,7 +16,7 @@ import swiss.sib.sparql.playground.Application;
 import swiss.sib.sparql.playground.controller.SparqlController;
 import swiss.sib.sparql.playground.domain.SparqlQueryType;
 import swiss.sib.sparql.playground.exception.SparqlTutorialException;
-import swiss.sib.sparql.playground.geosparql.marklogic.SparqlEvaluator;
+import swiss.sib.sparql.playground.geosparql.GeoSparqlEvaluator;
 import swiss.sib.sparql.playground.repository.RDF4jRepository;
 import swiss.sib.sparql.playground.repository.impl.RepositoryType;
 import swiss.sib.sparql.playground.utils.IOUtils;
@@ -33,74 +33,51 @@ public class SparqlService implements InitializingBean {
 
 	@Autowired
 	private RDF4jRepository repository;
-	// TODO: autowire
-	private SparqlEvaluator marklogicSupport;
+	@Autowired
+	private GeoSparqlEvaluator geoSparqlEvaluator;
 
 	private Map<String, String> prefixes = null;
 	private String prefixesString;
-
-	public SparqlService() {
-		marklogicSupport = SparqlEvaluator.getInstance();
-	}
 
 	public Query getQuery(String queryStr) throws SparqlTutorialException {
 		return repository.prepareQuery(queryStr);
 	}
 
-	public TupleQueryResult executeSelectQuery(String queryStr) {
-		Query query = repository.prepareQuery(queryStr);
-		return (TupleQueryResult) evaluateQuery(query, SparqlQueryType.getQueryType(query));
-	}
-
-	public boolean executeAskQuery(String queryStr) {
-		Query query = repository.prepareQuery(queryStr);
-		return (Boolean) evaluateQuery(query, SparqlQueryType.getQueryType(query));
-	}
-
 	public Object evaluateQuery(String queryStr) {
 		try {
 			Query query = repository.prepareQuery(queryStr);
-			return evaluateQuery(query, SparqlQueryType.getQueryType(query));
+			switch (SparqlQueryType.getQueryType(query)) {
+				case TUPLE_QUERY:
+					return ((TupleQuery) query).evaluate();
 
-		} catch (QueryEvaluationException e) {
-			RepositoryType repositoryType = Application.getRepositoryType();
+				case GRAPH_QUERY:
+					return ((GraphQuery) query).evaluate();
 
-			if (e.getMessage().contains("Server Message: XDMP-UNDFUN") && repositoryType == RepositoryType.MARK_LOGIC) {
+				case BOOLEAN_QUERY:
+					return ((BooleanQuery) query).evaluate();
+
+				default:
+					throw new SparqlTutorialException("Unsupported query type: " + query.getClass().getName());
+			}
+		}
+		catch (QueryInterruptedException e) {
+			logger.info("Query interrupted", e);
+			throw new SparqlTutorialException("Query evaluation took too long");
+		}
+		catch (QueryEvaluationException e) {
+			if (Application.getRepositoryType() == RepositoryType.MARK_LOGIC && e.getMessage().contains("Server Message: XDMP-UNDFUN")) {
 				return evaluateOnMarklogicSemantics(queryStr);
 
 			} else {
 				logger.info("Query evaluation error", e);
 				throw new SparqlTutorialException("Query evaluation error: " + e.getMessage());
 			}
-		}
-	}
-
-	private Object evaluateQuery(Query query, SparqlQueryType queryType)
-			throws SparqlTutorialException, QueryEvaluationException {
-		try {
-			switch (queryType) {
-			case TUPLE_QUERY:
-				return ((TupleQuery) query).evaluate();
-
-			case GRAPH_QUERY:
-				return ((GraphQuery) query).evaluate();
-
-			case BOOLEAN_QUERY:
-				return ((BooleanQuery) query).evaluate();
-
-			default:
-				throw new SparqlTutorialException("Unsupported query type: " + query.getClass().getName());
-			}
-
-		} catch (QueryInterruptedException e) {
-			logger.info("Query interrupted", e);
-			throw new SparqlTutorialException("Query evaluation took too long");
-		}
+		} 
 	}
 
 	private Object evaluateOnMarklogicSemantics(String queryStr) {
 		try {
-			return marklogicSupport.evaluateQuery(queryStr);
+			return geoSparqlEvaluator.evaluateQuery(queryStr);
 
 		} catch (Exception e) {
 			throw new SparqlTutorialException(e);
@@ -168,7 +145,6 @@ public class SparqlService implements InitializingBean {
 		} else {
 			throw new SparqlTutorialException("Loading data is not supported for native store");
 		}
-
 	}
 
 	public boolean isDataLoadAllowed() {

@@ -1,31 +1,29 @@
-package swiss.sib.sparql.playground.geosparql.marklogic.query.evaluator;
+package swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.java;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.client.DatabaseClientFactory.SecurityContext;
-import com.marklogic.client.eval.EvalResult;
 import com.marklogic.client.eval.EvalResultIterator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.impl.ValidatingValueFactory;
-import org.eclipse.rdf4j.query.TupleQueryResult;
 import org.eclipse.rdf4j.query.impl.ListBindingSet;
 import org.eclipse.rdf4j.query.impl.TupleQueryResultBuilder;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import swiss.sib.sparql.playground.Application;
+import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.JavaScriptQueryEvaluator;
 
 public class JavaClientEvaluator implements JavaScriptQueryEvaluator {
 	private static final Log logger = LogFactory.getLog(JavaClientEvaluator.class);
-	private static final String NEW_LINE = System.lineSeparator();
+//	private static final String NEW_LINE = System.lineSeparator();
 
-	public Object evaluateJavaScript(String jsQuery, Boolean returnRaw) throws Exception {
+	public Object evaluate(String jsQuery, Boolean returnRaw) throws Exception {
 		DatabaseClient client = createDbClient();
 		EvalResultIterator iterator = client.newServerEval().javascript(jsQuery).eval();
 		client.release();
@@ -56,7 +54,17 @@ public class JavaClientEvaluator implements JavaScriptQueryEvaluator {
 			return null;
 		}
 		
+		iterator.forEach(null);
+
+		JSONObject jsonObj;
+		Boolean bindingNamesInitialized = false;
+		List<String> bindingNames = new ArrayList<String>();
+		ValidatingValueFactory valueFactory = new ValidatingValueFactory();
+		TupleQueryResultBuilder builder = new TupleQueryResultBuilder();
+
 		String resultStr = iterator.next().getAs(String.class);
+		
+		//TRY PARSE AS ASK QUERY
 		if ("true".equals(resultStr)) {
 			return true;
 		}
@@ -64,12 +72,7 @@ public class JavaClientEvaluator implements JavaScriptQueryEvaluator {
 			return false;
 		}
 		
-		JSONObject jsonObj;
-		Boolean bindingNamesInitialized = false;
-		List<String> bindingNames = new ArrayList<String>();
-		ValidatingValueFactory valueFactory = new ValidatingValueFactory();
-		TupleQueryResultBuilder builder = new TupleQueryResultBuilder();
-
+		//TRY PARSE AS TUPLE QUERY
 		while(true) {
 			try {
 				jsonObj = new JSONObject(resultStr);

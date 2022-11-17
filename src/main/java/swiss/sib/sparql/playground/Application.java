@@ -8,7 +8,8 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 
-import swiss.sib.sparql.playground.geosparql.marklogic.query.evaluator.EvaluatorType;
+import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.JavaScriptQueryCreatorType;
+import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.EvaluatorApiType;
 import swiss.sib.sparql.playground.repository.impl.RepositoryType;
 
 import java.io.File;
@@ -33,13 +34,15 @@ public class Application {
 	// argument with index 3
 	private static Boolean INFERENCING_ENABLED = false;
 	// argument with index 4
-	private static EvaluatorType MARKLOGIC_EVALUATOR_TYPE = EvaluatorType.parseType(""); // get default value
+	private static EvaluatorApiType MARKLOGIC_EVALUATOR_API_TYPE = EvaluatorApiType.parseType(""); // get default value
 	// argument with index 5
 	private static String MARKLOGIC_HOST = "localhost";
 	// argument with index 6
 	private static int MARKLOGIC_PORT = 8111;
 	// argument with index 7
 	private static String MARKLOGIC_DB_NAME = "sparql-playground-db";
+	// argument with index 7
+	private static JavaScriptQueryCreatorType JS_QUERY_CREATOR_TYPE = JavaScriptQueryCreatorType.parseType("");
 
 	public static int getApplicationPort() {
 		return APPLICATION_PORT;
@@ -69,8 +72,12 @@ public class Application {
 		return MARKLOGIC_DB_NAME;
 	}
 
-	public static EvaluatorType getMarklogicEvaluatorType() {
-		return MARKLOGIC_EVALUATOR_TYPE;
+	public static EvaluatorApiType getMarklogicEvaluatorApiType() {
+		return MARKLOGIC_EVALUATOR_API_TYPE;
+	}
+
+	public static JavaScriptQueryCreatorType getJavaScriptQueryCreatorType() {
+		return JS_QUERY_CREATOR_TYPE;
 	}
 
 	public static void main(String[] args) {
@@ -90,10 +97,13 @@ public class Application {
 			logger.debug("INFERENCING_ENABLED: " + INFERENCING_ENABLED);
 
 			setMarkLogicSettings(args);
-			logger.debug("MARKLOGIC_EVALUATOR_TYPE: " + MARKLOGIC_EVALUATOR_TYPE);
+			logger.debug("MARKLOGIC_EVALUATOR_TYPE: " + MARKLOGIC_EVALUATOR_API_TYPE);
 			logger.debug("MARKLOGIC_ADDRESS: " + MARKLOGIC_HOST);
 			logger.debug("MARKLOGIC_PORT: " + MARKLOGIC_PORT);
 			logger.debug("MARKLOGIC_DB_NAME: " + MARKLOGIC_DB_NAME);
+
+			setJavaScriptQueryCreatorType(args);
+			logger.debug("JS_QUERY_CREATOR_TYPE: " + JS_QUERY_CREATOR_TYPE);
 
 			SpringApplication.run(Application.class, args);
 			logHostingAddress();
@@ -162,7 +172,7 @@ public class Application {
 			return;
 		}
 
-		MARKLOGIC_EVALUATOR_TYPE = EvaluatorType.parseType(args[4]);
+		MARKLOGIC_EVALUATOR_API_TYPE = EvaluatorApiType.parseType(args[4]);
 		MARKLOGIC_HOST = args[5];
 
 		try {
@@ -172,6 +182,15 @@ public class Application {
 		}
 
 		MARKLOGIC_DB_NAME = args[7];
+	}
+
+	// arguments with index 8
+	private static void setJavaScriptQueryCreatorType(String[] args) {
+		if ((args.length < 9) || (args[8] == "")) {
+			return;
+		}
+
+		JS_QUERY_CREATOR_TYPE = JavaScriptQueryCreatorType.parseType(args[8]);
 	}
 
 	private static void logHostingAddress() {

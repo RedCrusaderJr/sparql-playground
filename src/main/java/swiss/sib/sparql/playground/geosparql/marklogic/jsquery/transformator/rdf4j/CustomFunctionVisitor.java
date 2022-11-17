@@ -1,4 +1,4 @@
-package swiss.sib.sparql.playground.geosparql;
+package swiss.sib.sparql.playground.geosparql.marklogic.jsquery.transformator.rdf4j;
 
 import java.util.*;
 
@@ -9,12 +9,14 @@ import org.eclipse.rdf4j.query.algebra.ValueExpr;
 import org.eclipse.rdf4j.query.algebra.Var;
 import org.eclipse.rdf4j.query.algebra.helpers.AbstractQueryModelVisitor;
 
-public class GeosparqlQueryModelVisitor extends AbstractQueryModelVisitor<Exception> {
-	private static final Log logger = LogFactory.getLog(GeosparqlQueryModelVisitor.class);
+import swiss.sib.sparql.playground.geosparql.FunctionMapper;
+
+public class CustomFunctionVisitor extends AbstractQueryModelVisitor<Exception> {
+	private static final Log logger = LogFactory.getLog(CustomFunctionVisitor.class);
 
 	private FunctionMapper functionMapper;
 
-	public GeosparqlQueryModelVisitor(FunctionMapper functionMapper) {
+	public CustomFunctionVisitor(FunctionMapper functionMapper) {
 		this.functionMapper = functionMapper;
 	}
 
@@ -25,9 +27,9 @@ public class GeosparqlQueryModelVisitor extends AbstractQueryModelVisitor<Except
 			// node.getURI());
 			return;
 		}
+		String functionName = node.getURI();
 		logger.debug("Changing a Function call. Function uri: " + node.getURI());
 
-		String functionName = node.getURI();
 		List<ValueExpr> params = node.getArgs();
 
 		FunctionCall applyFunctionCall = new FunctionCall();
