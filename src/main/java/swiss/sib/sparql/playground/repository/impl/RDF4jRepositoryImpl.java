@@ -233,7 +233,7 @@ public class RDF4jRepositoryImpl implements RDF4jRepository, InitializingBean {
 		// }
 
 		long start = System.currentTimeMillis();
-		File rdfFolder = new File(Application.getFolder() + "/rdf-data");
+		File rdfFolder = new File(Application.getFolder() + "/rdf-data/" + Application.getDataSize());
 
 		if (!rdfFolder.exists()) {
 			logger.warn("Folder for RDF data was not found. Path: " + rdfFolder);

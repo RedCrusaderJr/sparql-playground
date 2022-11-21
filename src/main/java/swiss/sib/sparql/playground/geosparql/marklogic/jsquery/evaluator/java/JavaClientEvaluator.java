@@ -1,43 +1,42 @@
 package swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.java;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.marklogic.client.DatabaseClient;
 import com.marklogic.client.DatabaseClientFactory;
 import com.marklogic.client.DatabaseClientFactory.SecurityContext;
 import com.marklogic.client.eval.EvalResultIterator;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.eclipse.rdf4j.model.Value;
-import org.eclipse.rdf4j.model.impl.ValidatingValueFactory;
-import org.eclipse.rdf4j.query.impl.ListBindingSet;
-import org.eclipse.rdf4j.query.impl.TupleQueryResultBuilder;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import swiss.sib.sparql.playground.Application;
 import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.JavaScriptQueryEvaluator;
 
 public class JavaClientEvaluator implements JavaScriptQueryEvaluator {
-	private static final Log logger = LogFactory.getLog(JavaClientEvaluator.class);
-//	private static final String NEW_LINE = System.lineSeparator();
+	ResultHandler resultHandler;
+
+	public JavaClientEvaluator() {
+		resultHandler = new ResultHandler();
+	}
 
 	public Object evaluate(String jsQuery, Boolean returnRaw) throws Exception {
+		EvalResultIterator resultIterator;	
 		DatabaseClient client = createDbClient();
-		EvalResultIterator iterator = client.newServerEval().javascript(jsQuery).eval();
-		client.release();
+		
+		try {
+			resultIterator = client.newServerEval().javascript(jsQuery).eval();	
+		} finally {
+			client.release();
+		}
 
-		//handel propperly -> iterator.close() in finally
-		Object result = iterator;
-		if (!returnRaw) {
-			result = handleEvalResult(iterator);
+		Object result;
+		try {
+			result = resultIterator;
+			if (!returnRaw) {
+				result = resultHandler.handleEvalResult(resultIterator);
+			}
+		} finally {
+			resultIterator.close();
 		}
 
 		return result;
 	}
 
-	// #region JAVA API helpers
 	private DatabaseClient createDbClient() {
 		String host = Application.getMarklogicHost();
 		Integer port = Application.getMarklogicPort();
@@ -46,80 +45,4 @@ public class JavaClientEvaluator implements JavaScriptQueryEvaluator {
 
 		return DatabaseClientFactory.newClient(host, port, dbName, securityContext);
 	}
-
-	// ponovo razmotriti da li je ovo prepakivanje neophodno - Moze li se do fronta
-	// proslediti json... tj premeriti pazljivo koliko sta traje
-	private Object handleEvalResult(EvalResultIterator iterator) throws Exception {		
-		if (!iterator.hasNext()) {
-			return null;
-		}
-		
-		iterator.forEach(null);
-
-		JSONObject jsonObj;
-		Boolean bindingNamesInitialized = false;
-		List<String> bindingNames = new ArrayList<String>();
-		ValidatingValueFactory valueFactory = new ValidatingValueFactory();
-		TupleQueryResultBuilder builder = new TupleQueryResultBuilder();
-
-		String resultStr = iterator.next().getAs(String.class);
-		
-		//TRY PARSE AS ASK QUERY
-		if ("true".equals(resultStr)) {
-			return true;
-		}
-		if ("false".equals(resultStr)) {
-			return false;
-		}
-		
-		//TRY PARSE AS TUPLE QUERY
-		while(true) {
-			try {
-				jsonObj = new JSONObject(resultStr);
-			} catch (JSONException ex) {
-				// try {// new JSONArray(jsonStr);// } catch (JSONException ex)...
-				logger.error("Not valid JSON string in tuple query result.", ex);
-				return null;
-			}
-
-			String[] names = JSONObject.getNames(jsonObj);
-			List<Value> values = new ArrayList<Value>();
-
-			for (String name : names) {
-				String valueStr = jsonObj.getString(name);
-				try {
-					values.add(valueFactory.createIRI(valueStr));
-
-				} catch (IllegalArgumentException e) {
-					// maybe check if value str is a valid IRI?
-					values.add(valueFactory.createLiteral(valueStr));
-				}
-
-				if (!bindingNamesInitialized) {
-					bindingNames.add(name);
-				}
-			}
-
-			if (!bindingNamesInitialized) {
-				bindingNamesInitialized = true;
-				builder.startQueryResult(bindingNames);
-			}
-			builder.handleSolution(new ListBindingSet(bindingNames, values));
-
-			if(iterator.hasNext()) {
-				resultStr = iterator.next().getAs(String.class);
-			}
-			else {
-				break;
-			}
-		}
-
-		// handling the empty result...
-		if (!bindingNamesInitialized) {
-			builder.startQueryResult(new ArrayList<String>());
-		}
-		builder.endQueryResult();
-		return builder.getQueryResult();
-	}
-	// #endregion JAVA API helpers
 }

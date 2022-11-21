@@ -30,18 +30,20 @@ public class Application {
 	// argument with index 1
 	private static String FOLDER = "default"; // e.g. nextprot, uniprot, geospatial
 	// argument with index 2
-	private static RepositoryType REPOSITORY_TYPE = RepositoryType.parseType(""); // get default value
+	private static String DATA_SIZE = "small-data"; // e.g. small-data, medium-data, big-data, single-data
 	// argument with index 3
-	private static Boolean INFERENCING_ENABLED = false;
+	private static RepositoryType REPOSITORY_TYPE = RepositoryType.parseType(""); // get default value
 	// argument with index 4
-	private static EvaluatorApiType MARKLOGIC_EVALUATOR_API_TYPE = EvaluatorApiType.parseType(""); // get default value
+	private static Boolean INFERENCING_ENABLED = false;
 	// argument with index 5
-	private static String MARKLOGIC_HOST = "localhost";
+	private static EvaluatorApiType MARKLOGIC_EVALUATOR_API_TYPE = EvaluatorApiType.parseType(""); // get default value
 	// argument with index 6
+	private static String MARKLOGIC_HOST = "localhost";
+	// argument with index 7
 	private static int MARKLOGIC_PORT = 8111;
-	// argument with index 7
+	// argument with index 8
 	private static String MARKLOGIC_DB_NAME = "sparql-playground-db";
-	// argument with index 7
+	// argument with index 9
 	private static JavaScriptQueryCreatorType JS_QUERY_CREATOR_TYPE = JavaScriptQueryCreatorType.parseType("");
 
 	public static int getApplicationPort() {
@@ -50,6 +52,10 @@ public class Application {
 
 	public static String getFolder() {
 		return FOLDER;
+	}
+
+	public static String getDataSize() {
+		return DATA_SIZE;
 	}
 
 	public static RepositoryType getRepositoryType() {
@@ -89,6 +95,9 @@ public class Application {
 
 			setFolder(args);
 			logger.debug("FOLDER: " + FOLDER);
+
+			setDataSize(args);
+			logger.debug("DATA_SIZE: " + DATA_SIZE);
 
 			setRepositoryType(args);
 			logger.debug("REPOSITORY_TYPE: " + REPOSITORY_TYPE);
@@ -133,64 +142,75 @@ public class Application {
 			return;
 		}
 
-		String folderStr = args[1];
-
-		if (new File(folderStr).exists()) {
-			FOLDER = folderStr;
+		if (new File(args[1]).exists()) {
+			FOLDER = args[1];
 		} else {
-			logger.warn(folderStr + " folder not found. Default value set to: " + FOLDER);
+			logger.warn(args[1] + " folder not found. Default value set to: " + FOLDER);
 		}
 	}
 
 	// argument with index 2
+	private static void setDataSize(String[] args) {
+		if ((args.length < 3) || (args[2] == "")) {
+			return;
+		}
+
+		if (new File(FOLDER + "/rdf-data/" + args[2]).exists()) {
+			DATA_SIZE = args[2];
+		} else {
+			logger.warn(FOLDER + "/rdf-data/" + args[2] + " folder not found. Default value set to: " + DATA_SIZE);
+		}
+	}
+
+	// argument with index 3
 	private static void setRepositoryType(String[] args) {	
 		if (System.getProperty("repository.type") != null) {
 			REPOSITORY_TYPE = RepositoryType.parseType(System.getProperty("repository.type"));
 			return;
 		}
 
-		if ((args.length < 3) || (args[2] == "")) {
-			return;
-		}
-
-		REPOSITORY_TYPE = RepositoryType.parseType(args[2]);
-	}
-
-	// argument with index 3
-	private static void setInferencingEnabled(String[] args) {
 		if ((args.length < 4) || (args[3] == "")) {
 			return;
 		}
 
-		INFERENCING_ENABLED = args[3].equals("true");
+		REPOSITORY_TYPE = RepositoryType.parseType(args[3]);
 	}
 
-	// arguments with index 4, 5, 6 and 7
-	private static void setMarkLogicSettings(String[] args) {
-		// HOST AND ADDRESS MUST BE SET IN PAIR
-		if ((args.length < 8) || (args[4] == "") || (args[5] == "") || (args[6] == "") || (args[7] == "")) {
+	// argument with index 4
+	private static void setInferencingEnabled(String[] args) {
+		if ((args.length < 5) || (args[4] == "")) {
 			return;
 		}
 
-		MARKLOGIC_EVALUATOR_API_TYPE = EvaluatorApiType.parseType(args[4]);
-		MARKLOGIC_HOST = args[5];
+		INFERENCING_ENABLED = args[4].equals("true");
+	}
+
+	// arguments with index 5, 6, 7 and 8
+	private static void setMarkLogicSettings(String[] args) {
+		// HOST AND ADDRESS MUST BE SET IN PAIR
+		if ((args.length < 9) || (args[5] == "") || (args[6] == "") || (args[7] == "") || (args[8] == "")) {
+			return;
+		}
+
+		MARKLOGIC_EVALUATOR_API_TYPE = EvaluatorApiType.parseType(args[5]);
+		MARKLOGIC_HOST = args[6];
 
 		try {
-			MARKLOGIC_PORT = Integer.parseInt(args[6]);
+			MARKLOGIC_PORT = Integer.parseInt(args[7]);
 		} catch (NumberFormatException e) {
 			logger.error(e.getMessage());
 		}
 
-		MARKLOGIC_DB_NAME = args[7];
+		MARKLOGIC_DB_NAME = args[8];
 	}
 
-	// arguments with index 8
+	// arguments with index 9
 	private static void setJavaScriptQueryCreatorType(String[] args) {
-		if ((args.length < 9) || (args[8] == "")) {
+		if ((args.length < 10) || (args[9] == "")) {
 			return;
 		}
 
-		JS_QUERY_CREATOR_TYPE = JavaScriptQueryCreatorType.parseType(args[8]);
+		JS_QUERY_CREATOR_TYPE = JavaScriptQueryCreatorType.parseType(args[9]);
 	}
 
 	private static void logHostingAddress() {

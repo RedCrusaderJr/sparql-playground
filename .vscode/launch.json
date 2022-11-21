@@ -10,7 +10,7 @@
             "request": "launch",
             "mainClass": "swiss.sib.sparql.playground.Application",
             "projectName": "sparql-playground",
-            "args": "8080 geospatial default false"
+            "args": "8080 geospatial small-data default false"
         },
         // inferencing
         // {
@@ -19,7 +19,7 @@
         //     "request": "launch",
         //     "mainClass": "swiss.sib.sparql.playground.Application",
         //     "projectName": "sparql-playground",
-        //     "args": "8080 geospatial default true"
+        //     "args": "8080 geospatial small-data default true"
         // },
         // attach
         // {
@@ -37,7 +37,7 @@
             "request": "launch",
             "mainClass": "swiss.sib.sparql.playground.Application",
             "projectName": "sparql-playground",
-            "args": "8080 geospatial native false"
+            "args": "8080 geospatial small-data native false"
         },
         {
             "type": "java",
@@ -45,7 +45,7 @@
             "request": "launch",
             "mainClass": "swiss.sib.sparql.playground.Application",
             "projectName": "sparql-playground",
-            "args": "8080 geospatial marklogic false java localhost 8111 sparql-playground-db jena"
+            "args": "8080 geospatial small-data marklogic false java localhost 8111 sparql-playground-db jena"
         },
         {
             "type": "java",
@@ -53,7 +53,7 @@
             "request": "launch",
             "mainClass": "swiss.sib.sparql.playground.Application",
             "projectName": "sparql-playground",
-            "args": "8080 geospatial marklogic false java localhost 8111 sparql-playground-db rdf4j"
+            "args": "8080 geospatial small-data marklogic false java localhost 8111 sparql-playground-db rdf4j"
         },
     ]
 }

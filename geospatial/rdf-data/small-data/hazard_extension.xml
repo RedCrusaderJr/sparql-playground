@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:j.0="http://iec.ch/TC57/CIM-generic#"
+    xmlns:cims="http://iec.ch/TC57/1999/rdf-schema-extensions-19990926#"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:msg="http://langdale.com.au/2005/Message#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:uml="http://langdale.com.au/2005/UML#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:custom="http://www.custom.org/"> 
+    
+    <rdf:Description rdf:about="http://www.custom.org/Hazard">
+      <rdfs:comment>Top of the Hazard hierarchy</rdfs:comment>
+      <rdfs:label>Hazard</rdfs:label>
+      <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.custom.org/Hazard.DangerZone">
+      <cims:stereotype rdf:resource="http://langdale.com.au/2005/UML#attribute"/>
+      <rdfs:range rdf:resource="http://www.opengis.net/ont/geosparql#wktLiteral"/>
+      <rdfs:domain rdf:resource="http://www.custom.org/Hazard"/>
+      <rdfs:comment>Property of Hazard - defines a region of danger, represented by WKT literal.</rdfs:comment>
+      <rdfs:label>Hazard.DangerZone</rdfs:label>
+      <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.custom.org/Storm">
+      <rdfs:subClassOf rdf:resource="http://www.custom.org/Hazard"/>
+      <rdfs:comment>One concretization of Hazard hierarchy</rdfs:comment>
+      <rdfs:label>Storm</rdfs:label>
+      <cims:stereotype rdf:resource="http://langdale.com.au/2005/UML#concrete"/>
+      <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    </rdf:Description>
+       <rdf:Description rdf:about="http://www.custom.org/Thunder">
+      <rdfs:subClassOf rdf:resource="http://www.custom.org/Hazard"/>
+      <rdfs:comment>One concretization of Hazard hierarchy</rdfs:comment>
+      <rdfs:label>Thunder</rdfs:label>
+      <cims:stereotype rdf:resource="http://langdale.com.au/2005/UML#concrete"/>
+      <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    </rdf:Description>
+       <rdf:Description rdf:about="http://www.custom.org/Fire">
+      <rdfs:subClassOf rdf:resource="http://www.custom.org/Hazard"/>
+      <rdfs:comment>One concretization of Hazard hierarchy</rdfs:comment>
+      <rdfs:label>Fire</rdfs:label>
+      <cims:stereotype rdf:resource="http://langdale.com.au/2005/UML#concrete"/>
+      <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    </rdf:Description>
+  </rdf:RDF>
