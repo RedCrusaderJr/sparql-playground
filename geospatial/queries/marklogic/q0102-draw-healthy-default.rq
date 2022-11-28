@@ -1,0 +1,51 @@
+#title:default-draw-healthy
+#comment:
+
+#tags:default,buffer,wkt,coordinates
+#color:ex-red
+#img:
+
+SELECT DISTINCT ?g_wktPolygon ?g_wktLine
+WHERE {
+    {
+        SELECT DISTINCT ?x1 ?y1 ?x2 ?y2
+        WHERE {
+            #connectivity nodes with a terminal
+            ?tmId cim:Terminal.ConnectivityNode ?cNodeId;
+                #conducting equipment of that terminal
+                cim:Terminal.ConductingEquipment ?condEqId;
+                #is a terminal
+                a cim:Terminal.							   
+                
+            #locations - coordinates
+            ?condEqId cim:PowerSystemResource.Location ?locationId.
+            ?postionPointId1 rdf:type cim:PositionPoint.
+            ?postionPointId2 rdf:type cim:PositionPoint.
+            FILTER(str(?postionPointId1) < str(?postionPointId2))
+
+            ?postionPointId1 cim:PositionPoint.Location ?locationId;
+                cim:PositionPoint.xPosition ?x1;
+                cim:PositionPoint.yPosition ?y1.
+
+            ?postionPointId2 cim:PositionPoint.Location ?locationId;
+                cim:PositionPoint.xPosition ?x2;
+                cim:PositionPoint.yPosition ?y2.
+            FILTER(?x1 != ?x2 || ?y1 != ?y2)
+        }
+    }
+
+    #hazard zones
+    ?hazardType rdfs:subClassOf+ custom:Hazard. 
+    ?hazardId a ?hazardType;
+        custom:Hazard.DangerZone ?g_wktHazardZone.
+
+    #construct WKTs (draw geometry)
+    BIND(concat("LINESTRING (", str(?x1), " ", str(?y1), ", ", str(?x2), " ", str(?y2), ")") as ?lineStr).
+    BIND(strdt(?lineStr, geo:wktLiteral) as ?g_wktLine).
+
+    BIND(<http://example.org/custom-function/buffer>(?lineStr, 50) as ?polygonStr).
+    BIND(strdt(?polygonStr, geo:wktLiteral) as ?g_wktPolygon).
+
+    BIND(geof:intersection(?g_wktPolygon, ?g_wktHazardZone) as ?intersection).
+    FILTER(str(?intersection) = "false")
+}

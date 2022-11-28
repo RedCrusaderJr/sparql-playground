@@ -1,1 +1,0 @@
-java -Dserver.port=8883 -Drepository.type=marklogic -Dspring.profiles.active=nocache -agentlib:jdwp=transport=dt_socket,server=y,address=8803 -jar sparql-playground-1.4.1.war 8883 geospatial marklogic false java localhost 8111 sparql-playground-db

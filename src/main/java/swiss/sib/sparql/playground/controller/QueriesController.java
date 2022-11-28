@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import swiss.sib.sparql.playground.Application;
 import swiss.sib.sparql.playground.domain.SparqlQuery;
 import swiss.sib.sparql.playground.repository.QueryDictionary;
+import swiss.sib.sparql.playground.repository.impl.RepositoryType;
 import swiss.sib.sparql.playground.service.PageService;
 import swiss.sib.sparql.playground.utils.IOUtils;
 
@@ -32,14 +33,19 @@ public class QueriesController {
 
 	@RequestMapping(value = "/queries", produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<SparqlQuery> queries() throws IOException {
-		return queryDictionary.getQueries(Application.getFolder() + "/queries");
+		return queryDictionary.getQueries(getQueriesPath());
 	}
 
 	@RequestMapping(value = "/queries/{queryId}.{extension}")
 	public @ResponseBody byte[] queryImage(@PathVariable("queryId") String queryId,
 			@PathVariable("extension") String extension) throws IOException {
-		return pageService.getFileOrTry(Application.getFolder() + "/queries/" + queryId + "." + extension, null,
+		return pageService.getFileOrTry(getQueriesPath() + queryId + "." + extension, null,
 				extension);
+	}
+
+	private String getQueriesPath() {
+		String subforlder = Application.getRepositoryType() == RepositoryType.MARK_LOGIC ? "marklogic/" : "rdf4j/";
+		return Application.getFolder() + "/queries/" + subforlder;
 	}
 
 	@RequestMapping(value = "/rdfhelp", produces = MediaType.APPLICATION_JSON_VALUE)

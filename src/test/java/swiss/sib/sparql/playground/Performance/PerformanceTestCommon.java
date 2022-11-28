@@ -42,14 +42,20 @@ import org.eclipse.rdf4j.sail.memory.MemoryStore;
 import org.eclipse.rdf4j.sail.nativerdf.NativeStore;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import swiss.sib.sparql.playground.domain.JavaScriptQuery;
 import swiss.sib.sparql.playground.domain.SparqlQuery;
 import swiss.sib.sparql.playground.domain.SparqlQueryType;
 import swiss.sib.sparql.playground.geosparql.GeoSparqlEvaluator;
+import swiss.sib.sparql.playground.geosparql.marklogic.MarklogicGeoSparqlEvaluator;
 import swiss.sib.sparql.playground.repository.QueryDictionary;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = { MarklogicGeoSparqlEvaluator.class })
 public class PerformanceTestCommon {
 	private static final Log logger = LogFactory.getLog(PerformanceTestCommon.class);
 

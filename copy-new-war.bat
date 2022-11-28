@@ -1,2 +1,2 @@
-copy target\sparql-playground-1.4.1.war sparql-playground.war
+copy target\sparql-playground-2.0.0.war sparql-playground.war
 rd /s /q target

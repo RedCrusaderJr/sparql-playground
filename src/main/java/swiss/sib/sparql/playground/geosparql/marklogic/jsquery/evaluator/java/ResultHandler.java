@@ -36,7 +36,7 @@ public class ResultHandler {
         builder = new TupleQueryResultBuilder();
     }
     
-    // ponovo razmotriti da li je ovo prepakivanje neophodno - Moze li se do fronta
+	//TODO: ponovo razmotriti da li je ovo prepakivanje neophodno - Moze li se do fronta
 	// proslediti json... tj premeriti pazljivo koliko sta traje
 	public Object handleEvalResult(EvalResultIterator iterator) throws Exception {
         result = null;
@@ -72,6 +72,9 @@ public class ResultHandler {
 				resultType = "ERROR"; return;
 			}
 			
+			//ClassLoader classloader = org.json.JSONObject.class.getClassLoader();
+			//System.out.println("Core JSONObject came from " + classloader.getResource("org/json/JSONObject.class").getPath());
+
 			jsonNames = JSONObject.getNames(jsonObj);
 			jsonValues = new ArrayList<Value>();
 
@@ -104,16 +107,26 @@ public class ResultHandler {
 			builder.handleSolution(new ListBindingSet(bindingNames, jsonValues));	
 		});
 
-        if(resultType == "ERROR") return null;
-        if(resultType == "ASK_QUERY") return result;
+		iterator.close();
+
+        return finalizeResult();
+	}
+
+	private Object finalizeResult() {
+		if(resultType == "ASK_QUERY") {
+			return result;
+		} 
         
-        if(resultType != "TUPLE_QUERY") return null;
-        //handling the empty result
-		if (!bindingNamesAreInitialized) {
-			builder.startQueryResult(new ArrayList<String>());
+        if(resultType == "TUPLE_QUERY") {
+			if (!bindingNamesAreInitialized) {
+				//handling the empty result
+				builder.startQueryResult(new ArrayList<String>());
+			}
+	
+			builder.endQueryResult();
+			return builder.getQueryResult();
 		}
 
-        builder.endQueryResult();
-		return builder.getQueryResult();
+		return null;
 	}
 }

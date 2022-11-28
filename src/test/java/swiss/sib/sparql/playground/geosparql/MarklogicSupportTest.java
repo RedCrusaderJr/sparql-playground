@@ -5,10 +5,14 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import swiss.sib.sparql.playground.Application;
 import swiss.sib.sparql.playground.domain.SparqlQueryType;
+import swiss.sib.sparql.playground.geosparql.marklogic.MarklogicGeoSparqlEvaluator;
 import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.java.JavaClientEvaluator;
 import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.nodejs.NodeJsClientEvaluator;
 import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.rest.RestClientEvaluator;
@@ -38,6 +42,8 @@ import org.eclipse.rdf4j.repository.RepositoryConnection;
 import org.eclipse.rdf4j.repository.sail.SailRepository;
 import org.eclipse.rdf4j.sail.memory.MemoryStore;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = { MarklogicGeoSparqlEvaluator.class })
 public class MarklogicSupportTest {
 	private static final Log logger = LogFactory.getLog(MarklogicSupportTest.class);
 
@@ -82,7 +88,6 @@ public class MarklogicSupportTest {
 	}
 
 	@Test
-	@Disabled
 	public void evaluateQueryTest() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT *").append(System.lineSeparator());
@@ -95,7 +100,7 @@ public class MarklogicSupportTest {
 		Assertions.assertEquals(true, result instanceof TupleQueryResult);
 		TupleQueryResult tupleQueryResult = (TupleQueryResult) result;
 
-		int count = 1;
+		int count = 0;
 		while (tupleQueryResult.hasNext()) {
 			count++;
 			tupleQueryResult.next();
@@ -257,7 +262,7 @@ public class MarklogicSupportTest {
 
 		for (String functionUri : supportedFunctions) {
 			//String jsQuery = marklogicTestQueries.get(functionUri);
-			String jsQuery = createQueryWithGeosparqlBinaryFunctionCallAndSelectSubquery(functionUri);
+			String jsQuery = createJsQueryWithGeosparqlBinaryFunctionCallAndSelectSubquery(functionUri);
 			logger.debug(String.format("JS query:%s%s", System.lineSeparator(), jsQuery));
 
 			Object result = javaApi.evaluate(jsQuery, false);
@@ -267,43 +272,59 @@ public class MarklogicSupportTest {
 		logger.debug(String.format("END of Test: evaluateJsGeospatialWithSelectSubqueryOnMarklogicJavaApiTest" + System.lineSeparator()));
 	}
 
-	private static String createQueryWithGeosparqlBinaryFunctionCallAndSelectSubquery(String function) {
-		String bindStr = String.format("  BIND(<%s>(?wktPoint1, ?wktPoint2) as ?functionResult)", function);
+
+	private static String createJsQueryWithGeosparqlBinaryFunctionCallAndSelectSubquery(String functionUri) {
+		Set<String> supportedFunctions = FunctionMapper.getInstance().getAllSupportedFunctionByUri();
+		if (!supportedFunctions.contains(functionUri)) {
+			throw new IllegalArgumentException();
+		}
+
+		FunctionDescription function = FunctionMapper.getInstance().getFunctionByUri(functionUri);
+		String functionAbbrv = function.abbreviation;
+		String marklogicFunction = function.marklogicFunction;
+		String functionCallStr = String.format("  	  BIND(<http://marklogic.com/xdmp#apply>(?%s, ?wktPoint1, ?wktPoint2) as ?functionResult).",
+				functionAbbrv);
+		String paramsStr = String.format("var params = {%s: %s}", functionAbbrv, marklogicFunction);
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("PREFIX geo:<http://www.opengis.net/ont/geosparql#>").append(System.lineSeparator());
+		sb.append("declareUpdate();").append(System.lineSeparator());
+		sb.append("var sem = require('/MarkLogic/semantics.xqy');").append(System.lineSeparator());
+		sb.append("var query = `").append(System.lineSeparator());
 		sb.append("SELECT DISTINCT ?functionResult").append(System.lineSeparator());
 		sb.append("WHERE {").append(System.lineSeparator());
 		sb.append("  {").append(System.lineSeparator());
 		sb.append("    SELECT DISTINCT ?wktPoint1 ?wktPoint2").append(System.lineSeparator());
 		sb.append("    WHERE {").append(System.lineSeparator());
-		sb.append("      BIND(\"POINT (1 1)\"^^geo:wktLiteral as ?wktPoint1)").append(System.lineSeparator());
-		sb.append("      BIND(\"POINT (2 2)\"^^geo:wktLiteral as ?wktPoint2)").append(System.lineSeparator());
+		sb.append("  	  BIND(\"POINT (1 1)\"^^<http://www.opengis.net/ont/geosparql#wktLiteral> as ?wktPoint1)").append(System.lineSeparator());
+		sb.append("      BIND(\"POINT (2 2)\"^^<http://www.opengis.net/ont/geosparql#wktLiteral> as ?wktPoint2)").append(System.lineSeparator());
+		sb.append(functionCallStr).append(System.lineSeparator());
+		sb.append("    }").append(System.lineSeparator());
+		sb.append("  }").append(System.lineSeparator());
+		sb.append("}`").append(System.lineSeparator());
+		sb.append(paramsStr).append(System.lineSeparator());
+		sb.append("var results = sem.sparql(query,params);").append(System.lineSeparator());
+		sb.append("results").append(System.lineSeparator());
+		return sb.toString();
+	}
+
+
+	private static String createQueryWithGeosparqlBinaryFunctionCallAndSelectSubquery(String function) {
+		String bindStr = String.format("  BIND(<%s>(?wktPoint1, ?wktPoint2) as ?functionResult)", function);
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT DISTINCT ?functionResult").append(System.lineSeparator());
+		sb.append("WHERE {").append(System.lineSeparator());
+		sb.append("  {").append(System.lineSeparator());
+		sb.append("    SELECT DISTINCT ?wktPoint1 ?wktPoint2").append(System.lineSeparator());
+		sb.append("    WHERE {").append(System.lineSeparator());
+		sb.append("      BIND(\"POINT (1 1)\"^^<http://www.opengis.net/ont/geosparql#wktLiteral> as ?wktPoint1)").append(System.lineSeparator());
+		sb.append("      BIND(\"POINT (2 2)\"^^<http://www.opengis.net/ont/geosparql#wktLiteral> as ?wktPoint2)").append(System.lineSeparator());
 		sb.append("    }").append(System.lineSeparator());
 		sb.append("  }").append(System.lineSeparator());
 		sb.append(bindStr).append(System.lineSeparator());
 		sb.append("}").append(System.lineSeparator());
 		return sb.toString();
 	}
-
-	// MAYBE one day
-	// private static String createQueryWithGeosparqlUnaryFunctionCall(String
-	// function) {
-	// String bindStr = String.format(" BIND(<%s>(?wktPoint1) as ?functionResult)",
-	// function);
-
-	// StringBuilder sb = new StringBuilder();
-	// sb.append("PREFIX
-	// geo:<http://www.opengis.net/ont/geosparql#>").append(System.lineSeparator());
-	// sb.append("SELECT ?wktPoint1
-	// ?functionResult").append(System.lineSeparator());
-	// sb.append("WHERE {").append(System.lineSeparator());
-	// sb.append(" BIND(\"POINT (1 1)\"^^geo:wktLiteral as
-	// ?wktPoint1)").append(System.lineSeparator());
-	// sb.append(bindStr).append(System.lineSeparator());
-	// sb.append("}").append(System.lineSeparator());
-	// return sb.toString();
-	// }
 
 	private static String createQueryWithGeosparqlBinaryFunctionCall(String function) {
 		String bindStr = String.format("  BIND(<%s>(?wktPoint1, ?wktPoint2) as ?functionResult)", function);
@@ -319,48 +340,6 @@ public class MarklogicSupportTest {
 		return sb.toString();
 	}
 
-	// MAYBE one day
-	// private static String createJSQueryWithUnaryFunctionCall(String functionUri)
-	// {
-	// Set<String> supportedFunctions =
-	// FunctionMapper.getInstance().getAllSupportedFunctionByUri();
-	// if (!supportedFunctions.contains(functionUri)) {
-	// throw new IllegalArgumentException();
-	// }
-
-	// FunctionDescription function =
-	// FunctionMapper.getInstance().getFunctionByUri(functionUri);
-	// String functionAbbrv = function.abbreviation;
-	// String marklogicFunction = function.marklogicFunction;
-	// String functionCallStr = String.format(" BIND(xdmp:apply(?%s, ?wktPoint1) as
-	// ?functionResult).",
-	// functionAbbrv);
-	// String paramsStr = String.format("var params = {%s: %s}", functionAbbrv,
-	// marklogicFunction);
-
-	// StringBuilder sb = new StringBuilder();
-	// sb.append("declareUpdate();").append(System.lineSeparator());
-	// sb.append("var sem =
-	// require('/MarkLogic/semantics.xqy');").append(System.lineSeparator());
-	// sb.append("var query = `").append(System.lineSeparator());
-	// sb.append("PREFIX
-	// geo:<http://www.opengis.net/ont/geosparql#>").append(System.lineSeparator());
-	// sb.append("PREFIX
-	// xdmp:<http://marklogic.com/xdmp#>").append(System.lineSeparator());
-	// sb.append("SELECT DISTINCT ?wktPoint1
-	// ?functionResult").append(System.lineSeparator());
-	// sb.append("WHERE {").append(System.lineSeparator());
-	// sb.append(" BIND(\"POINT (1 1)\"^^geo:wktLiteral as
-	// ?wktPoint1)").append(System.lineSeparator());
-	// sb.append(functionCallStr).append(System.lineSeparator());
-	// sb.append("}`").append(System.lineSeparator());
-	// sb.append(paramsStr).append(System.lineSeparator());
-	// sb.append("var results =
-	// sem.sparql(query,params);").append(System.lineSeparator());
-	// sb.append("results").append(System.lineSeparator());
-	// return sb.toString();
-	// }
-
 	private static String createJSQueryWithBinaryFunctionCall(String functionUri) {
 		Set<String> supportedFunctions = FunctionMapper.getInstance().getAllSupportedFunctionByUri();
 		if (!supportedFunctions.contains(functionUri)) {
@@ -370,7 +349,7 @@ public class MarklogicSupportTest {
 		FunctionDescription function = FunctionMapper.getInstance().getFunctionByUri(functionUri);
 		String functionAbbrv = function.abbreviation;
 		String marklogicFunction = function.marklogicFunction;
-		String functionCallStr = String.format("  BIND(xdmp:apply(?%s, ?wktPoint1, ?wktPoint2) as ?functionResult).",
+		String functionCallStr = String.format("  BIND(<http://marklogic.com/xdmp#apply>(?%s, ?wktPoint1, ?wktPoint2) as ?functionResult).",
 				functionAbbrv);
 		String paramsStr = String.format("var params = {%s: %s}", functionAbbrv, marklogicFunction);
 
@@ -378,12 +357,10 @@ public class MarklogicSupportTest {
 		sb.append("declareUpdate();").append(System.lineSeparator());
 		sb.append("var sem = require('/MarkLogic/semantics.xqy');").append(System.lineSeparator());
 		sb.append("var query = `").append(System.lineSeparator());
-		sb.append("PREFIX geo:<http://www.opengis.net/ont/geosparql#>").append(System.lineSeparator());
-		sb.append("PREFIX xdmp:<http://marklogic.com/xdmp#>").append(System.lineSeparator());
 		sb.append("SELECT DISTINCT ?wktPoint1 ?wktPoint2 ?functionResult").append(System.lineSeparator());
 		sb.append("WHERE {").append(System.lineSeparator());
-		sb.append("  BIND(\"POINT (1 1)\"^^geo:wktLiteral as ?wktPoint1)").append(System.lineSeparator());
-		sb.append("  BIND(\"POINT (2 2)\"^^geo:wktLiteral as ?wktPoint2)").append(System.lineSeparator());
+		sb.append("  BIND(\"POINT (1 1)\"^^<http://www.opengis.net/ont/geosparql#wktLiteral> as ?wktPoint1)").append(System.lineSeparator());
+		sb.append("  BIND(\"POINT (2 2)\"^^<http://www.opengis.net/ont/geosparql#wktLiteral> as ?wktPoint2)").append(System.lineSeparator());
 		sb.append(functionCallStr).append(System.lineSeparator());
 		sb.append("}`").append(System.lineSeparator());
 		sb.append(paramsStr).append(System.lineSeparator());

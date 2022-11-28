@@ -1,0 +1,14 @@
+#title:draw-hazard
+#comment:
+
+#tags:hazard,polygons,wkt,coordinates
+#color:ex-red
+#img:
+
+SELECT DISTINCT ?g_wktHazardZone
+WHERE { 
+    #hazard zones
+    ?hazardType rdfs:subClassOf+ custom:Hazard. 
+    ?hazardId rdf:type ?hazardType.
+    ?hazardId custom:Hazard.DangerZone ?g_wktHazardZone.
+}

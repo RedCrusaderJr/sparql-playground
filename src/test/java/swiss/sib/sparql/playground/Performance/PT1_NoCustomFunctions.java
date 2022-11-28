@@ -8,11 +8,13 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 @TestInstance(Lifecycle.PER_CLASS)
+@Disabled
 public class PT1_NoCustomFunctions {
 	private static final Log logger = LogFactory.getLog(PT1_NoCustomFunctions.class);
 	private static final String NEW_LINE = System.lineSeparator();

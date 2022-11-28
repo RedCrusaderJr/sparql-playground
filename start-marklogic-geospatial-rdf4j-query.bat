@@ -1,0 +1,1 @@
+java -Dserver.port=8884 -Drepository.type=marklogic -Dspring.profiles.active=nocache -jar sparql-playground.war 8884 geospatial small-data marklogic false java localhost 8111 sparql-playground-db rdf4j

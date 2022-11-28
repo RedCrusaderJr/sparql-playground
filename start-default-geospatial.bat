@@ -1,1 +1,1 @@
-java -Dserver.port=8881 -Drepository.type=default -Dspring.profiles.active=nocache -jar sparql-playground-1.4.1.war 8881 geospatial default false
+java -Dserver.port=8881 -Drepository.type=default -Dspring.profiles.active=nocache -jar sparql-playground.war 8881 geospatial small-data default false

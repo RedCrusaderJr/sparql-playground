@@ -1,0 +1,13 @@
+@prefix custom: <http://www.custom.org/> .
+@prefix rico: <http://www.rico.org/> .
+
+custom:kiwi rico:isOrWasIncludedIn custom:fruits .
+custom:apple rico:isOrWasIncludedIn custom:fruits .
+custom:plum rico:isOrWasIncludedIn custom:fruits .
+custom:orange rico:isOrWasIncludedIn custom:fruits .
+custom:banana rico:isOrWasIncludedIn custom:fruits .
+
+custom:orange rico:followsOrFollowed custom:plum .
+custom:banana rico:followsOrFollowed custom:kiwi .
+custom:apple rico:followsOrFollowed custom:orange .
+custom:plum rico:followsOrFollowed custom:banana .

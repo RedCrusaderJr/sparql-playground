@@ -225,7 +225,7 @@ function calculateVerticalOffset(slope, distanceTotal) {
 	// angle of line to x-axis [rad]: angle = arcus tangent(slope)
 	let angle = new BigNumber(Math.atan(slope));
 	if (angle.isZero() || angle.isNaN()) {
-		throw new Error("angle: " + angle.doubleValue());
+		throw new Error("angle: " + angle);
 	}
 
 	// verticalOffset = distanceTotal * sin(angle)

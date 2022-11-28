@@ -8,41 +8,33 @@ import swiss.sib.sparql.playground.Application;
 import swiss.sib.sparql.playground.geosparql.marklogic.jsquery.evaluator.JavaScriptQueryEvaluator;
 
 public class JavaClientEvaluator implements JavaScriptQueryEvaluator {
-	ResultHandler resultHandler;
+	private String host;
+	private Integer port;
+	private String dbName;
+	private SecurityContext securityContext;
+	private ResultHandler resultHandler;
 
 	public JavaClientEvaluator() {
-		resultHandler = new ResultHandler();
+		this.resultHandler = new ResultHandler();
+		populateDatabaseClientParameters();
 	}
 
 	public Object evaluate(String jsQuery, Boolean returnRaw) throws Exception {
-		EvalResultIterator resultIterator;	
-		DatabaseClient client = createDbClient();
+		DatabaseClient client = DatabaseClientFactory.newClient(host, port, dbName, securityContext);
 		
 		try {
-			resultIterator = client.newServerEval().javascript(jsQuery).eval();	
+			EvalResultIterator resultIterator = client.newServerEval().javascript(jsQuery).eval();	
+			return returnRaw ? resultIterator : this.resultHandler.handleEvalResult(resultIterator);
+		
 		} finally {
 			client.release();
 		}
-
-		Object result;
-		try {
-			result = resultIterator;
-			if (!returnRaw) {
-				result = resultHandler.handleEvalResult(resultIterator);
-			}
-		} finally {
-			resultIterator.close();
-		}
-
-		return result;
 	}
 
-	private DatabaseClient createDbClient() {
-		String host = Application.getMarklogicHost();
-		Integer port = Application.getMarklogicPort();
-		String dbName = Application.getMarklogicDbName();
-		SecurityContext securityContext = new DatabaseClientFactory.DigestAuthContext("admin", "admin");
-
-		return DatabaseClientFactory.newClient(host, port, dbName, securityContext);
+	private void populateDatabaseClientParameters() {
+		this.host = Application.getMarklogicHost();
+		this.port = Application.getMarklogicPort();
+		this.dbName = Application.getMarklogicDbName();
+		this.securityContext = new DatabaseClientFactory.DigestAuthContext("admin", "admin");
 	}
 }

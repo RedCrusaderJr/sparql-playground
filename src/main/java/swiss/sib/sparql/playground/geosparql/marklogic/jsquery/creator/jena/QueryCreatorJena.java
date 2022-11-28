@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.sparql.algebra.Algebra;
 import org.apache.jena.sparql.algebra.Op;
+import org.apache.jena.sparql.algebra.OpAsQuery;
 import org.apache.jena.sparql.algebra.OpWalker;
 
 import swiss.sib.sparql.playground.geosparql.FunctionMapper;
@@ -22,10 +23,15 @@ public class QueryCreatorJena extends JavaScriptQueryCreator {
 
 	@Override
     protected String transformSparqlQuery(String sparqlQueryStr) {
-		Op opRoot = Algebra.compile(QueryFactory.create(sparqlQueryStr)); // Get the algebra for the query 
-		OpWalker.walk(opRoot, customFunctionVisitor);
-
-		logger.warn("[QueryCreatorJena] Transformation was unsuccessful.");
-        return sparqlQueryStr;
+		try {
+            Op opRoot = Algebra.compile(QueryFactory.create(sparqlQueryStr)); // Get the algebra for the query 
+            OpWalker.walk(opRoot, customFunctionVisitor);
+            
+            return OpAsQuery.asQuery(opRoot).serialize();
+        }
+        catch (Exception e) {
+            logger.warn("[QueryCreatorJena] Transformation was unsuccessful.", e);
+            return sparqlQueryStr;
+        }
 	}
 }
