@@ -1,11 +1,11 @@
-#title:draw-buffer
-#comment: conducting equipment (ACL segment) with buffer wkt polygon and wkt linestring
+#title:draw-buffer-affected
+#comment: conducting equipment (ACL segment) AFFECTED BY HAZARD, with buffer wkt polygon and wkt linestring   
 
 #tags:buffer,wkt,coordinates
 #color:ex-blue
 #img:
-
-SELECT DISTINCT ?g_wktSegmentLine ?g_wktBufferPolygon WHERE 
+ 
+SELECT DISTINCT ?conductingEquipmentId ?g_wktSegmentLine ?g_wktBufferPolygon WHERE 
 {
     {
         #conducting equipment with coordinates
@@ -40,6 +40,11 @@ SELECT DISTINCT ?g_wktSegmentLine ?g_wktBufferPolygon WHERE
         }
     }
 
+    #hazard with hazard zone polygone
+    ?hazardType rdfs:subClassOf+ custom:Hazard. 
+    ?hazardId a ?hazardType;
+        custom:Hazard.DangerZone ?g_wktHazardZone.
+
     #construct LINESTRING WKT
     BIND(concat("LINESTRING (", str(?x1), " ", str(?y1), ", ", str(?x2), " ", str(?y2), ")") as ?segmentLineStr).
     BIND(strdt(?segmentLineStr, geo:wktLiteral) as ?g_wktSegmentLine).
@@ -47,4 +52,8 @@ SELECT DISTINCT ?g_wktSegmentLine ?g_wktBufferPolygon WHERE
     #construct buffer POLYGON WKT
     BIND(<http://example.org/custom-function/buffer>(?segmentLineStr, 50) as ?bufferPolygonStr).
     BIND(strdt(?bufferPolygonStr, geo:wktLiteral) as ?g_wktBufferPolygon).
+
+    #filter by GeoSPARQL intersection of buffer and hazard polygon
+    BIND(geof:intersection(?g_wktBufferPolygon, ?g_wktHazardZone) as ?intersection).
+    FILTER(str(?intersection) != "POINT EMPTY")
 }

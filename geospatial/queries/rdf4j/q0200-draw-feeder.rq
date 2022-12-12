@@ -1,40 +1,46 @@
 #title:draw-feeder
-#comment: draw feeder optimized
+#comment: conducting equipment (ACL segment) with wkt linestring
 
 #tags:draw-geometry,connected-points,wkt,coordinates
 #color:ex-blue
 #img:
 
-SELECT DISTINCT ?g_wktLine
-WHERE {
+SELECT DISTINCT ?g_wktSegmentLine WHERE 
+{
     {
-        SELECT DISTINCT ?x1 ?y1 ?x2 ?y2 
-        WHERE {
-            #connectivity nodes with a terminal
-            ?tmId cim:Terminal.ConnectivityNode ?cNodeId;
-              #conducting equipment of that terminal
-              cim:Terminal.ConductingEquipment ?condEqId.
-          
-            #locations
-            ?condEqId cim:PowerSystemResource.Location ?locationId.
-            ?postionPointId1 cim:PositionPoint.Location ?locationId.
-            ?postionPointId2 cim:PositionPoint.Location ?locationId.
+        #conducting equipment with coordinates
+        SELECT DISTINCT ?conductingEquipmentId ?x1 ?y1 ?x2 ?y2 WHERE 
+        {
+            #terminal with a connectivityNode and a conducting equipment
+            ?terminalId a cim:Terminal;
+                cim:Terminal.ConnectivityNode ?connectivityNode;
+                cim:Terminal.ConductingEquipment ?conductingEquipmentId.							   
+                
+            #cartesian product of position points
+            ?postionPointId1 rdf:type cim:PositionPoint.
+            ?postionPointId2 rdf:type cim:PositionPoint.
+            #reducing cartesian product
             FILTER(str(?postionPointId1) < str(?postionPointId2))
 
-            #coordinates
-            ?condEqId cim:PowerSystemResource.Location ?locationId.  
+            #conducting equipment with a location
+            ?conductingEquipmentId cim:PowerSystemResource.Location ?locationId.
+            
+            #position point 1 of location with coordinates
             ?postionPointId1 cim:PositionPoint.Location ?locationId;
-              cim:PositionPoint.xPosition ?x1;
-              cim:PositionPoint.yPosition ?y1.
-              
+                cim:PositionPoint.xPosition ?x1;
+                cim:PositionPoint.yPosition ?y1.
+            
+            #position point 2 of location with coordinates
             ?postionPointId2 cim:PositionPoint.Location ?locationId;
-              cim:PositionPoint.xPosition ?x2;
-              cim:PositionPoint.yPosition ?y2.	
-            FILTER(?x1 != ?x2 || ?y1 != ?y2).
+                cim:PositionPoint.xPosition ?x2;
+                cim:PositionPoint.yPosition ?y2.
+
+            #reducing coordinates permutations
+            FILTER(?x1 != ?x2 || ?y1 != ?y2)
         }
     }
-    
-    #construct WKTs (draw geometry)
-    BIND(concat("LINESTRING (", str(?x1), " ", str(?y1), ", ", str(?x2), " ", str(?y2), ")") as ?lineStr).
-    BIND(strdt(?lineStr, geo:wktLiteral) as ?g_wktLine).
+
+    #construct LINESTRING WKT
+    BIND(concat("LINESTRING (", str(?x1), " ", str(?y1), ", ", str(?x2), " ", str(?y2), ")") as ?segmentLineStr).
+    BIND(strdt(?segmentLineStr, geo:wktLiteral) as ?g_wktSegmentLine).
 }
