@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF 
+	xml:base="http://micro#" 
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+	xmlns:cim="http://iec.ch/TC57/CIM-generic#" 
+	xmlns:FTN="http://www.ftn.uns.ac.rs#">
+	
+	<!-- cim:Feeder -->
+	<cim:Feeder rdf:ID="_5804f013-80d8-4a1f-9938-085d578a617a">
+		<cim:IdentifiedObject.mRID>5804f013-80d8-4a1f-9938-085d578a617a</cim:IdentifiedObject.mRID>
+		<cim:IdentifiedObject.name>IEEE_37_Node_Test</cim:IdentifiedObject.name>
+	</cim:Feeder>
+
+
+	<!-- cim:ConnectivityNode -->
+	<cim:ConnectivityNode rdf:ID="CN_1">
+		<cim:IdentifiedObject.mRID>CN_1</cim:IdentifiedObject.mRID>
+		<cim:IdentifiedObject.name>CN_1</cim:IdentifiedObject.name>
+	</cim:ConnectivityNode>
+	<cim:ConnectivityNode rdf:ID="CN_2">
+		<cim:IdentifiedObject.mRID>CN_2</cim:IdentifiedObject.mRID>
+		<cim:IdentifiedObject.name>CN_2</cim:IdentifiedObject.name>
+	</cim:ConnectivityNode>
+
+
+	<!-- cim:Terminal -->
+	<cim:Terminal rdf:ID="T1">
+		<cim:IdentifiedObject.mRID>T1</cim:IdentifiedObject.mRID>
+		<cim:IdentifiedObject.name>T1</cim:IdentifiedObject.name>
+		<cim:Terminal.ConductingEquipment rdf:resource="#ACL_1" />
+		<cim:Terminal.ConnectivityNode rdf:resource="#CN_1" />
+	</cim:Terminal>
+	<cim:Terminal rdf:ID="T2">
+		<cim:IdentifiedObject.mRID>T2</cim:IdentifiedObject.mRID>
+		<cim:IdentifiedObject.name>T2</cim:IdentifiedObject.name>
+		<cim:Terminal.ConductingEquipment rdf:resource="#ACL_2" />
+		<cim:Terminal.ConnectivityNode rdf:resource="#CN_1" />
+	</cim:Terminal>
+	<cim:Terminal rdf:ID="T3">
+		<cim:IdentifiedObject.mRID>T3</cim:IdentifiedObject.mRID>
+		<cim:IdentifiedObject.name>T3</cim:IdentifiedObject.name>
+		<cim:Terminal.ConductingEquipment rdf:resource="#ACL_3" />
+		<cim:Terminal.ConnectivityNode rdf:resource="#CN_2" />
+	</cim:Terminal>
+
+	<!-- cim:ACLineSegment -->
+	<cim:ACLineSegment rdf:ID="ACL_1">
+		<cim:IdentifiedObject.mRID>ACL_1</cim:IdentifiedObject.mRID>
+		<cim:IdentifiedObject.name>PP1-PP2</cim:IdentifiedObject.name>
+		<cim:PowerSystemResource.Location rdf:resource="#LOC_1" />
+	</cim:ACLineSegment>
+	<cim:ACLineSegment rdf:ID="ACL_2">
+		<cim:IdentifiedObject.mRID>ACL_2</cim:IdentifiedObject.mRID>
+		<cim:IdentifiedObject.name>PP2'-PP3</cim:IdentifiedObject.name>
+		<cim:PowerSystemResource.Location rdf:resource="#LOC_2" />
+	</cim:ACLineSegment>
+	<cim:ACLineSegment rdf:ID="ACL_3">
+		<cim:IdentifiedObject.mRID>ACL_3</cim:IdentifiedObject.mRID>
+		<cim:IdentifiedObject.name>PP4-PP5</cim:IdentifiedObject.name>
+		<cim:PowerSystemResource.Location rdf:resource="#LOC_3" />
+	</cim:ACLineSegment>
+		
+	<!-- cim:Location -->
+	<cim:Location rdf:ID="LOC_1">
+		<cim:IdentifiedObject.mRID>LOC_1</cim:IdentifiedObject.mRID>
+		<cim:IdentifiedObject.name>LOC_1</cim:IdentifiedObject.name>
+	</cim:Location>
+	<cim:Location rdf:ID="LOC_2">
+		<cim:IdentifiedObject.mRID>LOC_2</cim:IdentifiedObject.mRID>
+		<cim:IdentifiedObject.name>LOC_2</cim:IdentifiedObject.name>
+	</cim:Location>
+	<cim:Location rdf:ID="LOC_3">
+		<cim:IdentifiedObject.mRID>LOC_3</cim:IdentifiedObject.mRID>
+		<cim:IdentifiedObject.name>LOC_3</cim:IdentifiedObject.name>
+	</cim:Location>
+		
+
+	<!-- cim:PositionPoint -->
+
+	<!-- POINT(-122.109728 38.281912)  -->
+	<cim:PositionPoint rdf:ID="PP1">
+		<cim:PositionPoint.Location rdf:resource="#LOC_1" />
+		<cim:PositionPoint.xPosition>-122.109728</cim:PositionPoint.xPosition>
+		<cim:PositionPoint.yPosition>38.281912</cim:PositionPoint.yPosition>
+	</cim:PositionPoint>
+	
+	<!-- POINT(-122.106580 38.282611)  -->
+	<cim:PositionPoint rdf:ID="PP2">
+		<cim:PositionPoint.Location rdf:resource="#LOC_1" />
+		<cim:PositionPoint.xPosition>-122.106580</cim:PositionPoint.xPosition>
+		<cim:PositionPoint.yPosition>38.282611</cim:PositionPoint.yPosition>
+	</cim:PositionPoint>
+	<cim:PositionPoint rdf:ID="PP2_">
+		<cim:PositionPoint.Location rdf:resource="#LOC_2" />
+		<cim:PositionPoint.xPosition>-122.106580</cim:PositionPoint.xPosition>
+		<cim:PositionPoint.yPosition>38.282611</cim:PositionPoint.yPosition>
+	</cim:PositionPoint>
+
+	<!-- POINT(-122.103580 38.282600)  -->
+	<cim:PositionPoint rdf:ID="PP3">
+		<cim:PositionPoint.Location rdf:resource="#LOC_2" />
+		<cim:PositionPoint.xPosition>-122.103580</cim:PositionPoint.xPosition>
+		<cim:PositionPoint.yPosition>38.282600</cim:PositionPoint.yPosition>
+	</cim:PositionPoint>
+
+	<!-- POINT(-122.100580 38.282711)  -->
+	<cim:PositionPoint rdf:ID="PP4">
+		<cim:PositionPoint.Location rdf:resource="#LOC_3" />
+		<cim:PositionPoint.xPosition>-122.100580</cim:PositionPoint.xPosition>
+		<cim:PositionPoint.yPosition>38.282711</cim:PositionPoint.yPosition>
+	</cim:PositionPoint>
+
+	<!-- POINT(-122.100000 38.282700)  -->
+	<cim:PositionPoint rdf:ID="PP5">
+		<cim:PositionPoint.Location rdf:resource="#LOC_3" />
+		<cim:PositionPoint.xPosition>-122.100000</cim:PositionPoint.xPosition>
+		<cim:PositionPoint.yPosition>38.282700</cim:PositionPoint.yPosition>
+	</cim:PositionPoint>
+
+</rdf:RDF>

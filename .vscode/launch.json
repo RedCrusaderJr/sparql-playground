@@ -6,11 +6,35 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Launch - Default geospatial",
+            "name": "Launch - micro Default geospatial",
+            "request": "launch",
+            "mainClass": "swiss.sib.sparql.playground.Application",
+            "projectName": "sparql-playground",
+            "args": "8080 geospatial micro-data default false"
+        },
+        {
+            "type": "java",
+            "name": "Launch - small Default geospatial",
             "request": "launch",
             "mainClass": "swiss.sib.sparql.playground.Application",
             "projectName": "sparql-playground",
             "args": "8080 geospatial small-data default false"
+        },
+        {
+            "type": "java",
+            "name": "Launch - medium Default geospatial",
+            "request": "launch",
+            "mainClass": "swiss.sib.sparql.playground.Application",
+            "projectName": "sparql-playground",
+            "args": "8080 geospatial medium-data default false"
+        },
+        {
+            "type": "java",
+            "name": "Launch - big Default geospatial",
+            "request": "launch",
+            "mainClass": "swiss.sib.sparql.playground.Application",
+            "projectName": "sparql-playground",
+            "args": "8080 geospatial big-data default false"
         },
         // inferencing
         // {
@@ -41,7 +65,7 @@
         },
         {
             "type": "java",
-            "name": "Launch - Marklogic geospatial - Jena SPARQL parser",
+            "name": "Launch - small Marklogic geospatial - Jena SPARQL parser",
             "request": "launch",
             "mainClass": "swiss.sib.sparql.playground.Application",
             "projectName": "sparql-playground",
@@ -49,11 +73,27 @@
         },
         {
             "type": "java",
-            "name": "Launch - Marklogic geospatial - RDF4J SPARQL parser",
+            "name": "Launch - small Marklogic geospatial - RDF4J SPARQL parser",
             "request": "launch",
             "mainClass": "swiss.sib.sparql.playground.Application",
             "projectName": "sparql-playground",
             "args": "8080 geospatial small-data marklogic false java localhost 8111 sparql-playground-db rdf4j"
+        },
+        {
+            "type": "java",
+            "name": "Launch - medium Marklogic geospatial - Jena SPARQL parser",
+            "request": "launch",
+            "mainClass": "swiss.sib.sparql.playground.Application",
+            "projectName": "sparql-playground",
+            "args": "8080 geospatial medium-data marklogic false java localhost 8111 sparql-playground-db jena"
+        },
+        {
+            "type": "java",
+            "name": "Launch - big Marklogic geospatial - Jena SPARQL parser",
+            "request": "launch",
+            "mainClass": "swiss.sib.sparql.playground.Application",
+            "projectName": "sparql-playground",
+            "args": "8080 geospatial big-data marklogic false java localhost 8111 sparql-playground-db jena"
         },
     ]
 }
