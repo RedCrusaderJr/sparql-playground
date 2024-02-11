@@ -1,0 +1,51 @@
+#title:functions-shapes
+#comment: 
+
+#tags:wkt,coordinates
+#color:ex-red
+#img:
+
+SELECT DISTINCT * WHERE
+{ 
+  	BIND("POINT (0 0)" as ?point1Str).
+	BIND(strdt(?point1Str, geo:wktLiteral) as ?g_wktPoint1).
+  
+  	BIND("POINT (1 1)" as ?point2Str).
+	BIND(strdt(?point2Str, geo:wktLiteral) as ?g_wktPoint2).
+  
+  	BIND("POINT (0 1)" as ?point3Str).
+	BIND(strdt(?point3Str, geo:wktLiteral) as ?g_wktPoint3).
+  
+  	BIND("POINT (1 0)" as ?point4Str).
+	BIND(strdt(?point4Str, geo:wktLiteral) as ?g_wktPoint4).
+
+	BIND("LINESTRING (0 0, 0 1)" as ?line1Str).
+	BIND(strdt(?line1Str, geo:wktLiteral) as ?g_wktLine1).
+
+	BIND("LINESTRING (0 1, 1 1)" as ?line2Str).
+	BIND(strdt(?line2Str, geo:wktLiteral) as ?g_wktLine2).
+
+	BIND("LINESTRING (1 1, 1 0)" as ?line3Str).
+	BIND(strdt(?line3Str, geo:wktLiteral) as ?g_wktLine3).
+
+	BIND("LINESTRING (1 0, 0 0)" as ?line4Str).
+	BIND(strdt(?line4Str, geo:wktLiteral) as ?g_wktLine4).
+
+	BIND("LINESTRING (0 0, 1 1)" as ?line5Str).
+	BIND(strdt(?line5Str, geo:wktLiteral) as ?g_wktLine5).
+
+	BIND("LINESTRING (0 1, 1 0)" as ?line6Str).
+	BIND(strdt(?line6Str, geo:wktLiteral) as ?g_wktLine6).
+
+	BIND("POLYGON ((0 0, 1 0, 1 1, 0 1, 0 0))" as ?polygon1Str).
+	BIND(strdt(?polygon1Str, geo:wktLiteral) as ?g_black_wktPolygon1).
+
+	BIND("POLYGON ((0 0, 1 1, 0 1, 0 0))" as ?polygon2Str).
+	BIND(strdt(?polygon2Str, geo:wktLiteral) as ?g_yellow_wktPolygon2).
+
+	BIND("POLYGON ((0 0, 1 1, 1 0, 0 0))" as ?polygon3Str).
+	BIND(strdt(?polygon3Str, geo:wktLiteral) as ?g_red_wktPolygon3).
+
+	BIND("POLYGON ((0 0, 0.5 0.5, 1 0, 1 1, 0 1, 0 0))" as ?polygon4Str).
+	BIND(strdt(?polygon4Str, geo:wktLiteral) as ?g_green_wktPolygon4).
+}

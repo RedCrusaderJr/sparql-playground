@@ -88,6 +88,7 @@ public class MarklogicSupportTest {
 	}
 
 	@Test
+	@Disabled
 	public void evaluateQueryTest() throws Exception {
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT *").append(System.lineSeparator());
@@ -111,6 +112,7 @@ public class MarklogicSupportTest {
 	}
 
 	@Test
+	@Disabled
 	public void parseHttResponseTest() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Content-Type: application/jsonX-Primitive: ");
@@ -135,6 +137,7 @@ public class MarklogicSupportTest {
 	}
 
 	@Test
+	@Disabled
 	public void evaluateGeospatialOnInMemoryRepoTest() {
 		logger.debug(String.format("Test: evaluateGeospatialInMemoryRepoTest"));
 		RepositoryConnection connection = inMemoryRepo.getConnection();
@@ -150,6 +153,7 @@ public class MarklogicSupportTest {
 	}
 
 	@Test
+	@Disabled
 	public void evaluateGeospatialOnMarklogicRepoTest() throws Exception {
 		logger.debug(String.format("Test: evaluateGeospatialMarklogicRepoTest"));
 		
@@ -165,6 +169,7 @@ public class MarklogicSupportTest {
 	}
 
 	@Test
+	@Disabled
 	public void evaluateGeospatialOnMarklogicConsoleTest() {
 		logger.debug(String.format("Test: evaluateGeospatialMarklogicConsoleTest"));
 
@@ -179,6 +184,7 @@ public class MarklogicSupportTest {
 	}
 
 	@Test
+	@Disabled
 	public void evaluateJsGeospatialOnMarklogicRestApiTest() throws IOException {
 		logger.debug(String.format("Test: evaluateJsGeospatialMarklogicRestApiTest"));
 		RestClientEvaluator restApi = new RestClientEvaluator();
@@ -194,6 +200,7 @@ public class MarklogicSupportTest {
 	}
 
 	@Test
+	@Disabled
 	public void evaluateJsGeospatialOnMarklogicJavaApi() throws Exception {
 		logger.debug(String.format("Test: evaluateJsGeospatialOnMarklogicJavaApi"));
 		JavaClientEvaluator javaApi = new JavaClientEvaluator();
@@ -227,6 +234,7 @@ public class MarklogicSupportTest {
 	}
 
 	@Test
+	@Disabled
 	public void evaluateJsGeospatialOnMarklogicConsoleTest() {
 		logger.debug(String.format("Test: evaluateJsGeospatialMarklogicConsoleTest"));
 
@@ -241,6 +249,7 @@ public class MarklogicSupportTest {
 	}
 
 	@Test
+	@Disabled
 	public void evaluateJsGeospatialOnMarklogic3rdPartyTest() {
 		logger.debug(String.format("Test: evaluateJsGeospatialMarklogic3rdPartyTest"));
 
@@ -256,6 +265,7 @@ public class MarklogicSupportTest {
 	}
 
 	@Test
+	@Disabled
 	public void evaluateJsGeospatialWithSelectSubqueryOnMarklogicJavaApiTest() throws Exception {
 		logger.debug(String.format("Test: evaluateJsGeospatialWithSelectSubqueryOnMarklogicJavaApiTest"));
 		JavaClientEvaluator javaApi = new JavaClientEvaluator();

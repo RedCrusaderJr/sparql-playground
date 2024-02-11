@@ -31,13 +31,13 @@
 				}
 			}
 
-			addElementToBulkRender(rawValue, lineColor, polygoneColor, elementOrigin) {
+			addElementToBulkRender(rawValue, lineColor, polygonColor, elementOrigin) {
 				if(rawValue == "POINT EMPTY") {
 					return;
 				}
 				
 				let parsedElement = wktParser.parseElement(rawValue);
-				addParsedElementToBulkRender(parsedElement, this.bulkRenderMap, lineColor, polygoneColor, elementOrigin)
+				addParsedElementToBulkRender(parsedElement, this.bulkRenderMap, lineColor, polygonColor, elementOrigin);
 			}
 
 			finishBulkRender() {
@@ -55,7 +55,7 @@
 
 		//
 		//PRIVATE FUNCTIONS
-		function addParsedElementToBulkRender(parsedElement, bulkRenderMap, lineColor, polygoneColor, elementOrigin) {
+		function addParsedElementToBulkRender(parsedElement, bulkRenderMap, lineColor, polygonColor, elementOrigin) {
 			if(!bulkRenderMap.has(parsedElement.Name)) {
 				console.error("KEY: '" + parsedElement.Name + "' not present in 'bulkRenderMap'.");
 				return;
@@ -64,8 +64,8 @@
 			if(typeof lineColor == 'undefined') {
 				lineColor = { color: 'green' };
 			}
-			if(typeof polygoneColor == 'undefined') {
-				polygoneColor = { color: 'blue' };
+			if(typeof polygonColor == 'undefined') {
+				polygonColor = { color: 'blue' };
 			}
 			
 			//
@@ -93,7 +93,7 @@
 					break;
 
 				case "POLYGON":
-					let polygon = geomapManipulation.createPolygon(wktParser.extractPolygonCoordinates(parsedElement), polygoneColor);
+					let polygon = geomapManipulation.createPolygon(wktParser.extractPolygonCoordinates(parsedElement), polygonColor);
 					if(!bulkRenderGroup.has(elementOrigin)) {
 						bulkRenderGroup.set(elementOrigin, []);
 					}

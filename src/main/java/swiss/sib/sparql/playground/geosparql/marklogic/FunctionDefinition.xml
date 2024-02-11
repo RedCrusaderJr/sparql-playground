@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<DefinedFunctions>
+
+    <FunctionDescriptions>
+        <!-- <FunctionDescription>
+            <FunctionUri>http://www.opengis.net/def/function/geosparql/intersection</FunctionUri>
+            <Abbreviation>intersectionFunction</Abbreviation>
+            <MarklogicFunction>geo.regionIntersects</MarklogicFunction>
+        </FunctionDescription> -->
+
+        <!-- <FunctionDescription>
+            <FunctionUri></FunctionUri>
+            <Abbreviation></Abbreviation>
+            <MarklogicFunction></MarklogicFunction>
+        </FunctionDescription> -->
+    </FunctionDescriptions>
+
+    <CustomFunctions>
+        <CustomFunction>
+            <FunctionUri>http://example.org/custom-function/buffer</FunctionUri>
+            <Abbreviation>bufferFunCustom</Abbreviation>
+            <MarklogicFunction>bufferFunction</MarklogicFunction>
+            <ModulePath>/create-buffer-function.mjs</ModulePath>
+        </CustomFunction>
+
+        <CustomFunction>
+            <FunctionUri>http://www.opengis.net/def/function/geosparql/distance</FunctionUri>
+            <Abbreviation>distanceFun</Abbreviation>
+            <MarklogicFunction>distanceFunction</MarklogicFunction>
+            <ModulePath>/distance-function.mjs</ModulePath>
+        </CustomFunction>
+
+        <CustomFunction>
+            <FunctionUri>http://www.opengis.net/def/function/geosparql/buffer</FunctionUri>
+            <Abbreviation>bufferFun</Abbreviation>
+            <MarklogicFunction>bufferFunction</MarklogicFunction>
+            <ModulePath>/buffer-function.mjs</ModulePath>
+        </CustomFunction>
+
+        <CustomFunction>
+            <FunctionUri>http://www.opengis.net/def/function/geosparql/convexHull</FunctionUri>
+            <Abbreviation>convexHullFun</Abbreviation>
+            <MarklogicFunction>convexHullFunction</MarklogicFunction>
+            <ModulePath>/convex-hull-function.mjs</ModulePath>
+        </CustomFunction>
+
+        <CustomFunction>
+            <FunctionUri>http://www.opengis.net/def/function/geosparql/intersection</FunctionUri>
+            <Abbreviation>intersectionFun</Abbreviation>
+            <MarklogicFunction>intersectionFunction</MarklogicFunction>
+            <ModulePath>/intersection-function.mjs</ModulePath>
+        </CustomFunction>
+
+        <CustomFunction>
+            <FunctionUri>http://www.opengis.net/def/function/geosparql/union</FunctionUri>
+            <Abbreviation>unionFun</Abbreviation>
+            <MarklogicFunction>unionFunction</MarklogicFunction>
+            <ModulePath>/union-function.mjs</ModulePath>
+        </CustomFunction>
+
+        <CustomFunction>
+            <FunctionUri>http://www.opengis.net/def/function/geosparql/difference</FunctionUri>
+            <Abbreviation>differenceFun</Abbreviation>
+            <MarklogicFunction>differenceFunction</MarklogicFunction>
+            <ModulePath>/difference-function.mjs</ModulePath>
+        </CustomFunction>
+
+        <CustomFunction>
+            <FunctionUri>http://www.opengis.net/def/function/geosparql/symDifference</FunctionUri>
+            <Abbreviation>symDifferenceFun</Abbreviation>
+            <MarklogicFunction>symDifferenceFunction</MarklogicFunction>
+            <ModulePath>/sym-difference-function.mjs</ModulePath>
+        </CustomFunction>
+
+        <CustomFunction>
+            <FunctionUri>http://www.opengis.net/def/function/geosparql/envelope</FunctionUri>
+            <Abbreviation>envelopeFun</Abbreviation>
+            <MarklogicFunction>envelopeFunction</MarklogicFunction>
+            <ModulePath>/envelope-function.mjs</ModulePath>
+        </CustomFunction>
+
+        <CustomFunction>
+            <FunctionUri>http://www.opengis.net/def/function/geosparql/boundary</FunctionUri>
+            <Abbreviation>boundaryFun</Abbreviation>
+            <MarklogicFunction>boundaryFunction</MarklogicFunction>
+            <ModulePath>/boundary-function.mjs</ModulePath>
+        </CustomFunction>
+    </CustomFunctions>
+
+</DefinedFunctions>

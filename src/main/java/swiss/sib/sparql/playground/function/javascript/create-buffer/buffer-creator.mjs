@@ -1,4 +1,4 @@
-import CrsTransformator from  '/crs-transformator.mjs';
+import CrsTransformator from '/crs-transformator.mjs';
 
 const BigNumber = require('/bignumber.js');
 const Proj4js = require('/proj4js.js');

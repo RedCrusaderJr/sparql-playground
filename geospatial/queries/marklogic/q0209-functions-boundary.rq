@@ -1,0 +1,27 @@
+#title:functions
+#comment: function-boundary
+
+#tags:wkt,coordinates
+#color:ex-red
+#img:
+
+
+SELECT DISTINCT * WHERE
+{ 
+    BIND("POINT (0 0)" as ?pointStr1).
+	BIND(strdt(?pointStr1, geo:wktLiteral) as ?g_wktPoint1).
+  
+  	BIND("POINT (1 1)" as ?pointStr2).
+	BIND(strdt(?pointStr2, geo:wktLiteral) as ?g_wktPoint2).
+  
+  	BIND("POINT (0 1)" as ?pointStr3).
+	BIND(strdt(?pointStr3, geo:wktLiteral) as ?g_wktPoint3).
+  
+  	BIND("POINT (1 0)" as ?pointStr4).
+	BIND(strdt(?pointStr4, geo:wktLiteral) as ?g_wktPoint4).
+  
+  	BIND(geof:distance(?pointStr1, ?pointStr1, uom:metre) as ?distance11).
+  	BIND(geof:distance(?pointStr1, ?pointStr2, uom:metre) as ?distance12).
+	BIND(geof:distance(?pointStr1, ?pointStr3, uom:metre) as ?distance13).
+	BIND(geof:distance(?pointStr1, ?pointStr4, uom:metre) as ?distance14).
+}

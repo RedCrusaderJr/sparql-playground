@@ -51,10 +51,10 @@ public class MarklogicGeoSparqlEvaluator implements GeoSparqlEvaluator, Initiali
 		return evaluateQuery(sparqlQuery, false);
 	}
 
-	public Object evaluateQuery(String sparqlQuery, Boolean reurnRaw) throws Exception {
+	public Object evaluateQuery(String sparqlQuery, Boolean returnRaw) throws Exception {
 		try {
 			String jsQuery = this.jsQueryCreator.createJavaScriptQuery(sparqlQuery);
-			return this.queryEvaluator.evaluate(jsQuery, reurnRaw);
+			return this.queryEvaluator.evaluate(jsQuery, returnRaw);
 
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);

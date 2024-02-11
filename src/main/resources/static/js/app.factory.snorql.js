@@ -530,24 +530,41 @@
 				return eval('/' + finder + '/').test(item);
 			});
 
-			if (geoSpatialColumnHeaders.length > 0) {
-				var elements = self.result.results.bindings;
-				shapeRenderer.startBulkRender();
-				geoSpatialColumnHeaders.forEach(column => {
-					elements.forEach(binding => {
-						if(typeof binding[column] != 'undefined') {
-							shapeRenderer.addElementToBulkRender(binding[column].value);
-						}
-						else {
-							console.log(binding + ' has undefined value for key: ' + column)
-						}
-					});
-				});
-				shapeRenderer.finishBulkRender();
-				geomapManipulation.setCurrentView();
-				geomapManipulation.exportGeojson();
+			if (geoSpatialColumnHeaders.length == 0) {
+				return;
 			}
+
+			shapeRenderer.startBulkRender();
+			
+			var elements = self.result.results.bindings;
+			geoSpatialColumnHeaders.forEach(column => {
+				
+				let color = getColor(column);
+
+				elements.forEach(binding => {
+					if (typeof binding[column] != 'undefined') {
+						shapeRenderer.addElementToBulkRender(binding[column].value, color, color);
+					}
+					else {
+						console.log(binding + ' has undefined value for key: ' + column)
+					}
+				});
+			});
+
+			shapeRenderer.finishBulkRender();
+			geomapManipulation.setCurrentView();
+			geomapManipulation.exportGeojson();
 		}
+
+		function getColor(column) {
+			if (column.includes("g_red_")) 		return { color: 'red' };
+			if (column.includes("g_orange_")) 	return { color: 'orange' };
+			if (column.includes("g_yellow_")) 	return { color: 'yellow' };
+			if (column.includes("g_green_")) 	return { color: 'green' };
+			if (column.includes("g_blue_")) 	return { color: 'blue' };
+			if (column.includes("g_purple_")) 	return { color: 'purple' };
+			if (column.includes("g_black_")) 	return { color: 'black' };
+		} 
 	};
 
 })(angular);
