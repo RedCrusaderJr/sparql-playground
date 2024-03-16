@@ -1,0 +1,21 @@
+SELECT DISTINCT ?equals ?disjoint ?intersects ?touches ?crosses ?within ?contains ?overlaps WHERE
+{ 
+    BIND("POLYGON ((0 0, 0 1, 1 1, 0 0))" as ?polygon1Str).
+	BIND(strdt(?polygon1Str, geo:wktLiteral) as ?black_wktPolygon1).
+  
+  	#BIND("POLYGON ((0 0, 1 0, 1 1, 0 0))" as ?polygon2Str).
+  	BIND("POLYGON ((0 0, 0 1, 1 1, 1 0, 0 0))" as ?polygon2Str).
+	BIND(strdt(?polygon2Str, geo:wktLiteral) as ?black_wktPolygon2).
+  
+  	#BIND(geof:getSRID(?black_wktPolygon1) as ?srid1).
+  	#BIND(geof:relate(?black_wktPolygon1, ?black_wktPolygon2, "F*TTF****") as ?srid2).
+  
+  	BIND(geof:sfEquals(?black_wktPolygon1, ?black_wktPolygon2) as ?equals).
+  	BIND(geof:sfDisjoint(?black_wktPolygon1, ?black_wktPolygon2) as ?disjoint).
+  	BIND(geof:sfIntersects(?black_wktPolygon1, ?black_wktPolygon2) as ?intersects).
+  	BIND(geof:sfTouches(?black_wktPolygon1, ?black_wktPolygon2) as ?touches).
+  	BIND(geof:sfCrosses(?black_wktPolygon1, ?black_wktPolygon2) as ?crosses).
+  	BIND(geof:sfWithin(?black_wktPolygon1, ?black_wktPolygon2) as ?within).
+  	BIND(geof:sfContains(?black_wktPolygon1, ?black_wktPolygon2) as ?contains).
+  	BIND(geof:sfOverlaps(?black_wktPolygon1, ?black_wktPolygon2) as ?overlaps).
+}

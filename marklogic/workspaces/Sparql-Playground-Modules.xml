@@ -2,11 +2,75 @@
 <workspace name="Sparql-Playground-Modules">
 <query name="Import modules" focus="true" listorder="1" taborder="1" active="true" database="16004715573724256548" server="6083025199173533748" database-name="sparql-playground-modules" server-name="App-Services" mode="javascript">
 declareUpdate();
-xdmp.documentLoad('C:/Users/Dimitrije Mitic/Desktop/RedCrusaderJr-sparql-playground/src/main/java/swiss/sib/sparql/playground/function/javascript/bignumber.js', {'uri': '/bignumber.js'});
-xdmp.documentLoad('C:/Users/Dimitrije Mitic/Desktop/RedCrusaderJr-sparql-playground/src/main/java/swiss/sib/sparql/playground/function/javascript/proj4js.js', {'uri': '/proj4js.js'});
-xdmp.documentLoad('C:/Users/Dimitrije Mitic/Desktop/RedCrusaderJr-sparql-playground/src/main/java/swiss/sib/sparql/playground/function/javascript/crs-transformator.mjs', {'uri': '/crs-transformator.mjs'});
-xdmp.documentLoad('C:/Users/Dimitrije Mitic/Desktop/RedCrusaderJr-sparql-playground/src/main/java/swiss/sib/sparql/playground/function/javascript/create-buffer/create-buffer-function.mjs', {'uri': '/create-buffer-function.mjs'});
-xdmp.documentLoad('C:/Users/Dimitrije Mitic/Desktop/RedCrusaderJr-sparql-playground/src/main/java/swiss/sib/sparql/playground/function/javascript/create-buffer/buffer-creator.mjs', {'uri': '/buffer-creator.mjs'});    
+
+const rootPath = 'C:/Users/Dimitrije Mitic/Desktop/RedCrusaderJr-sparql-playground/src/main/java/swiss/sib/sparql/playground/function/javascript';
+
+// third party implementations
+xdmp.documentLoad(rootPath + '/bignumber.js', {'uri': '/bignumber.js'});
+xdmp.documentLoad(rootPath + '/proj4js.js', {'uri': '/proj4js.js'});
+xdmp.documentLoad(rootPath + '/wellknown.js', {'uri': '/wellknown.js'});
+xdmp.documentLoad(rootPath + '/turf.min.js', {'uri': '/turf.min.js'});
+
+// Custom functions
+xdmp.documentLoad(rootPath + '/create-buffer/create-buffer-function.mjs', {'uri': '/create-buffer-function.mjs'});
+
+// GeoSPARQL functions implementations
+
+// geometry extension - query functions
+const queryFunctionsPath = '/geosparql/req/geometry-extension/query-functions';
+xdmp.documentLoad(rootPath + queryFunctionsPath + '/distance-function.mjs', {'uri': '/distance-function.mjs'});
+xdmp.documentLoad(rootPath + queryFunctionsPath + '/buffer-function.mjs', {'uri': '/buffer-function.mjs'});
+xdmp.documentLoad(rootPath + queryFunctionsPath + '/convex-hull-function.mjs', {'uri': '/convex-hull-function.mjs'});
+xdmp.documentLoad(rootPath + queryFunctionsPath + '/intersection-function.mjs', {'uri': '/intersection-function.mjs'});
+xdmp.documentLoad(rootPath + queryFunctionsPath + '/union-function.mjs', {'uri': '/union-function.mjs'});
+xdmp.documentLoad(rootPath + queryFunctionsPath + '/difference-function.mjs', {'uri': '/difference-function.mjs'});
+xdmp.documentLoad(rootPath + queryFunctionsPath + '/sym-difference-function.mjs', {'uri': '/sym-difference-function.mjs'});
+xdmp.documentLoad(rootPath + queryFunctionsPath + '/envelope-function.mjs', {'uri': '/envelope-function.mjs'});
+xdmp.documentLoad(rootPath + queryFunctionsPath + '/boundary-function.mjs', {'uri': '/boundary-function.mjs'});
+
+// geometry extension - srid function
+xdmp.documentLoad(rootPath + '/geosparql/req/geometry-extension/srid-function' + '/get-srid-function.mjs', {'uri': '/get-srid-function.mjs'});
+
+// geometry topology extension - relate query function
+xdmp.documentLoad(rootPath + '/geosparql/req/geometry-topology-extension/relate-query-function' + '/relate-function.mjs', {'uri': '/relate-function.mjs'});
+
+// geometry topology extension - sf query functions
+const sfQueryFunctionsPath = '/geosparql/req/geometry-topology-extension/sf-query-functions';
+xdmp.documentLoad(rootPath + sfQueryFunctionsPath + '/sf-contains.mjs', {'uri': '/sf-contains.mjs'});
+xdmp.documentLoad(rootPath + sfQueryFunctionsPath + '/sf-crosses.mjs', {'uri': '/sf-crosses.mjs'});
+xdmp.documentLoad(rootPath + sfQueryFunctionsPath + '/sf-disjoint.mjs', {'uri': '/sf-disjoint.mjs'});
+xdmp.documentLoad(rootPath + sfQueryFunctionsPath + '/sf-equals.mjs', {'uri': '/sf-equals.mjs'});
+xdmp.documentLoad(rootPath + sfQueryFunctionsPath + '/sf-intersects.mjs', {'uri': '/sf-intersects.mjs'});
+xdmp.documentLoad(rootPath + sfQueryFunctionsPath + '/sf-overlaps.mjs', {'uri': '/sf-overlaps.mjs'});
+xdmp.documentLoad(rootPath + sfQueryFunctionsPath + '/sf-touches.mjs', {'uri': '/sf-touches.mjs'});
+xdmp.documentLoad(rootPath + sfQueryFunctionsPath + '/sf-within.mjs', {'uri': '/sf-within.mjs'});
+
+// geometry topology extension - eh query functions
+const ehQueryFunctionsPath = '/geosparql/req/geometry-topology-extension/eh-query-functions';
+xdmp.documentLoad(rootPath + ehQueryFunctionsPath + '/eh-contains.mjs', {'uri': '/eh-contains.mjs'});
+xdmp.documentLoad(rootPath + ehQueryFunctionsPath + '/eh-covered-by.mjs', {'uri': '/eh-covered-by.mjs'});
+xdmp.documentLoad(rootPath + ehQueryFunctionsPath + '/eh-covers.mjs', {'uri': '/eh-covers.mjs'});
+xdmp.documentLoad(rootPath + ehQueryFunctionsPath + '/eh-disjoint.mjs', {'uri': '/eh-disjoint.mjs'});
+xdmp.documentLoad(rootPath + ehQueryFunctionsPath + '/eh-equals.mjs', {'uri': '/eh-equals.mjs'});
+xdmp.documentLoad(rootPath + ehQueryFunctionsPath + '/eh-inside.mjs', {'uri': '/eh-inside.mjs'});
+xdmp.documentLoad(rootPath + ehQueryFunctionsPath + '/eh-meet.mjs', {'uri': '/eh-meet.mjs'});
+xdmp.documentLoad(rootPath + ehQueryFunctionsPath + '/eh-overlap.mjs', {'uri': '/eh-overlap.mjs'});
+
+// geometry topology extension - rcc8 query functions
+const rcc8QueryFunctionsPath = '/geosparql/req/geometry-topology-extension/rcc8-query-functions';
+xdmp.documentLoad(rootPath + rcc8QueryFunctionsPath + '/rcc8dc.mjs', {'uri': '/rcc8dc.mjs'});
+xdmp.documentLoad(rootPath + rcc8QueryFunctionsPath + '/rcc8ec.mjs', {'uri': '/rcc8ec.mjs'});
+xdmp.documentLoad(rootPath + rcc8QueryFunctionsPath + '/rcc8eq.mjs', {'uri': '/rcc8eq.mjs'});
+xdmp.documentLoad(rootPath + rcc8QueryFunctionsPath + '/rcc8ntpp.mjs', {'uri': '/rcc8ntpp.mjs'});
+xdmp.documentLoad(rootPath + rcc8QueryFunctionsPath + '/rcc8ntppi.mjs', {'uri': '/rcc8ntppi.mjs'});
+xdmp.documentLoad(rootPath + rcc8QueryFunctionsPath + '/rcc8po.mjs', {'uri': '/rcc8po.mjs'});
+xdmp.documentLoad(rootPath + rcc8QueryFunctionsPath + '/rcc8tpp.mjs', {'uri': '/rcc8tpp.mjs'});
+xdmp.documentLoad(rootPath + rcc8QueryFunctionsPath + '/rcc8tppi.mjs', {'uri': '/rcc8tppi.mjs'});
+
+//GeoSPARQL functions helpers
+xdmp.documentLoad(rootPath + '/crs-transformator.mjs', {'uri': '/crs-transformator.mjs'});
+xdmp.documentLoad(rootPath + '/turf-helper.mjs', {'uri': '/turf-helper.mjs'});
+xdmp.documentLoad(rootPath + '/create-buffer/buffer-creator.mjs', {'uri': '/buffer-creator.mjs'});
 </query>
 </workspace>
 </export>
